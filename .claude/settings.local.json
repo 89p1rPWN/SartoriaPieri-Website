@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(convert:*)",
+      "Bash(magick:*)",
+      "Bash(node:*)",
+      "Bash(npm create:*)",
+      "Bash(npx vite:*)",
+      "Bash(pip show:*)",
+      "Bash(python:*)",
+      "Bash(source:*)",
+      "WebFetch(domain:dribbble.com)",
+      "Bash(gh auth:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "stitch"
+  ]
+}

@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+
+.test-page {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse 110% 90% at 50% 35%, #d2cec9 0%, #b8b4b0 70%, #a5a19d 100%);
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #111;
+}
+
+/* ══════ NAV ══════ */
+.t-nav {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.8rem 3rem;
+}
+
+.t-nav-logo { font-weight: 900; font-size: 1.3rem; letter-spacing: -0.02em; }
+.t-nav-links { display: flex; gap: 2.5rem; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; }
+.t-nav-cta { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; }
+
+/* ══════ RED GLOW ══════ */
+.t-glow {
+  position: absolute;
+  top: 2%; right: 14%;
+  width: 10vw; height: 10vw;
+  background: radial-gradient(circle, rgba(240, 55, 75, 0.55) 0%, rgba(240, 55, 75, 0.12) 45%, transparent 70%);
+  filter: blur(20px);
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* ══════ COLLAGE ══════ */
+.t-collage {
+  position: absolute;
+  inset: 0;
+}
+
+.t-fig {
+  position: absolute;
+}
+
+.t-fig img {
+  height: 100%;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  filter: saturate(0.12) brightness(1.05) contrast(1.12);
+}
+
+/* ── Positions from drag-and-drop ── */
+.t-fig-topleft {
+  z-index: 6;
+  height: 62vh;
+  left: 27.2%;
+  top: 8.9%;
+}
+
+.t-fig-topcenter {
+  z-index: 8;
+  height: 65vh;
+  left: 47.5%;
+  top: 12.4%;
+}
+
+.t-fig-topright {
+  z-index: 6;
+  height: 78vh;
+  left: 5.7%;
+  top: 21.9%;
+}
+
+.t-fig-center {
+  z-index: 9;
+  height: 80vh;
+  left: 27.7%;
+  top: 19.4%;
+}
+
+/* ══════ WHITE HAZE around text ══════ */
+.t-text-haze {
+  position: absolute;
+  z-index: 19;
+  top: 35%;
+  left: 0;
+  right: 0;
+  height: 22vh;
+  background: radial-gradient(ellipse 80% 100% at 50% 50%, rgba(190, 186, 180, 0.85) 0%, rgba(190, 186, 180, 0.5) 35%, rgba(190, 186, 180, 0.2) 55%, transparent 75%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* ══════ TITAN TEXT — IN FRONT OF EVERYTHING ══════ */
+.t-titan {
+  position: absolute;
+  z-index: 20;
+  top: 46%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'din-condensed', 'Oswald', 'Impact', sans-serif;
+  font-size: clamp(5rem, 10.5vw, 14rem);
+  font-weight: 900;
+  color: #0a0a0a;
+  letter-spacing: 0.02em;
+  line-height: 0.85;
+  white-space: nowrap;
+  margin: 0;
+  pointer-events: none;
+  text-transform: uppercase;
+  /* White glow/haze directly on the text */
+  text-shadow:
+    0 0 60px rgba(200, 196, 190, 0.9),
+    0 0 120px rgba(200, 196, 190, 0.6),
+    0 0 200px rgba(200, 196, 190, 0.4);
+}
+
+/* ══════ EDITORIAL ══════ */
+.t-editorial {
+  position: absolute;
+  bottom: 5%; right: 3.5%;
+  z-index: 40;
+  max-width: 300px;
+}
+
+.t-editorial h4 {
+  font-size: 1rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.3rem;
+}
+
+.t-editorial h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+}
+
+.t-editorial p {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(0, 0, 0, 0.75);
+  margin: 0 0 0.7rem;
+}
+
+/* ══════ MOBILE ══════ */
+@media (max-width: 768px) {
+  .t-nav { padding: 1rem 1.5rem; }
+  .t-nav-links { display: none; }
+  .t-fig-topleft { display: none; }
+  .t-fig-topcenter {
+    height: 50vh;
+    left: 5%;
+    top: 3%;
+  }
+  .t-fig-topright {
+    height: 60vh;
+    left: auto;
+    right: 5%;
+    top: 5%;
+  }
+  .t-fig-center {
+    height: 65vh;
+    left: 15%;
+    top: 18%;
+  }
+  .t-titan {
+    font-size: 28vw;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%) scaleX(0.5) scaleY(0.55);
+  }
+  .t-editorial { max-width: 55vw; bottom: 3%; right: 3%; }
+  .t-editorial h4 { font-size: 0.7rem; }
+  .t-editorial h2 { font-size: 1rem; margin-bottom: 0.5rem; }
+  .t-editorial p { font-size: 0.58rem; line-height: 1.4; }
+}

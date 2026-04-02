@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build cache
+.vite/
+dist/
+
+# Large media assets
+FW25:26/
+FW25_26.zip
+__MACOSX/
+
+# RAW photo files
+*.ARW
+*.NEF
+*.PSD
+*.psd
+
+# OS files
+.DS_Store
+Thumbs.db
+._*
+
+# MCP config (contains API keys)
+.mcp.json
+
+# Environment
+.env
+.env.local
