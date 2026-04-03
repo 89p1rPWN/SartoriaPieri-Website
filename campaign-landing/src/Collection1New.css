@@ -466,8 +466,8 @@
 
 @media (max-width: 600px) {
   .c1n-accordion-row {
-    flex-direction: column;
-    height: auto;
+    height: 65vh;
+    min-height: 380px;
   }
 
   .c1n-accordion-card {
@@ -476,23 +476,51 @@
 
   .c1n-accordion-active {
     flex: 5;
-    min-height: 50vh;
   }
 
   .c1n-accordion-collapsed {
-    flex: 1;
-    min-height: 60px;
+    flex: 0.4;
+  }
+
+  .c1n-accordion-content {
+    bottom: 1.5rem;
+    left: 1rem;
+    right: 1rem;
+  }
+
+  .c1n-accordion-name {
+    font-size: 1.4rem;
+  }
+
+  .c1n-accordion-desc {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .c1n-accordion-num {
+    top: 0.8rem;
+    left: 0.8rem;
+    font-size: 0.6rem;
   }
 
   .c1n-accordion-vertical-name {
-    writing-mode: horizontal-tb;
-    transform: none;
-    bottom: auto;
-    top: 50%;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    bottom: 2rem;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%) rotate(180deg);
+    font-size: 0.7rem;
     letter-spacing: 0.15em;
-    font-size: 0.85rem;
+  }
+
+  .c1n-accordion-idle .c1n-accordion-vertical-name {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
   }
 }
 
@@ -939,6 +967,18 @@
 
 /* ══════ MOBILE ══════ */
 @media (max-width: 900px) {
+  .c1n-accordion-section {
+    padding: 6vh 0 0;
+  }
+
+  .c1n-accordion-header {
+    padding: 0 1.5rem 4vh;
+  }
+
+  .c1n-accordion-title {
+    font-size: clamp(2rem, 6vw, 3rem);
+  }
+
   .c1n-sovra-track {
     height: 400vh;
     /* Allow more scrolling room for text reading on mobile/tablet */

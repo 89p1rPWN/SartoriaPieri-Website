@@ -399,6 +399,7 @@ export default function Collection1New() {
               key={`acc-${i}`}
               className={`c1n-accordion-card ${activeAccordion === i ? 'c1n-accordion-active' : activeAccordion === -1 ? 'c1n-accordion-idle' : 'c1n-accordion-collapsed'}`}
               onMouseEnter={() => setActiveAccordion(i)}
+              onClick={() => setActiveAccordion(activeAccordion === i ? -1 : i)}
             >
               <div className="c1n-accordion-bg">
                 <img src={outfit.accordionImg} alt={outfit.name} />
