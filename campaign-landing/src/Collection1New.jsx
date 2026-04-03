@@ -429,12 +429,13 @@ export default function Collection1New() {
             ))}
           </div>
           <div className={`c1n-swipe-hint ${carouselIndex > 0 ? 'hidden' : ''}`}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.4 }}>
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
+            <div className="c1n-swipe-trail" />
+            <div className="c1n-swipe-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 11V6a2 2 0 0 0-4 0v5" /><path d="M14 10V4a2 2 0 0 0-4 0v7" /><path d="M10 10.5V8a2 2 0 0 0-4 0v8a8 8 0 0 0 16 0v-3a2 2 0 0 0-4 0" />
+              </svg>
+            </div>
+            <span className="c1n-swipe-label">SLIDE</span>
           </div>
         </div>
         <div className="c1n-carousel-track">

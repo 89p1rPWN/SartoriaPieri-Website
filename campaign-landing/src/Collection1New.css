@@ -610,34 +610,74 @@
     position: relative;
   }
 
-  /* ── Animated swipe chevrons overlaying the carousel ── */
+  /* ── Swipe hand animation overlaying the carousel ── */
   .c1n-swipe-hint {
     display: flex;
     align-items: center;
+    gap: 0.8rem;
     position: absolute;
-    right: 1.2rem;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    bottom: 15%;
+    transform: translateX(-50%);
     z-index: 20;
-    animation: swipe-slide 1.8s ease-in-out infinite;
     pointer-events: none;
+    animation: hint-fade-in 0.8s ease-out 3.5s both;
   }
 
-  .c1n-swipe-hint svg {
-    width: 32px;
-    height: 32px;
+  /* Trail line that the hand drags across */
+  .c1n-swipe-trail {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--c1n-accent));
+    transform: translateY(-50%);
+    opacity: 0;
+    animation: trail-sweep 2.5s ease-in-out 4.3s infinite;
+  }
+
+  /* Hand icon */
+  .c1n-swipe-icon {
+    width: 28px;
+    height: 28px;
+    color: #fff;
+    animation: hand-swipe 2.5s ease-in-out 4.3s infinite;
+    filter: drop-shadow(0 0 6px rgba(255, 0, 0, 0.5));
+  }
+
+  .c1n-swipe-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Label */
+  .c1n-swipe-label {
+    font-family: var(--c1n-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
     color: var(--c1n-accent);
-    filter: drop-shadow(0 0 14px rgba(255, 0, 0, 0.7));
-    margin-left: -12px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
   }
 
-  .c1n-swipe-hint svg:first-child {
-    margin-left: 0;
+  @keyframes hint-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
-  @keyframes swipe-slide {
-    0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.7; }
-    50% { transform: translateY(-50%) translateX(16px); opacity: 1; }
+  @keyframes hand-swipe {
+    0%, 10% { transform: translateX(0); }
+    45% { transform: translateX(40px); }
+    55% { transform: translateX(40px); }
+    100% { transform: translateX(0); }
+  }
+
+  @keyframes trail-sweep {
+    0%, 10% { opacity: 0; transform: translateY(-50%) translateX(0) scaleX(0); transform-origin: left; }
+    30% { opacity: 0.6; transform: translateY(-50%) translateX(0) scaleX(1); }
+    50% { opacity: 0; transform: translateY(-50%) translateX(40px) scaleX(0.3); }
+    100% { opacity: 0; transform: translateY(-50%) translateX(0) scaleX(0); }
   }
 
   .c1n-swipe-hint.hidden {
@@ -645,6 +685,10 @@
     transition: opacity 0.5s ease;
     animation: none;
     pointer-events: none;
+  }
+
+  .c1n-swipe-hint.hidden * {
+    animation: none;
   }
 }
 
