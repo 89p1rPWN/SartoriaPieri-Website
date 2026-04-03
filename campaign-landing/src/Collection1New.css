@@ -564,33 +564,57 @@
   }
 }
 
-/* Carousel dot indicators — mobile only */
-.c1n-carousel-dots {
+/* Carousel progress track — mobile only */
+.c1n-carousel-track {
   display: none;
 }
 
 @media (max-width: 600px) {
-  .c1n-carousel-dots {
+  .c1n-carousel-track {
     display: flex;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: 1.5rem 0 0;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1.5rem 7.5vw 0;
   }
 
-  .c1n-carousel-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  .c1n-carousel-bar {
+    flex: 1;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    position: relative;
+    border-radius: 1px;
+    overflow: hidden;
   }
 
-  .c1n-carousel-dot.active {
+  .c1n-carousel-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
     background: var(--c1n-accent);
-    transform: scale(1.3);
+    border-radius: 1px;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .c1n-carousel-hint {
+    font-family: var(--c1n-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.25);
+    white-space: nowrap;
+    animation: hint-nudge 2s ease-in-out infinite;
+  }
+
+  @keyframes hint-nudge {
+    0%, 100% { transform: translateX(0); opacity: 0.25; }
+    50% { transform: translateX(4px); opacity: 0.5; }
+  }
+
+  /* Hide hint after user has scrolled past first card */
+  .c1n-carousel-hint.scrolled {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    animation: none;
   }
 }
 

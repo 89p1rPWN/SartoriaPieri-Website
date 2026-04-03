@@ -432,10 +432,11 @@ export default function Collection1New() {
             </div>
           ))}
         </div>
-        <div className="c1n-carousel-dots">
-          {outfits.map((_, i) => (
-            <button key={i} className={`c1n-carousel-dot ${carouselIndex === i ? 'active' : ''}`} onClick={() => scrollToCard(i)} aria-label={`Go to outfit ${i + 1}`} />
-          ))}
+        <div className="c1n-carousel-track">
+          <div className="c1n-carousel-bar">
+            <div className="c1n-carousel-fill" style={{ width: `${((carouselIndex + 1) / outfits.length) * 100}%` }} />
+          </div>
+          <span className={`c1n-carousel-hint ${carouselIndex > 0 ? 'scrolled' : ''}`}>SWIPE →</span>
         </div>
       </section>
 
