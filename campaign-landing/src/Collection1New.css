@@ -465,62 +465,132 @@
 }
 
 @media (max-width: 600px) {
+  /* ── Swipeable full-width carousel ── */
   .c1n-accordion-row {
-    height: 65vh;
-    min-height: 380px;
+    display: flex;
+    height: 70vh;
+    min-height: 420px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+  }
+
+  .c1n-accordion-row::-webkit-scrollbar {
+    display: none;
   }
 
   .c1n-accordion-card {
-    transition: flex 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    flex: 0 0 85vw;
+    scroll-snap-align: center;
+    border-radius: 8px;
+    margin: 0 2vw;
+    transition: none;
   }
 
-  .c1n-accordion-active {
-    flex: 5;
+  .c1n-accordion-card:first-child {
+    margin-left: 7.5vw;
   }
 
+  .c1n-accordion-card:last-child {
+    margin-right: 7.5vw;
+  }
+
+  /* Override accordion states — all cards look the same in carousel */
+  .c1n-accordion-idle,
+  .c1n-accordion-active,
   .c1n-accordion-collapsed {
-    flex: 0.4;
+    flex: 0 0 85vw;
   }
 
+  .c1n-accordion-bg img {
+    filter: grayscale(20%) brightness(0.65);
+  }
+
+  .c1n-accordion-collapsed .c1n-accordion-bg img {
+    filter: grayscale(20%) brightness(0.65);
+  }
+
+  .c1n-accordion-overlay {
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.3) 40%,
+      rgba(0, 0, 0, 0.1) 70%,
+      transparent 100%
+    );
+  }
+
+  .c1n-accordion-collapsed .c1n-accordion-overlay {
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.3) 40%,
+      rgba(0, 0, 0, 0.1) 70%,
+      transparent 100%
+    );
+  }
+
+  /* Always show content on mobile carousel */
   .c1n-accordion-content {
-    bottom: 1.5rem;
-    left: 1rem;
-    right: 1rem;
+    opacity: 1;
+    transform: translateX(0);
+    transition: none;
+    bottom: 2rem;
+    left: 1.5rem;
+    right: 1.5rem;
   }
 
   .c1n-accordion-name {
-    font-size: 1.4rem;
+    font-size: 1.8rem;
   }
 
   .c1n-accordion-desc {
-    font-size: 0.75rem;
-    line-height: 1.5;
+    font-size: 0.8rem;
+    line-height: 1.6;
   }
 
   .c1n-accordion-num {
-    top: 0.8rem;
-    left: 0.8rem;
-    font-size: 0.6rem;
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.65rem;
   }
 
+  /* Hide vertical name in carousel — content block shows the name */
   .c1n-accordion-vertical-name {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%) rotate(180deg);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
+    display: none;
+  }
+}
+
+/* Carousel dot indicators — mobile only */
+.c1n-carousel-dots {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .c1n-carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1.5rem 0 0;
   }
 
-  .c1n-accordion-idle .c1n-accordion-vertical-name {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%) rotate(180deg);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
+  .c1n-carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .c1n-carousel-dot.active {
+    background: var(--c1n-accent);
+    transform: scale(1.3);
   }
 }
 

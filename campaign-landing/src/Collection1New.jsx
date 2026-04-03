@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -124,7 +124,25 @@ export default function Collection1New() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
   const lenisRef = useRef(null);
+  const accordionRowRef = useRef(null);
   const [activeAccordion, setActiveAccordion] = useState(-1);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
+  const handleCarouselScroll = useCallback(() => {
+    const row = accordionRowRef.current;
+    if (!row) return;
+    const scrollLeft = row.scrollLeft;
+    const cardWidth = row.firstElementChild?.offsetWidth || 1;
+    const gap = row.firstElementChild?.offsetLeft || 0;
+    const index = Math.round(scrollLeft / (cardWidth + gap * 0.5));
+    setCarouselIndex(Math.min(index, outfits.length - 1));
+  }, []);
+
+  const scrollToCard = useCallback((index) => {
+    const row = accordionRowRef.current;
+    if (!row || !row.children[index]) return;
+    row.children[index].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -393,7 +411,7 @@ export default function Collection1New() {
           <span className="c1n-accordion-label">THE COLLECTION</span>
           <h2 className="c1n-accordion-title">Five Emotions</h2>
         </div>
-        <div className="c1n-accordion-row" onMouseLeave={() => setActiveAccordion(-1)}>
+        <div className="c1n-accordion-row" ref={accordionRowRef} onMouseLeave={() => setActiveAccordion(-1)} onScroll={handleCarouselScroll}>
           {outfits.map((outfit, i) => (
             <div
               key={`acc-${i}`}
@@ -412,6 +430,11 @@ export default function Collection1New() {
               </div>
               <span className="c1n-accordion-vertical-name">{outfit.name}</span>
             </div>
+          ))}
+        </div>
+        <div className="c1n-carousel-dots">
+          {outfits.map((_, i) => (
+            <button key={i} className={`c1n-carousel-dot ${carouselIndex === i ? 'active' : ''}`} onClick={() => scrollToCard(i)} aria-label={`Go to outfit ${i + 1}`} />
           ))}
         </div>
       </section>
