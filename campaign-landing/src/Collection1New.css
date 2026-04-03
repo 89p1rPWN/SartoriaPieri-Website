@@ -242,6 +242,8 @@
   z-index: 5;
   padding: 10vh 0 0;
   width: 100%;
+  display: block;
+  overflow: visible;
 }
 
 .c1n-accordion-header {
@@ -1094,10 +1096,11 @@
   }
 
   .c1n-accordion-header {
-    padding: 0 1.5rem 3vh;
+    padding: 0 1.5rem 2.5vh;
     text-align: center;
     align-items: center;
   }
+
 
   .c1n-accordion-title {
     font-size: clamp(2rem, 6vw, 3rem);
