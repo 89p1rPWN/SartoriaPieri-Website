@@ -465,11 +465,11 @@
 }
 
 @media (max-width: 600px) {
-  /* ── Swipeable full-width carousel ── */
+  /* ── Edge-to-edge swipeable carousel ── */
   .c1n-accordion-row {
     display: flex;
-    height: 70vh;
-    min-height: 420px;
+    height: 80vh;
+    min-height: 480px;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
@@ -483,26 +483,26 @@
   }
 
   .c1n-accordion-card {
-    flex: 0 0 85vw;
-    scroll-snap-align: center;
-    border-radius: 8px;
-    margin: 0 2vw;
+    flex: 0 0 100vw;
+    scroll-snap-align: start;
+    border-radius: 0;
+    margin: 0;
     transition: none;
   }
 
   .c1n-accordion-card:first-child {
-    margin-left: 7.5vw;
+    margin-left: 0;
   }
 
   .c1n-accordion-card:last-child {
-    margin-right: 7.5vw;
+    margin-right: 0;
   }
 
-  /* Override accordion states — all cards look the same in carousel */
+  /* Override accordion states — all cards full width */
   .c1n-accordion-idle,
   .c1n-accordion-active,
   .c1n-accordion-collapsed {
-    flex: 0 0 85vw;
+    flex: 0 0 100vw;
   }
 
   .c1n-accordion-bg img {
@@ -538,24 +538,24 @@
     opacity: 1;
     transform: translateX(0);
     transition: none;
-    bottom: 2rem;
+    bottom: 2.5rem;
     left: 1.5rem;
     right: 1.5rem;
   }
 
   .c1n-accordion-name {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
 
   .c1n-accordion-desc {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     line-height: 1.6;
   }
 
   .c1n-accordion-num {
-    top: 1rem;
-    left: 1rem;
-    font-size: 0.65rem;
+    top: 1.2rem;
+    left: 1.5rem;
+    font-size: 0.7rem;
   }
 
   /* Hide vertical name in carousel — content block shows the name */
@@ -569,12 +569,17 @@
   display: none;
 }
 
+/* Swipe hint arrow — shown on first card only */
+.c1n-swipe-hint {
+  display: none;
+}
+
 @media (max-width: 600px) {
   .c1n-carousel-track {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    padding: 1.5rem 7.5vw 0;
+    gap: 0;
+    padding: 1.2rem 1.5rem 0;
   }
 
   .c1n-carousel-bar {
@@ -596,24 +601,44 @@
     transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .c1n-carousel-hint {
+  /* ── Animated swipe arrow on card ── */
+  .c1n-swipe-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    animation: swipe-slide 2s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .c1n-swipe-hint svg {
+    width: 32px;
+    height: 32px;
+    color: var(--c1n-accent);
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.5));
+  }
+
+  .c1n-swipe-hint span {
     font-family: var(--c1n-mono);
-    font-size: 0.55rem;
-    letter-spacing: 0.2em;
-    color: rgba(255, 255, 255, 0.25);
-    white-space: nowrap;
-    animation: hint-nudge 2s ease-in-out infinite;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--c1n-accent);
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
   }
 
-  @keyframes hint-nudge {
-    0%, 100% { transform: translateX(0); opacity: 0.25; }
-    50% { transform: translateX(4px); opacity: 0.5; }
+  @keyframes swipe-slide {
+    0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.6; }
+    50% { transform: translateY(-50%) translateX(12px); opacity: 1; }
   }
 
-  /* Hide hint after user has scrolled past first card */
-  .c1n-carousel-hint.scrolled {
+  .c1n-swipe-hint.hidden {
     opacity: 0;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.5s ease;
     animation: none;
   }
 }

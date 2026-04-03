@@ -138,11 +138,6 @@ export default function Collection1New() {
     setCarouselIndex(Math.min(index, outfits.length - 1));
   }, []);
 
-  const scrollToCard = useCallback((index) => {
-    const row = accordionRowRef.current;
-    if (!row || !row.children[index]) return;
-    row.children[index].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -429,6 +424,13 @@ export default function Collection1New() {
                 <p className="c1n-accordion-desc">{outfit.emotion}</p>
               </div>
               <span className="c1n-accordion-vertical-name">{outfit.name}</span>
+              {i === 0 && (
+                <div className={`c1n-swipe-hint ${carouselIndex > 0 ? 'hidden' : ''}`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -436,7 +438,6 @@ export default function Collection1New() {
           <div className="c1n-carousel-bar">
             <div className="c1n-carousel-fill" style={{ width: `${((carouselIndex + 1) / outfits.length) * 100}%` }} />
           </div>
-          <span className={`c1n-carousel-hint ${carouselIndex > 0 ? 'scrolled' : ''}`}>SWIPE →</span>
         </div>
       </section>
 
