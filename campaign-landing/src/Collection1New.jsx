@@ -435,7 +435,7 @@ export default function Collection1New() {
                 <path d="M18 11V6a2 2 0 0 0-4 0v5" /><path d="M14 10V4a2 2 0 0 0-4 0v7" /><path d="M10 10.5V8a2 2 0 0 0-4 0v8a8 8 0 0 0 16 0v-3a2 2 0 0 0-4 0" />
               </svg>
             </div>
-            <span className="c1n-swipe-label">SLIDE</span>
+            <span className="c1n-swipe-label">SCORRI</span>
           </div>
         </div>
         <div className="c1n-carousel-track">
