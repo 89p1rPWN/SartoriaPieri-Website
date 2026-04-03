@@ -564,12 +564,15 @@
   }
 }
 
-/* Carousel progress track — mobile only */
+/* Carousel elements — mobile only */
+.c1n-carousel-wrap {
+  display: contents;
+}
+
 .c1n-carousel-track {
   display: none;
 }
 
-/* Swipe hint arrow — shown on first card only */
 .c1n-swipe-hint {
   display: none;
 }
@@ -601,17 +604,20 @@
     transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* ── Animated swipe arrow on card ── */
+  .c1n-carousel-wrap {
+    position: relative;
+  }
+
+  /* ── Animated swipe chevrons overlaying the carousel ── */
   .c1n-swipe-hint {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
     position: absolute;
-    right: 1.5rem;
+    right: 1.2rem;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10;
-    animation: swipe-slide 2s ease-in-out infinite;
+    z-index: 20;
+    animation: swipe-slide 1.8s ease-in-out infinite;
     pointer-events: none;
   }
 
@@ -619,27 +625,24 @@
     width: 32px;
     height: 32px;
     color: var(--c1n-accent);
-    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.5));
+    filter: drop-shadow(0 0 14px rgba(255, 0, 0, 0.7));
+    margin-left: -12px;
   }
 
-  .c1n-swipe-hint span {
-    font-family: var(--c1n-mono);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    color: var(--c1n-accent);
-    text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+  .c1n-swipe-hint svg:first-child {
+    margin-left: 0;
   }
 
   @keyframes swipe-slide {
-    0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.6; }
-    50% { transform: translateY(-50%) translateX(12px); opacity: 1; }
+    0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.7; }
+    50% { transform: translateY(-50%) translateX(16px); opacity: 1; }
   }
 
   .c1n-swipe-hint.hidden {
     opacity: 0;
     transition: opacity 0.5s ease;
     animation: none;
+    pointer-events: none;
   }
 }
 
@@ -1091,12 +1094,15 @@
   }
 
   .c1n-accordion-header {
-    padding: 0 1.5rem 4vh;
+    padding: 0 1.5rem 3vh;
+    text-align: center;
+    align-items: center;
   }
 
   .c1n-accordion-title {
     font-size: clamp(2rem, 6vw, 3rem);
   }
+
 
   .c1n-sovra-track {
     height: 400vh;

@@ -406,33 +406,36 @@ export default function Collection1New() {
           <span className="c1n-accordion-label">THE COLLECTION</span>
           <h2 className="c1n-accordion-title">Five Emotions</h2>
         </div>
-        <div className="c1n-accordion-row" ref={accordionRowRef} onMouseLeave={() => setActiveAccordion(-1)} onScroll={handleCarouselScroll}>
-          {outfits.map((outfit, i) => (
-            <div
-              key={`acc-${i}`}
-              className={`c1n-accordion-card ${activeAccordion === i ? 'c1n-accordion-active' : activeAccordion === -1 ? 'c1n-accordion-idle' : 'c1n-accordion-collapsed'}`}
-              onMouseEnter={() => setActiveAccordion(i)}
-              onClick={() => setActiveAccordion(activeAccordion === i ? -1 : i)}
-            >
-              <div className="c1n-accordion-bg">
-                <img src={outfit.accordionImg} alt={outfit.name} />
-              </div>
-              <div className="c1n-accordion-overlay" />
-              <span className="c1n-accordion-num">{String(i + 1).padStart(2, '0')}</span>
-              <div className="c1n-accordion-content">
-                <h3 className="c1n-accordion-name">{outfit.name.charAt(0) + outfit.name.slice(1).toLowerCase()}</h3>
-                <p className="c1n-accordion-desc">{outfit.emotion}</p>
-              </div>
-              <span className="c1n-accordion-vertical-name">{outfit.name}</span>
-              {i === 0 && (
-                <div className={`c1n-swipe-hint ${carouselIndex > 0 ? 'hidden' : ''}`}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
+        <div className="c1n-carousel-wrap">
+          <div className="c1n-accordion-row" ref={accordionRowRef} onMouseLeave={() => setActiveAccordion(-1)} onScroll={handleCarouselScroll}>
+            {outfits.map((outfit, i) => (
+              <div
+                key={`acc-${i}`}
+                className={`c1n-accordion-card ${activeAccordion === i ? 'c1n-accordion-active' : activeAccordion === -1 ? 'c1n-accordion-idle' : 'c1n-accordion-collapsed'}`}
+                onMouseEnter={() => setActiveAccordion(i)}
+                onClick={() => setActiveAccordion(activeAccordion === i ? -1 : i)}
+              >
+                <div className="c1n-accordion-bg">
+                  <img src={outfit.accordionImg} alt={outfit.name} />
                 </div>
-              )}
-            </div>
-          ))}
+                <div className="c1n-accordion-overlay" />
+                <span className="c1n-accordion-num">{String(i + 1).padStart(2, '0')}</span>
+                <div className="c1n-accordion-content">
+                  <h3 className="c1n-accordion-name">{outfit.name.charAt(0) + outfit.name.slice(1).toLowerCase()}</h3>
+                  <p className="c1n-accordion-desc">{outfit.emotion}</p>
+                </div>
+                <span className="c1n-accordion-vertical-name">{outfit.name}</span>
+              </div>
+            ))}
+          </div>
+          <div className={`c1n-swipe-hint ${carouselIndex > 0 ? 'hidden' : ''}`}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.4 }}>
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </div>
         </div>
         <div className="c1n-carousel-track">
           <div className="c1n-carousel-bar">
