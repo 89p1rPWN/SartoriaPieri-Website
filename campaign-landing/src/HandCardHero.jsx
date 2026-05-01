@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import './HandCardHero.css';
 
-// Applied User Position Settings
+// Hotspot positions in % of the 1280x720 frame (aspect-locked .hc-frame).
+// Word row sits at ~y=35.6%; padded vertical for tap target.
 const INITIAL_POS = {
-  ABOUT:      { top: 31.5, left: 12,   width: 13,   height: 6 },
-  CAMPAIGN:   { top: 31.5, left: 26.5, width: 18,   height: 6 },
-  COLLECTION: { top: 31.5, left: 47.5, width: 21.5, height: 6 },
-  CONTACT:    { top: 31.5, left: 72,   width: 16,   height: 6 },
+  ABOUT:      { top: 33.5, left: 37.5, width: 5.5, height: 7 },
+  CAMPAIGN:   { top: 33.5, left: 43.0, width: 6.0, height: 7 },
+  COLLECTION: { top: 33.5, left: 49.2, width: 7.0, height: 7 },
+  CONTACT:    { top: 33.5, left: 56.5, width: 5.5, height: 7 },
 };
 
 export default function HandCardHero() {
@@ -59,36 +60,38 @@ export default function HandCardHero() {
   return (
     <div className={`hc-page hc-phase-${phase}`}>
       <div className="hc-stage">
-        <img src="/hand-card-warm.png" alt="" className="hc-card-img" draggable={false} />
-        
-        <div className="hc-hotspots">
-          {Object.entries(INITIAL_POS).map(([key, pos]) => (
-            <button 
-              key={key}
-              type="button"
-              aria-label={key}
-              className="hc-hot"
-              style={{
-                  top: `${pos.top}%`,
-                  left: `${pos.left}%`,
-                  width: `${pos.width}%`,
-                  height: `${pos.height}%`,
-              }}
-              onClick={() => ignite(key === 'COLLECTION' ? '/collections/collection1' : `/${key.toLowerCase()}`)}
-            />
-          ))}
+        <div className="hc-frame">
+          <img src="/hand-card-poster.jpg" alt="" className="hc-card-img" draggable={false} />
+
+          <video
+            ref={videoRef}
+            className={`hc-video ${phase !== 'idle' ? 'hc-video-on' : ''}`}
+            src="/card-burns.mp4"
+            poster="/hand-card-poster.jpg"
+            playsInline
+            preload="auto"
+            onEnded={onVideoEnded}
+          />
+
+          <div className="hc-hotspots">
+            {Object.entries(INITIAL_POS).map(([key, pos]) => (
+              <button
+                key={key}
+                type="button"
+                aria-label={key}
+                className="hc-hot"
+                style={{
+                    top: `${pos.top}%`,
+                    left: `${pos.left}%`,
+                    width: `${pos.width}%`,
+                    height: `${pos.height}%`,
+                }}
+                onClick={() => ignite(key === 'COLLECTION' ? '/collections/collection1' : `/${key.toLowerCase()}`)}
+              />
+            ))}
+          </div>
         </div>
       </div>
-
-      <video
-        ref={videoRef}
-        className={`hc-video ${phase !== 'idle' ? 'hc-video-on' : ''}`}
-        src="/card-burns.mp4"
-        poster="/hand-card-warm.png"
-        playsInline
-        preload="auto"
-        onEnded={onVideoEnded}
-      />
 
       <div className="hc-aftermath" />
       <div className="hc-prompt">— TAP A WORD TO BURN —</div>
