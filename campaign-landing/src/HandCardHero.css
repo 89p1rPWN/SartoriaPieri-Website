@@ -1,0 +1,127 @@
+.hc-page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a0707;
+  color: #f2ede7;
+  overflow: hidden;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  touch-action: manipulation;
+}
+
+.hc-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  will-change: opacity, transform, filter;
+}
+
+.hc-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.hc-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 55%, transparent 45%, rgba(0, 0, 0, 0.55) 100%),
+    radial-gradient(ellipse 30% 22% at 14% 18%, rgba(40, 10, 10, 0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 26% 22% at 86% 82%, rgba(40, 10, 10, 0.35) 0%, transparent 65%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.hc-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+}
+.hc-video-on { opacity: 1; }
+
+.hc-aftermath {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 35% at 50% 55%, rgba(255, 80, 30, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 60%, transparent 30%, rgba(0, 0, 0, 0.85) 100%),
+    #0e0303;
+}
+
+/* Hotspots overlay — own square box that mirrors .hc-stage geometry,
+   sibling to video so taps land above the (transparent) video layer. */
+.hc-hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.hc-hot {
+  position: absolute;
+  /* invisible but reliable hit area */
+  background: rgba(0, 0, 0, 0.001);
+  border: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 0;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color 0.25s ease;
+}
+.hc-hot:hover,
+.hc-hot:focus-visible {
+  outline: none;
+}
+
+.hc-prompt {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.45em;
+  color: rgba(242, 237, 231, 0.7);
+  text-transform: uppercase;
+  text-shadow: 0 0 14px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  animation: hc-pulse 2.6s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+.hc-phase-burning .hc-prompt,
+.hc-phase-gone .hc-prompt,
+.hc-phase-burning .hc-hot,
+.hc-phase-gone .hc-hot {
+  display: none;
+}
+
+@keyframes hc-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}

@@ -94,27 +94,85 @@ function App() {
     }
     rafId = requestAnimationFrame(raf);
 
-    // ══════ HERO ENTRANCE — simple fade ══════
+    // ══════ HERO ENTRANCE — decaying paper ══════
+    let cancelled = false;
+    const CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·/—·#§¶†‡";
+    const isSpace = (c) => c === ' ' || c.charCodeAt(0) === 160;
+    const scrambleEls = Array.from(document.querySelectorAll('.scramble'));
+    scrambleEls.forEach(el => {
+      if (!el.dataset.final) el.dataset.final = el.textContent;
+    });
+
+    const scrambleActive = new WeakMap();
+    const runScramble = (el, finalText, duration = 1.0) => {
+      const token = Symbol();
+      scrambleActive.set(el, token);
+      const chars = finalText.split('');
+      const start = performance.now();
+      const tick = (now) => {
+        if (cancelled || scrambleActive.get(el) !== token) return;
+        const progress = Math.min((now - start) / (duration * 1000), 1);
+        const settled = Math.floor(chars.length * progress);
+        let out = '';
+        for (let i = 0; i < chars.length; i++) {
+          const c = chars[i];
+          if (i < settled || c === ' ' || c === ' ') out += c;
+          else out += CHARSET[(Math.random() * CHARSET.length) | 0];
+        }
+        el.textContent = out;
+        if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = finalText;
+      };
+      requestAnimationFrame(tick);
+    };
+
+    const garbleInstant = (el) => {
+      const final = el.dataset.final || el.textContent;
+      const token = Symbol();
+      scrambleActive.set(el, token);
+      el.textContent = final.split('').map(c =>
+        (c === ' ' || c === ' ') ? c : CHARSET[(Math.random() * CHARSET.length) | 0]
+      ).join('');
+    };
+
+    // Pre-scramble all text so the entry reveal has garbage to settle from
+    scrambleEls.forEach(el => garbleInstant(el));
+
     const heroTl = gsap.timeline();
     heroTl.to(containerRef.current, { opacity: 1, duration: 0.01 }, 0);
-    heroTl.to(".hero-curtain", { opacity: 0, duration: 1.5, ease: "power2.inOut" }, 0.3);
-    heroTl.fromTo("nav", { opacity: 0 }, { opacity: 1, duration: 1.5, ease: "power2.out" }, 1.2);
-    heroTl.fromTo(".hero-editorial", { opacity: 0 }, { opacity: 1, duration: 1.5, ease: "power2.out" }, 1.5);
+    heroTl.to(".hero-curtain", { opacity: 0, duration: 1.8, ease: "power2.inOut" }, 0.3);
+    heroTl.fromTo("nav", { opacity: 0 }, { opacity: 1, duration: 1.5, ease: "power2.out" }, 1.4);
+    heroTl.fromTo(".paper-decay-mask", { opacity: 0, scale: 1.18, filter: "blur(30px) contrast(2)" }, { opacity: 1, scale: 1, filter: "blur(0px) contrast(1)", duration: 2.4, ease: "power3.out" }, 1.1);
+    heroTl.fromTo(".paper-edges", { opacity: 0 }, { opacity: 1, duration: 1.8, ease: "power2.out" }, 1.4);
+    heroTl.fromTo(".scramble", { opacity: 0, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 1.2, stagger: 0.1, ease: "power2.out" }, 1.6);
+    scrambleEls.forEach((el, i) => {
+      heroTl.call(() => runScramble(el, el.dataset.final, 1.1), [], 1.6 + i * 0.1);
+    });
+    heroTl.fromTo(".suite-scroll", { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "power2.out" }, 3.0);
     heroTl.fromTo(".red-accent-line", { scaleY: 0, transformOrigin: "top" }, { scaleY: 1, duration: 2, ease: "power2.out" }, 1.5);
 
-    // ══════ SCROLL EXIT — single timeline, fully reversible ══════
+    // ══════ SCROLL EXIT — re-scramble + ink-bleed dissolve ══════
     const heroExit = gsap.timeline({
       scrollTrigger: {
         trigger: heroRef.current,
         start: "top top",
         end: "bottom top",
         scrub: 2,
+        onLeave: () => {
+          scrambleEls.forEach(el => garbleInstant(el));
+        },
+        onEnterBack: () => {
+          scrambleEls.forEach((el, i) => {
+            setTimeout(() => runScramble(el, el.dataset.final, 0.8), i * 70);
+          });
+        },
       },
     });
 
-    heroExit.to(".hero-collage", { y: -100, opacity: 0, duration: 1 }, 0);
-    heroExit.to(".hero-editorial", { opacity: 0, duration: 0.4 }, 0);
-    heroExit.to(".hero-glow", { opacity: 0, duration: 0.5 }, 0);
+    heroExit.to(".paper-content", { y: -60, opacity: 0, filter: "blur(14px)", duration: 1 }, 0);
+    heroExit.to(".paper-decay-mask", { opacity: 0, filter: "blur(6px)", duration: 1 }, 0);
+    heroExit.to(".paper-edges", { opacity: 0, duration: 0.8 }, 0);
+    heroExit.to(".suite-corner, .suite-scroll", { opacity: 0, duration: 0.5 }, 0);
 
     // ══════ NEW: DEEPER LOOK PARALLAX ══════
     gsap.to(".img-offset-1", {
@@ -338,9 +396,16 @@ function App() {
     gsap.to(heroRef.current, { opacity: 1, duration: 0.1 });
 
     return () => {
+      cancelled = true;
       cancelAnimationFrame(rafId);
       lenis.destroy();
       ScrollTrigger.getAll().forEach(t => t.kill());
+      heroTl.kill();
+      heroExit.kill();
+      // Restore final text so a remount sees clean values
+      scrambleEls.forEach(el => {
+        if (el.dataset.final) el.textContent = el.dataset.final;
+      });
     };
   }, []);
 
@@ -380,29 +445,49 @@ function App() {
         </div>
       </div>
 
-      {/* HERO SECTION — COLLAGE */}
-      <section className="hero" ref={heroRef}>
-        <div className="hero-glow" />
+      {/* HERO — DECAYING PAPER */}
+      <section className="hero hero-paper" ref={heroRef}>
+        <svg className="paper-svg-defs" aria-hidden="true">
+          <defs>
+            <filter id="ink-bleed">
+              <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="3" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G">
+                <animate attributeName="scale" values="0;0" dur="0.01s" fill="freeze" />
+              </feDisplacementMap>
+            </filter>
+            <filter id="paper-reveal">
+              <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" />
+              <feDisplacementMap in="SourceGraphic" scale="60" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </defs>
+        </svg>
 
-        <div className="hero-collage" ref={ghostTextRef}>
-          <DraggableFig className="hero-fig-topleft" src="/outfits/perversione/2_nobg.png" alt="Perversione" label="topleft" />
-          <DraggableFig className="hero-fig-topcenter" src="/outfits/vergogna/vergogna_nobg.png" alt="Vergogna" label="topcenter" />
-          <DraggableFig className="hero-fig-topright" src="/outfits/depravazione/3_nobg.png" alt="Depravazione" label="topright" />
+        <div className="paper-decay-mask" aria-hidden="true" />
+        <div className="paper-edges" aria-hidden="true" />
 
-          <div className="hero-text-haze" />
-          <h1 className="hero-titan">SARTORIAPIERI</h1>
+        <div className="suite-corner suite-corner-tl scramble">SP / ARCHIVE</div>
+        <div className="suite-corner suite-corner-tr scramble">N° 01 — V</div>
+        <div className="suite-corner suite-corner-bl scramble">FIRENZE · ITALIA</div>
+        <div className="suite-corner suite-corner-br scramble">FW · MMXXVI</div>
 
-          <DraggableFig className="hero-fig-center" src="/outfits/trauma/9_nobg.png" alt="Trauma" label="center" />
+        <div className="suite-content paper-content" ref={ghostTextRef}>
+          <div className="paper-kicker scramble">SARTORIA PIERI ARCHIVE 01</div>
+          <h1 className="paper-title scramble">S&nbsp;P&nbsp;L&nbsp;E&nbsp;N&nbsp;D&nbsp;O&nbsp;R&nbsp;&nbsp;&nbsp;A&nbsp;N&nbsp;I&nbsp;M&nbsp;A&nbsp;E</h1>
+          <div className="paper-date scramble">04·24·2026 — FIRENZE</div>
+
+          <div className="paper-body">
+            <p className="scramble">INSPIRED BY DEPRAVAZIONE · DOLORE · PERVERSIONE</p>
+            <p className="scramble">CURATED THROUGH TRAUMA, VERGOGNA, AND SOUL</p>
+            <p className="scramble">BY SARTORIA PIERI</p>
+          </div>
         </div>
 
-        <div className="hero-editorial">
-          <h4>FALL / WINTER 2026</h4>
-          <h2>OUR CAMPAIGN</h2>
-          <p>At SartoriaPieri, each season unfolds a new story, a journey through oversized silhouettes, avant-garde styling, and cutting-edge tailoring.</p>
-          <p>Redefines the essence of Persona, taking inspiration from his roots and evolving it into an expression of bold, sculptural fashion.</p>
+        <div className="suite-scroll">
+          <span>SCROLL</span>
+          <span className="suite-arrow">↓</span>
         </div>
       </section>
-      
+
       {/* SECTION 1.5: BRAND STORY */}
       <section className="brand-story" ref={storyRef}>
         <div className="story-container">

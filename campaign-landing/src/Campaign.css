@@ -1,0 +1,126 @@
+.campaign-page {
+  min-height: 100vh;
+  background: #ebe7e1;
+  color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+}
+
+.campaign-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  flex: 1;
+  gap: 2rem;
+  padding: 10vh 4rem 4rem;
+}
+
+.campaign-card {
+  background: #111;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sketch-overlay {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  filter: invert(1) contrast(1.5) opacity(0.8);
+}
+
+.card-label {
+  position: absolute;
+  top: 2rem;
+  left: 2.5rem;
+  font-family: monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2rem;
+  color: white;
+}
+
+.campaign-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 2rem;
+}
+
+.info-header h2 {
+  font-size: 5rem;
+  font-weight: 900;
+  margin: 0;
+  line-height: 0.8;
+  color: #cc0000;
+}
+
+.info-header p {
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin: 1.5rem 0 3rem;
+  opacity: 0.6;
+}
+
+.info-body p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
+
+.tag-list {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.tag-list span {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  font-weight: 800;
+  border-bottom: 1px solid #111;
+  padding-bottom: 0.2rem;
+}
+
+.cta-btn {
+  background: #111;
+  color: #ebe7e1;
+  border: none;
+  padding: 1.2rem 2.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-btn:hover {
+  background: #cc0000;
+  transform: translateY(-2px);
+}
+
+.grain-layer {
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 50;
+}
+
+@media (max-width: 900px) {
+  .campaign-grid {
+    grid-template-columns: 1fr;
+    padding: 10vh 2rem 2rem;
+  }
+  .campaign-card {
+    height: 50vh;
+  }
+  .info-header h2 {
+    font-size: 3.5rem;
+  }
+}

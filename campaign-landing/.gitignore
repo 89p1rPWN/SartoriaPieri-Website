@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Working artifacts at repo root (Playwright MCP captures, scratch screenshots, source asset bundles)
+.playwright-mcp/
+/aligned-*.png
+/hand-card-*.png
+/hc-*.png
+/hero-paper-*.png
+/paper-*.png
+/paper-final*.png
+/spool-*.png
+/foto per sito interessanti.zip
+/foto per sito interessanti/
