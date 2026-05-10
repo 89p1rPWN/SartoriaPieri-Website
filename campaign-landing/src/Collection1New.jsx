@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import SmokeBackground from './SmokeBackground.jsx';
+import FocusRail from './FocusRail.jsx';
 import './Collection1New.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -147,6 +149,7 @@ export default function Collection1New() {
       smoothWheel: true, wheelMultiplier: 0.8,
     });
     lenisRef.current = lenis;
+    window.__lenis = lenis;
     let rafId;
     function raf(time) { lenis.raf(time); ScrollTrigger.update(); rafId = requestAnimationFrame(raf); }
     rafId = requestAnimationFrame(raf);
@@ -217,7 +220,7 @@ export default function Collection1New() {
     });
 
     // ── ACCORDION SCROLL REVEAL ──
-    gsap.fromTo('.c1n-accordion-section',
+    gsap.fromTo('.c1n-accordion-header',
       { opacity: 0, y: 60 },
       {
         scrollTrigger: { trigger: '.c1n-accordion-section', start: 'top 88%', toggleActions: 'play none none reverse' },
@@ -378,6 +381,7 @@ export default function Collection1New() {
 
   return (
     <div className="c1n-root" ref={containerRef}>
+      <SmokeBackground className="c1n-page-smoke" smokeColor="#FF0000" />
       <div className="c1n-curtain" />
 
       <nav className="c1n-nav">
@@ -389,7 +393,6 @@ export default function Collection1New() {
       </nav>
 
       <section className="c1n-hero" ref={heroRef}>
-        <video className="c1n-hero-video" src="/hero-video.mp4" autoPlay loop muted playsInline />
         <div className="c1n-hero-overlay" />
         <div className="c1n-hero-bg-text">PIERI</div>
         <div className="c1n-hero-inner">
@@ -406,43 +409,16 @@ export default function Collection1New() {
           <span className="c1n-accordion-label">THE COLLECTION</span>
           <h2 className="c1n-accordion-title">Five Emotions</h2>
         </div>
-        <div className="c1n-carousel-wrap">
-          <div className="c1n-accordion-row" ref={accordionRowRef} onMouseLeave={() => setActiveAccordion(-1)} onScroll={handleCarouselScroll}>
-            {outfits.map((outfit, i) => (
-              <div
-                key={`acc-${i}`}
-                className={`c1n-accordion-card ${activeAccordion === i ? 'c1n-accordion-active' : activeAccordion === -1 ? 'c1n-accordion-idle' : 'c1n-accordion-collapsed'}`}
-                onMouseEnter={() => setActiveAccordion(i)}
-                onClick={() => setActiveAccordion(activeAccordion === i ? -1 : i)}
-              >
-                <div className="c1n-accordion-bg">
-                  <img src={outfit.accordionImg} alt={outfit.name} />
-                </div>
-                <div className="c1n-accordion-overlay" />
-                <span className="c1n-accordion-num">{String(i + 1).padStart(2, '0')}</span>
-                <div className="c1n-accordion-content">
-                  <h3 className="c1n-accordion-name">{outfit.name.charAt(0) + outfit.name.slice(1).toLowerCase()}</h3>
-                  <p className="c1n-accordion-desc">{outfit.emotion}</p>
-                </div>
-                <span className="c1n-accordion-vertical-name">{outfit.name}</span>
-              </div>
-            ))}
-          </div>
-          <div className={`c1n-swipe-hint ${carouselIndex > 0 ? 'hidden' : ''}`}>
-            <div className="c1n-swipe-trail" />
-            <div className="c1n-swipe-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 11V6a2 2 0 0 0-4 0v5" /><path d="M14 10V4a2 2 0 0 0-4 0v7" /><path d="M10 10.5V8a2 2 0 0 0-4 0v8a8 8 0 0 0 16 0v-3a2 2 0 0 0-4 0" />
-              </svg>
-            </div>
-            <span className="c1n-swipe-label">SCORRI</span>
-          </div>
-        </div>
-        <div className="c1n-carousel-track">
-          <div className="c1n-carousel-bar">
-            <div className="c1n-carousel-fill" style={{ width: `${((carouselIndex + 1) / outfits.length) * 100}%` }} />
-          </div>
-        </div>
+        <FocusRail
+          items={outfits.map((o, i) => ({
+            id: i + 1,
+            title: o.name.charAt(0) + o.name.slice(1).toLowerCase(),
+            description: o.emotion,
+            meta: `LOOK ${String(i + 1).padStart(2, '0')} / FW 2026`,
+            imageSrc: o.accordionImg,
+          }))}
+          scrollDriven
+        />
       </section>
 
       {outfits.map((outfit, i) => (
