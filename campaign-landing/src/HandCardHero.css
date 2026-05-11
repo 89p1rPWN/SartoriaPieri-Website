@@ -123,15 +123,3 @@
 .hc-phase-gone .hc-hot {
   display: none;
 }
-
-/* Portrait phones: the poster has lots of dark space above/below the card.
-   Scale the image, video, and hotspot layer together so the card and hand
-   fill the screen edge-to-edge. */
-@media (max-aspect-ratio: 1/1) {
-  .hc-card-img,
-  .hc-video,
-  .hc-hotspots {
-    transform: scale(1.6);
-    transform-origin: center center;
-  }
-}
