@@ -16,7 +16,7 @@
   color: var(--c1n-text);
   font-family: var(--c1n-font);
   overflow-x: clip;
-  min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
 }
 
@@ -25,7 +25,7 @@
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   z-index: 0;
   pointer-events: none;
   display: block;
@@ -127,7 +127,7 @@
 
 /* ══════ HERO ══════ */
 .c1n-hero {
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -704,7 +704,7 @@
 
 /* ══════ OUTFIT SECTIONS ══════ */
 .c1n-outfit {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
@@ -841,7 +841,7 @@
   left: 0;
   width: 100vw;
   margin-left: calc(-1 * clamp(2rem, 6vw, 6rem));
-  height: 100vh;
+  height: 100dvh;
   background: rgba(0, 0, 0, 0.96);
   visibility: hidden;
   opacity: 0;

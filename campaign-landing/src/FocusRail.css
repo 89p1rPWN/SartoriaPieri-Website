@@ -5,12 +5,12 @@
 .fr-sticky {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.fr-sticky .fr-root { height: 100vh; }
+.fr-sticky .fr-root { height: 100dvh; }
 
 .fr-root {
   position: relative;

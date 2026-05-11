@@ -26,11 +26,14 @@
    Image, video, and hotspots all share this coordinate space, so
    the static poster and the video frame-0 align pixel-perfectly,
    and hotspot percentages map to fixed positions in the source. */
+/* Frame stays square so the % hotspot map remains valid;
+   sized to COVER the viewport (larger of the two axes) so on portrait phones
+   the burn fills the screen edge-to-edge with horizontal crop. */
 .hc-frame {
   position: relative;
   aspect-ratio: 1 / 1;
-  width: min(100vw, 100vh);
-  height: min(100vh, 100vw);
+  width: max(100vw, 100dvh);
+  height: max(100dvh, 100vw);
   overflow: hidden;
 }
 
