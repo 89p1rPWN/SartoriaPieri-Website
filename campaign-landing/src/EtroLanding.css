@@ -1,0 +1,325 @@
+.etro-page {
+  --surface: #FAFAFA;
+  --surface-2: #F2EEE6;
+  --fg: #1A1A1A;
+  --fg-soft: #666666;
+  --fg-inv: #FFFFFF;
+  --accent: #B11226;
+  --font-h: 'Playfair Display', serif;
+  --font-b: 'Newsreader', serif;
+  --font-c: 'IBM Plex Mono', monospace;
+
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--surface);
+  color: var(--fg);
+  font-family: var(--font-b);
+  overflow: hidden;
+}
+
+.etro-stage {
+  position: relative;
+  width: 100%;
+  max-width: 1440px;
+  height: 100vh;
+  min-height: 720px;
+  margin: 0 auto;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+/* TOP NAV */
+.etro-nav {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  z-index: 10;
+}
+.etro-brand {
+  font-family: var(--font-c);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+}
+.etro-nav-mid {
+  display: flex;
+  gap: 32px;
+}
+.etro-nav-mid a {
+  color: var(--fg-soft);
+  text-decoration: none;
+  font-size: 14px;
+}
+.etro-nav-mid a:hover { color: var(--fg); }
+.etro-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.etro-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fg-soft);
+  font-size: 14px;
+}
+.etro-acc {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--fg);
+}
+.etro-menu {
+  width: 24px; height: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.etro-menu span {
+  height: 1.5px;
+  background: var(--fg);
+  display: block;
+}
+.etro-menu span:nth-child(2) { width: 70%; }
+
+/* TAGS */
+.etro-tag-ref {
+  position: absolute;
+  top: 110px;
+  left: 32px;
+  font-family: var(--font-c);
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--accent);
+  z-index: 5;
+}
+.etro-tag-sub {
+  position: absolute;
+  top: calc(100vh - 320px);
+  left: 32px;
+  font-family: var(--font-c);
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--fg-soft);
+  z-index: 5;
+}
+
+/* HERO MODEL */
+.etro-model {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  margin-left: -340px;
+  width: 680px;
+  height: calc(100vh - 80px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1;
+  pointer-events: none;
+}
+.etro-model img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 40px 60px rgba(0,0,0,0.18));
+}
+
+/* WORDMARK */
+.etro-wordmark {
+  position: absolute;
+  bottom: 80px;
+  left: 32px;
+  font-family: var(--font-h);
+  font-weight: 700;
+  font-size: clamp(7rem, 14vw, 13rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--fg);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* VIDEO CARD */
+.etro-video-card {
+  position: absolute;
+  top: 200px;
+  left: 32px;
+  width: 280px;
+  height: 96px;
+  background: var(--fg);
+  color: var(--fg-inv);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  z-index: 6;
+  cursor: pointer;
+}
+.etro-video-circle {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--fg-inv);
+  color: var(--fg);
+  display: grid; place-items: center;
+  flex-shrink: 0;
+}
+.etro-video-text { display: flex; flex-direction: column; gap: 2px; }
+.etro-video-text strong {
+  font-weight: 500;
+  font-size: 16px;
+}
+.etro-video-text span {
+  color: rgba(255,255,255,0.55);
+  font-size: 13px;
+}
+
+/* PRODUCT CARD */
+.etro-product-card {
+  position: absolute;
+  top: 140px;
+  right: 32px;
+  width: 360px;
+  height: 128px;
+  background: var(--fg-inv);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  box-sizing: border-box;
+  z-index: 6;
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.10);
+}
+.etro-product-thumb {
+  width: 88px; height: 88px;
+  background: var(--surface-2);
+  flex-shrink: 0;
+}
+.etro-product-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.etro-product-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.etro-product-name {
+  font-size: 18px;
+  font-weight: 500;
+  font-style: italic;
+}
+.etro-product-price {
+  font-size: 18px;
+  font-weight: 500;
+  font-family: var(--font-c);
+}
+.etro-product-cat {
+  font-size: 13px;
+  color: var(--fg-soft);
+}
+.etro-swatches { display: flex; gap: 8px; align-items: center; }
+.etro-swatch { width: 10px; height: 10px; border-radius: 50%; }
+.etro-product-add {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 0;
+  display: grid; place-items: center;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--fg);
+}
+.etro-product-peek {
+  position: absolute;
+  top: 140px;
+  right: -100px;
+  width: 200px;
+  height: 128px;
+  background: var(--fg-inv);
+  z-index: 5;
+}
+
+/* NEXT CARD */
+.etro-next-card {
+  position: absolute;
+  bottom: 80px;
+  right: 32px;
+  width: 300px;
+  height: 120px;
+  background: var(--fg);
+  color: var(--fg-inv);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  z-index: 6;
+  cursor: pointer;
+}
+.etro-next-img {
+  width: 80px; height: 88px;
+  background: var(--surface-2);
+  flex-shrink: 0;
+}
+.etro-next-text { display: flex; flex-direction: column; gap: 4px; }
+.etro-next-text small {
+  color: rgba(255,255,255,0.55);
+  font-size: 13px;
+}
+.etro-next-text strong {
+  font-weight: 500;
+  font-size: 18px;
+}
+
+/* PAGINATION */
+.etro-pag {
+  position: absolute;
+  bottom: 96px;
+  left: 32px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 6;
+}
+.etro-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--fg-soft); opacity: 0.4; }
+.etro-dot.is-active { background: var(--accent); opacity: 1; width: 22px; border-radius: 4px; }
+.etro-pag-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 0;
+  cursor: pointer;
+  display: grid; place-items: center;
+  color: var(--fg-inv);
+  font-size: 14px;
+}
+.etro-pag-btn.prev { background: var(--fg); }
+.etro-pag-btn.next { background: var(--accent); }
+
+/* DECORATIVE TYPE */
+.etro-issue {
+  position: absolute;
+  top: 80px;
+  right: 32px;
+  font-family: var(--font-c);
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--fg-soft);
+  z-index: 5;
+}
+
+/* RESPONSIVE — basic */
+@media (max-width: 900px) {
+  .etro-stage { height: auto; min-height: 100vh; }
+  .etro-nav-mid, .etro-search, .etro-issue, .etro-product-peek, .etro-tag-sub { display: none; }
+  .etro-model { left: 0; transform: none; width: 100%; height: 70vh; top: 100px; }
+  .etro-wordmark { font-size: 22vw; bottom: 32px; }
+  .etro-product-card, .etro-next-card { display: none; }
+  .etro-video-card { top: 180px; width: 220px; }
+  .etro-pag { bottom: 28px; }
+}

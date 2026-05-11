@@ -1,0 +1,23 @@
+{
+  "name": "sartoriapieri-remotion",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts CardBurn out/hand-video-v3.mp4",
+    "render:public": "remotion render src/index.ts CardBurn ../public/hand-video-v3.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.397",
+    "@remotion/bundler": "^4.0.397",
+    "@remotion/renderer": "^4.0.397",
+    "remotion": "^4.0.397",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "typescript": "^5.6.0"
+  }
+}

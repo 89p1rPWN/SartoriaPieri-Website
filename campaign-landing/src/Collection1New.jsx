@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import SmokeBackground from './SmokeBackground.jsx';
+import FocusRail from './FocusRail.jsx';
 import './Collection1New.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -147,60 +149,44 @@ export default function Collection1New() {
       smoothWheel: true, wheelMultiplier: 0.8,
     });
     lenisRef.current = lenis;
+    window.__lenis = lenis;
     let rafId;
     function raf(time) { lenis.raf(time); ScrollTrigger.update(); rafId = requestAnimationFrame(raf); }
     rafId = requestAnimationFrame(raf);
 
-    // ── ENTRANCE — harsh, depressive ──
-    const heroTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+    // ── ENTRANCE — editorial mask-reveal ──
+    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    // Long suffocating black — 2s of nothing
-    heroTl.to('.c1n-curtain', { duration: 2 });
+    // Curtain lifts smoothly, no flicker
+    heroTl.to('.c1n-curtain', { opacity: 0, duration: 0.55, ease: 'power2.inOut' }, 0);
 
-    // Title appears BEHIND the curtain — barely visible, like something trapped
+    // Background text emerges first — gentle scale-in from blur
+    heroTl.fromTo('.c1n-hero-bg-text',
+      { opacity: 0, scale: 1.6, filter: 'blur(40px)' },
+      { opacity: 0.04, scale: 1, filter: 'blur(0px)', duration: 1.6, ease: 'power2.out' }, 0.1);
+
+    // Title — mask-reveal from below
     heroTl.fromTo('.c1n-hero-title',
-      { opacity: 0 },
-      { opacity: 0.08, duration: 0.8, ease: 'none' }, 1.2);
+      { clipPath: 'inset(110% 0 0 0)', y: 40, opacity: 1 },
+      { clipPath: 'inset(0% 0 0 0)', y: 0, duration: 1.0, ease: 'expo.out' }, 0.3);
 
-    // Curtain doesn't lift — it cracks. Opacity drops in harsh steps
-    heroTl.to('.c1n-curtain', { opacity: 0.7, duration: 0.1 }, 2.0);
-    heroTl.to('.c1n-curtain', { opacity: 0.85, duration: 0.15 }, 2.1); // flickers back
-    heroTl.to('.c1n-curtain', { opacity: 0.4, duration: 0.2 }, 2.3);
-    heroTl.to('.c1n-curtain', { opacity: 0.6, duration: 0.1 }, 2.5); // resists
-    heroTl.to('.c1n-curtain', { opacity: 0.15, duration: 0.4 }, 2.7);
-    heroTl.to('.c1n-curtain', { opacity: 0, duration: 1.5, ease: 'power1.out' }, 3.2);
-
-    // Title — was ghosting behind curtain, now settles heavy
-    heroTl.to('.c1n-hero-title', {
-      opacity: 1, duration: 1.5, ease: 'power1.out'
-    }, 3.0);
-    // Slight downward sag — like weight pressing down
-    heroTl.fromTo('.c1n-hero-title',
-      { y: -8 },
-      { y: 4, duration: 3, ease: 'power1.out' }, 3.0);
-
-    // Red line — seeps out slowly, like blood through fabric
+    // Red line — draws left to right
     heroTl.fromTo('.c1n-hero-line',
       { scaleX: 0, opacity: 0 },
-      { scaleX: 1, opacity: 1, duration: 3, ease: 'power1.inOut' }, 3.5);
+      { scaleX: 1, opacity: 1, duration: 0.8, ease: 'power3.inOut', transformOrigin: 'left center' }, 0.65);
 
-    // Tagline — fades in painfully slow, letter-spacing compresses like lungs deflating
+    // Tagline — fades up out of blur
     heroTl.fromTo('.c1n-hero-tagline',
-      { opacity: 0, letterSpacing: '1em', filter: 'blur(2px)' },
-      { opacity: 0.3, letterSpacing: '0.08em', filter: 'blur(0px)', duration: 4, ease: 'power1.out' }, 4.0);
+      { opacity: 0, y: 14, filter: 'blur(6px)' },
+      { opacity: 0.5, y: 0, filter: 'blur(0px)', duration: 0.85, ease: 'power2.out' }, 0.85);
 
-    // Background text — emerges from deep like a memory surfacing
-    heroTl.fromTo('.c1n-hero-bg-text',
-      { opacity: 0, scale: 8, filter: 'blur(80px)' },
-      { opacity: 0.025, scale: 1, filter: 'blur(0px)', duration: 5, ease: 'power1.out' }, 2.5);
-
-    // Nav — last thing, almost forgotten
+    // Nav — drops in from top
     heroTl.fromTo('.c1n-nav',
-      { opacity: 0 }, { opacity: 1, duration: 2 }, 6);
+      { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.55 }, 1.1);
 
-    // Scroll indicator — appears reluctantly
+    // Scroll indicator — rises last
     heroTl.fromTo('.c1n-hero-scroll',
-      { opacity: 0 }, { opacity: 0.5, duration: 2.5, ease: 'power1.out' }, 6.5);
+      { opacity: 0, y: 10 }, { opacity: 0.5, y: 0, duration: 0.6, ease: 'power2.out' }, 1.25);
 
     // ── HERO SCROLL EXIT — dramatic pull-back ──
     gsap.to('.c1n-hero-inner', {
@@ -217,7 +203,7 @@ export default function Collection1New() {
     });
 
     // ── ACCORDION SCROLL REVEAL ──
-    gsap.fromTo('.c1n-accordion-section',
+    gsap.fromTo('.c1n-accordion-header',
       { opacity: 0, y: 60 },
       {
         scrollTrigger: { trigger: '.c1n-accordion-section', start: 'top 88%', toggleActions: 'play none none reverse' },
@@ -369,15 +355,27 @@ export default function Collection1New() {
       }
     );
 
+    // Refresh ScrollTrigger after layout settles (images load async, fonts swap, smoke canvas mounts)
+    const refreshTimers = [
+      setTimeout(() => ScrollTrigger.refresh(), 200),
+      setTimeout(() => ScrollTrigger.refresh(), 800),
+      setTimeout(() => ScrollTrigger.refresh(), 2000),
+    ];
+    const onLoad = () => ScrollTrigger.refresh();
+    window.addEventListener('load', onLoad);
+
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
       ScrollTrigger.getAll().forEach(t => t.kill());
+      refreshTimers.forEach(clearTimeout);
+      window.removeEventListener('load', onLoad);
     };
   }, []);
 
   return (
     <div className="c1n-root" ref={containerRef}>
+      <SmokeBackground className="c1n-page-smoke" smokeColor="#FF0000" />
       <div className="c1n-curtain" />
 
       <nav className="c1n-nav">
@@ -389,7 +387,6 @@ export default function Collection1New() {
       </nav>
 
       <section className="c1n-hero" ref={heroRef}>
-        <video className="c1n-hero-video" src="/hero-video.mp4" autoPlay loop muted playsInline />
         <div className="c1n-hero-overlay" />
         <div className="c1n-hero-bg-text">PIERI</div>
         <div className="c1n-hero-inner">
@@ -398,51 +395,6 @@ export default function Collection1New() {
           <p className="c1n-hero-tagline">What lives inside you has always been wearing you.</p>
         </div>
         <div className="c1n-hero-scroll"><div className="c1n-scroll-line" /><span>SCROLL</span></div>
-      </section>
-
-      {/* ── FIVE EMOTIONS ACCORDION ── */}
-      <section className="c1n-accordion-section">
-        <div className="c1n-accordion-header">
-          <span className="c1n-accordion-label">THE COLLECTION</span>
-          <h2 className="c1n-accordion-title">Five Emotions</h2>
-        </div>
-        <div className="c1n-carousel-wrap">
-          <div className="c1n-accordion-row" ref={accordionRowRef} onMouseLeave={() => setActiveAccordion(-1)} onScroll={handleCarouselScroll}>
-            {outfits.map((outfit, i) => (
-              <div
-                key={`acc-${i}`}
-                className={`c1n-accordion-card ${activeAccordion === i ? 'c1n-accordion-active' : activeAccordion === -1 ? 'c1n-accordion-idle' : 'c1n-accordion-collapsed'}`}
-                onMouseEnter={() => setActiveAccordion(i)}
-                onClick={() => setActiveAccordion(activeAccordion === i ? -1 : i)}
-              >
-                <div className="c1n-accordion-bg">
-                  <img src={outfit.accordionImg} alt={outfit.name} />
-                </div>
-                <div className="c1n-accordion-overlay" />
-                <span className="c1n-accordion-num">{String(i + 1).padStart(2, '0')}</span>
-                <div className="c1n-accordion-content">
-                  <h3 className="c1n-accordion-name">{outfit.name.charAt(0) + outfit.name.slice(1).toLowerCase()}</h3>
-                  <p className="c1n-accordion-desc">{outfit.emotion}</p>
-                </div>
-                <span className="c1n-accordion-vertical-name">{outfit.name}</span>
-              </div>
-            ))}
-          </div>
-          <div className={`c1n-swipe-hint ${carouselIndex > 0 ? 'hidden' : ''}`}>
-            <div className="c1n-swipe-trail" />
-            <div className="c1n-swipe-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 11V6a2 2 0 0 0-4 0v5" /><path d="M14 10V4a2 2 0 0 0-4 0v7" /><path d="M10 10.5V8a2 2 0 0 0-4 0v8a8 8 0 0 0 16 0v-3a2 2 0 0 0-4 0" />
-              </svg>
-            </div>
-            <span className="c1n-swipe-label">SCORRI</span>
-          </div>
-        </div>
-        <div className="c1n-carousel-track">
-          <div className="c1n-carousel-bar">
-            <div className="c1n-carousel-fill" style={{ width: `${((carouselIndex + 1) / outfits.length) * 100}%` }} />
-          </div>
-        </div>
       </section>
 
       {outfits.map((outfit, i) => (
@@ -489,6 +441,24 @@ export default function Collection1New() {
           </div>
         </section>
       ))}
+
+      {/* ── FIVE EMOTIONS — pinned carousel at end ── */}
+      <section className="c1n-accordion-section">
+        <div className="c1n-accordion-header">
+          <span className="c1n-accordion-label">THE COLLECTION</span>
+          <h2 className="c1n-accordion-title">Five Emotions</h2>
+        </div>
+        <FocusRail
+          items={outfits.map((o, i) => ({
+            id: i + 1,
+            title: o.name.charAt(0) + o.name.slice(1).toLowerCase(),
+            description: o.emotion,
+            meta: `LOOK ${String(i + 1).padStart(2, '0')} / FW 2026`,
+            imageSrc: o.accordionImg,
+          }))}
+          scrollDriven
+        />
+      </section>
 
       <section className="c1n-closing">
         <div className="c1n-closing-bg">SPLENDOR ANIMAE</div>

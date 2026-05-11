@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1a0707;
+  background: #000;
   color: #f2ede7;
   overflow: hidden;
   font-family: 'Inter', 'Helvetica Neue', sans-serif;
@@ -82,7 +82,7 @@
   background:
     radial-gradient(ellipse 50% 35% at 50% 55%, rgba(255, 80, 30, 0.05) 0%, transparent 60%),
     radial-gradient(ellipse 100% 100% at 50% 60%, transparent 30%, rgba(0, 0, 0, 0.85) 100%),
-    #0e0303;
+    #000;
 }
 
 /* Hotspots overlay — sized in % of .hc-frame so they map to fixed

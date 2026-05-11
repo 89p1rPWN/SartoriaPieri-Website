@@ -49,24 +49,24 @@ export default function HandCardHero() {
 
   const onVideoEnded = () => {
     setPhase('gone');
-    gsap.to('.hc-aftermath', { opacity: 1, duration: 1.2, ease: 'power2.out' });
+    gsap.to('.hc-aftermath', { opacity: 1, duration: 0.25, ease: 'power2.out' });
     setTimeout(() => {
       const dest = destinationRef.current || '/';
       navigate(dest);
-    }, 1100);
+    }, 150);
   };
 
   return (
     <div className={`hc-page hc-phase-${phase}`}>
       <div className="hc-stage">
         <div className="hc-frame">
-          <img src="/hand-card-poster-v4.png" alt="" className="hc-card-img" draggable={false} />
+          <img src="/hand-card-poster-v4-black.png" alt="" className="hc-card-img" draggable={false} />
 
           <video
             ref={videoRef}
             className={`hc-video ${phase !== 'idle' ? 'hc-video-on' : ''}`}
-            src="/hand-video-v2.mp4"
-            poster="/hand-card-poster-v4.png"
+            src="/hand-video-v6.mp4"
+            poster="/hand-card-poster-v4-black.png"
             playsInline
             preload="auto"
             onEnded={onVideoEnded}
