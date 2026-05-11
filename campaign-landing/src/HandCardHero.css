@@ -36,8 +36,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   aspect-ratio: 1 / 1;
-  width: max(100vw, 100dvh);
-  height: max(100dvh, 100vw);
+  width: max(100vw, 100lvh);
+  height: max(100lvh, 100vw);
   overflow: hidden;
 }
 

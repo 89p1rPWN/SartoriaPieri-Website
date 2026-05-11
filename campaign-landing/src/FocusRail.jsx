@@ -283,7 +283,7 @@ export default function FocusRail({
 
   if (scrollDriven) {
     return (
-      <div ref={wrapRef} className="fr-wrap" style={{ height: '100dvh' }}>
+      <div ref={wrapRef} className="fr-wrap" style={{ height: '100lvh' }}>
         <div className="fr-sticky">{railContent}</div>
       </div>
     );
