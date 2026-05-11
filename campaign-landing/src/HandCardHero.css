@@ -17,8 +17,7 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-  display: grid;
-  place-items: center;
+  overflow: hidden;
   will-change: opacity, transform, filter;
 }
 
@@ -28,9 +27,14 @@
    and hotspot percentages map to fixed positions in the source. */
 /* Frame stays square so the % hotspot map remains valid;
    sized to COVER the viewport (larger of the two axes) so on portrait phones
-   the burn fills the screen edge-to-edge with horizontal crop. */
+   the burn fills the screen edge-to-edge with horizontal crop.
+   Explicit translate-centering — Safari iOS grid centering fails when
+   child is wider than parent. */
 .hc-frame {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   aspect-ratio: 1 / 1;
   width: max(100vw, 100dvh);
   height: max(100dvh, 100vw);
