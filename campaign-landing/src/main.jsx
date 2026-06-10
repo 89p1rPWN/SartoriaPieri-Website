@@ -11,6 +11,7 @@ import EtroLanding from './EtroLanding.jsx'
 import About from './About.jsx'
 import Campaign from './Campaign.jsx'
 import Contact from './Contact.jsx'
+import Collection1Story from './Collection1Story.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/hand-card" element={<HandCardHero />} />
         <Route path="/demo" element={<EtroLanding />} />
         <Route path="/collections/collection1" element={<Collection1 />} />
+        <Route path="/collections/collection1-story" element={<Collection1Story />} />
         <Route path="/test" element={<Test />} />
         <Route path="/spool-test" element={<SpoolHero />} />
         <Route path="/about" element={<About />} />
