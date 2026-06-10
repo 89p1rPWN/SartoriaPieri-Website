@@ -28,7 +28,7 @@ describe('chapterLayout', () => {
     expect(chapterLayout(2)).toEqual(chapterLayout(2))
   })
 
-  it('returns one placement per photo, hero largest and nearest', () => {
+  it('returns one placement per photo, hero is the largest', () => {
     const layout = chapterLayout(1) // dolore
     expect(layout).toHaveLength(CHAPTERS[1].photos.length)
     const hero = layout.find((p) => p.isHero)
