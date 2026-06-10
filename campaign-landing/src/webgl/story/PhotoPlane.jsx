@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
@@ -8,15 +8,24 @@ import { FogPlaneMaterial } from './fogPlaneMaterial.js'
 const PLANE_W = 1.76
 const PLANE_H = 2.2
 
+// Stable reference: drei re-runs its onLoad layout-effect when this changes.
+const toSRGB = (t) => {
+  t.colorSpace = THREE.SRGBColorSpace
+}
+
 export default function PhotoPlane({ placement, url, onClick }) {
   const mesh = useRef()
   const mat = useRef()
   const [hovered, setHovered] = useState(false)
-  const texture = useTexture(url, (t) => {
-    t.colorSpace = THREE.SRGBColorSpace
-  })
+  const texture = useTexture(url, toSRGB)
+
+  // Reset cursor if we unmount mid-hover (chapter zones unmount on scroll).
+  useEffect(() => () => {
+    document.body.style.cursor = ''
+  }, [])
 
   useFrame((state) => {
+    if (!mesh.current || !mat.current) return
     const { drift, y, scale } = placement
     const t = state.clock.elapsedTime
     // Slow vertical drift around the placement's base y.
