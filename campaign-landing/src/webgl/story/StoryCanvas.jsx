@@ -50,7 +50,7 @@ export default function StoryCanvas({ progressRef, active, lateralScale, onPhoto
 
   return (
     <Canvas
-      dpr={[1, 2]}
+      dpr={[1, 1.5]}
       gl={{ alpha: true, antialias: true }}
       camera={{ fov: 50, near: 0.1, far: 60, position: [0, 0, 6] }}
       style={{ position: 'fixed', inset: 0 }}
