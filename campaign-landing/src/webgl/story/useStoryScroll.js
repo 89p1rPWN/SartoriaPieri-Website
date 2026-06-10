@@ -11,7 +11,10 @@ export const SEGMENT = (1 - INTRO_FRACTION - OUTRO_FRACTION) / CHAPTER_COUNT
 export function activeChapter(progress) {
   if (progress < INTRO_FRACTION) return -1
   if (progress >= 1 - OUTRO_FRACTION) return CHAPTER_COUNT
-  return Math.min(CHAPTER_COUNT - 1, Math.floor((progress - INTRO_FRACTION) / SEGMENT))
+  // +EPSILON: (progress - INTRO_FRACTION) / SEGMENT lands 1 ULP below an
+  // integer at exact segment boundaries (IEEE 754), which would floor to
+  // the previous chapter.
+  return Math.min(CHAPTER_COUNT - 1, Math.floor((progress - INTRO_FRACTION) / SEGMENT + Number.EPSILON))
 }
 
 // 0..1 within chapter i's segment, clamped.

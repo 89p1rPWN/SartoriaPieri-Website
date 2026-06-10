@@ -20,6 +20,12 @@ describe('activeChapter', () => {
     expect(activeChapter(1 - OUTRO_FRACTION)).toBe(CHAPTER_COUNT)
     expect(activeChapter(1)).toBe(CHAPTER_COUNT)
   })
+
+  it('transitions between chapters at exact segment boundaries', () => {
+    for (let i = 1; i < CHAPTER_COUNT; i++) {
+      expect(activeChapter(INTRO_FRACTION + SEGMENT * i)).toBe(i)
+    }
+  })
 })
 
 describe('chapterLocalProgress', () => {
