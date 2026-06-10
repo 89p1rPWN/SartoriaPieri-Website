@@ -14,7 +14,7 @@ export const FogPlaneMaterial = shaderMaterial(
     uBleach: 1,
     uOpacity: 1,
     uTime: 0,
-    uFogColor: new THREE.Color('#c9c6bf'),
+    uFogColor: new THREE.Color('#c9c6bf'), // must stay in sync with .story-page CSS gradient
     uFogNear: 6,
     uFogFar: 26,
   },
@@ -39,8 +39,11 @@ export const FogPlaneMaterial = shaderMaterial(
     varying vec2 vUv;
     varying float vFogDepth;
 
+    // mediump-safe hash (Hoskins) — sin-based hashes band on mobile GPUs
     float hash(vec2 p) {
-      return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+      vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+      p3 += dot(p3, p3.yzx + 33.33);
+      return fract((p3.x + p3.y) * p3.z);
     }
 
     void main() {
@@ -52,6 +55,8 @@ export const FogPlaneMaterial = shaderMaterial(
       col += grain * uBleach;
       float fogF = smoothstep(uFogNear, uFogFar, vFogDepth);
       col = mix(col, uFogColor, fogF);
+      // 0.85 (not 1.0): keep a 15% floor so far planes hand off softly to
+      // the CSS gradient; assumes uFogColor stays in the gradient's family.
       float alpha = uOpacity * (1.0 - fogF * 0.85);
       gl_FragColor = vec4(col, alpha);
     }
