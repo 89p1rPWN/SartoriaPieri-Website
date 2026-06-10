@@ -68,8 +68,21 @@ export default function Collection1Story() {
       st.kill()
       gsap.ticker.remove(raf)
       lenis.destroy()
+      lenisRef.current = null
     }
   }, [useCanvas, progressRef])
+
+  const openLightbox = useCallback(
+    (chapterIndex, photoIndex) => setLightbox({ chapterIndex, photoIndex }),
+    [],
+  )
+  const stepLightbox = useCallback((dir) =>
+    setLightbox((lb) => {
+      if (!lb) return lb
+      const photos = CHAPTERS[lb.chapterIndex].photos
+      const next = (lb.photoIndex + dir + photos.length) % photos.length
+      return { ...lb, photoIndex: next }
+    }), [])
 
   // Lightbox: lock scroll while open, Esc to close.
   useEffect(() => {
@@ -85,20 +98,7 @@ export default function Collection1Story() {
       window.removeEventListener('keydown', onKey)
       lenisRef.current?.start()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lightbox])
-
-  const openLightbox = useCallback(
-    (chapterIndex, photoIndex) => setLightbox({ chapterIndex, photoIndex }),
-    [],
-  )
-  const stepLightbox = (dir) =>
-    setLightbox((lb) => {
-      if (!lb) return lb
-      const photos = CHAPTERS[lb.chapterIndex].photos
-      const next = (lb.photoIndex + dir + photos.length) % photos.length
-      return { ...lb, photoIndex: next }
-    })
+  }, [lightbox, stepLightbox])
 
   if (!useCanvas) {
     return (
@@ -154,8 +154,18 @@ export default function Collection1Story() {
 function Lightbox({ lightbox, onStep, onClose }) {
   const chapter = CHAPTERS[lightbox.chapterIndex]
   const file = chapter.photos[lightbox.photoIndex]
+  const closeRef = useRef(null)
+  useEffect(() => {
+    closeRef.current?.focus()
+  }, [])
   return (
-    <div className="story-lightbox" onClick={onClose} role="dialog" aria-modal="true">
+    <div
+      className="story-lightbox"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${chapter.slug} photo ${lightbox.photoIndex + 1} of ${chapter.photos.length}`}
+    >
       <figure onClick={(e) => e.stopPropagation()}>
         <img src={fullSrc(chapter.slug, file)} alt={`${chapter.slug} look ${lightbox.photoIndex + 1}`} />
         <figcaption>
@@ -163,7 +173,7 @@ function Lightbox({ lightbox, onStep, onClose }) {
         </figcaption>
         <button className="lb-prev" aria-label="Previous" onClick={() => onStep(-1)}>←</button>
         <button className="lb-next" aria-label="Next" onClick={() => onStep(1)}>→</button>
-        <button className="lb-close" aria-label="Close" onClick={onClose}>×</button>
+        <button ref={closeRef} className="lb-close" aria-label="Close" onClick={onClose}>×</button>
       </figure>
     </div>
   )

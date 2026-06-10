@@ -15,7 +15,7 @@
   position: fixed;
   inset: -50%;
   pointer-events: none;
-  z-index: 3;
+  z-index: 1; /* above canvas, below text overlays */
   opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: story-grain-shift 0.6s steps(3) infinite;
@@ -173,13 +173,25 @@
   gap: 1.2rem;
   margin-top: 2rem;
 }
+.story-fallback .fb-photo {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.story-fallback .fb-photo:focus-visible {
+  outline: 2px solid #3b372f;
+  outline-offset: 3px;
+}
 .story-fallback img {
   width: 100%;
   display: block;
   filter: saturate(0.5) brightness(1.04);
-  cursor: pointer;
   transition: filter 0.4s ease;
 }
-.story-fallback img:hover {
+.story-fallback .fb-photo:hover img {
+  filter: none;
+}
+.story-fallback .fb-photo:focus-visible img {
   filter: none;
 }

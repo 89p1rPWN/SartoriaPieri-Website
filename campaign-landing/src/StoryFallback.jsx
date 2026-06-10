@@ -9,13 +9,15 @@ export default function StoryFallback({ onPhotoClick }) {
           <h2>{c.numeral} — {c.slug.toUpperCase()}</h2>
           <div className="fb-grid">
             {c.photos.map((file, photoIndex) => (
-              <img
+              <button
                 key={file}
-                src={webSrc(c.slug, file)}
-                alt={`${c.slug} look ${photoIndex + 1}`}
-                loading="lazy"
+                type="button"
+                className="fb-photo"
                 onClick={() => onPhotoClick(c.index, photoIndex)}
-              />
+                aria-label={`Open ${c.slug} look ${photoIndex + 1}`}
+              >
+                <img src={webSrc(c.slug, file)} alt="" loading="lazy" />
+              </button>
             ))}
           </div>
         </section>
