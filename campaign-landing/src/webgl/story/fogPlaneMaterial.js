@@ -18,13 +18,22 @@ export const FogPlaneMaterial = shaderMaterial(
     uFogColor: new THREE.Color('#141414'), // smoke shader's dark floor (clamp .08)
     uFogNear: 6,
     uFogFar: 26,
+    uWave: 1, // cloth ripple strength; 0 disables
   },
   /* glsl */ `
+    uniform float uTime;
+    uniform float uWave;
     varying vec2 vUv;
     varying float vFogDepth;
     void main() {
       vUv = uv;
-      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+      vec3 p = position;
+      // Cloth-in-a-draft ripple: the hem (uv.y = 0) moves most, shoulders
+      // stay pinned, so the cutout figure reads as alive, not warping.
+      float hem = 1.0 - uv.y;
+      p.x += sin(uv.y * 5.0 + uTime * 1.1) * 0.035 * hem * uWave;
+      p.z += sin(uv.y * 3.5 - uTime * 0.8 + uv.x * 3.0) * 0.06 * hem * uWave;
+      vec4 mvPosition = modelViewMatrix * vec4(p, 1.0);
       vFogDepth = -mvPosition.z;
       gl_Position = projectionMatrix * mvPosition;
     }

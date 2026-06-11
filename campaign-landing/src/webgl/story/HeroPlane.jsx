@@ -31,8 +31,9 @@ export default function HeroPlane({ placement, url, onClick }) {
     if (!mesh.current || !mat.current) return
     const { drift, y, scale } = placement
     const t = state.clock.elapsedTime
-    // Slow vertical drift around the placement's base y.
+    // Slow vertical drift + gentle sway around the placement's base pose.
     mesh.current.position.y = y + Math.sin(t * drift.speed + drift.phase) * drift.amp
+    mesh.current.rotation.z = placement.rotZ + Math.sin(t * 0.3 + drift.phase) * 0.02
     // Hover: ease toward color + slight scale-up.
     const targetBleach = hovered ? 0 : 1
     mat.current.uBleach = THREE.MathUtils.lerp(mat.current.uBleach, targetBleach, 0.08)
@@ -67,7 +68,8 @@ export default function HeroPlane({ placement, url, onClick }) {
         document.body.style.cursor = ''
       }}
     >
-      <planeGeometry args={[PLANE_W, PLANE_H]} />
+      {/* segments: the cloth ripple displaces vertices in the shader */}
+      <planeGeometry args={[PLANE_W, PLANE_H, 24, 32]} />
       <fogPlaneMaterial
         ref={mat}
         key={FogPlaneMaterial.key}
