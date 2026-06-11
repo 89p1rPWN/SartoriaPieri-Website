@@ -15,13 +15,13 @@ const garmentData = (overrides = {}) =>
   }))
 
 const SINS = [
-  { slug: 'depravazione', numeral: 'I', photos: range(8), hero: '1.jpg', data: garmentData(), video: false },
-  { slug: 'dolore', numeral: 'II', photos: [...range(6), 'dolore_main.jpg'], hero: 'dolore_main.jpg', data: garmentData(), video: false },
+  { slug: 'depravazione', numeral: 'I', photos: range(8), hero: '1.jpg', data: garmentData(), video: true },
+  { slug: 'dolore', numeral: 'II', photos: [...range(6), 'dolore_main.jpg'], hero: 'dolore_main.jpg', data: garmentData(), video: true },
   // perversione/trauma 1.jpg are process-collage pages, not outfit shots —
   // heroes point at the true full-look photos.
-  { slug: 'perversione', numeral: 'III', photos: range(9), hero: '2.jpg', data: garmentData(), video: false },
-  { slug: 'trauma', numeral: 'IV', photos: range(10), hero: '3.jpg', data: garmentData(), video: false },
-  { slug: 'vergogna', numeral: 'V', photos: [...range(8), 'vergogna_main.jpg'], hero: 'vergogna_main.jpg', data: garmentData(), video: false },
+  { slug: 'perversione', numeral: 'III', photos: range(9), hero: '2.jpg', data: garmentData(), video: true },
+  { slug: 'trauma', numeral: 'IV', photos: range(10), hero: '3.jpg', data: garmentData(), video: true },
+  { slug: 'vergogna', numeral: 'V', photos: [...range(8), 'vergogna_main.jpg'], hero: 'vergogna_main.jpg', data: garmentData(), video: true },
 ]
 
 export const CHAPTERS = SINS.map((sin, index) => ({
