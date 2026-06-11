@@ -42,6 +42,15 @@ describe('heroPlacement', () => {
   })
 })
 
+describe('hero cutouts', () => {
+  it('every chapter has a transparent hero cutout file', () => {
+    CHAPTERS.forEach((c) => {
+      expect(typeof c.cutout).toBe('string')
+      expect(c.cutout).toMatch(/_nobg\.png$/)
+    })
+  })
+})
+
 describe('garment data & video', () => {
   it('every chapter has a data list of label/value pairs', () => {
     CHAPTERS.forEach((c) => {

@@ -6,6 +6,7 @@ import Lenis from 'lenis'
 import StoryCanvas from './webgl/story/StoryCanvas.jsx'
 import StoryFallback from './StoryFallback.jsx'
 import StoryDossier from './StoryDossier.jsx'
+import SmokeBackground from './SmokeBackground.jsx'
 import { CHAPTERS, fullSrc } from './webgl/story/photoManifest.js'
 import { useStoryScroll, activeChapter, CHAPTER_COUNT } from './webgl/story/useStoryScroll.js'
 import './Collection1Story.css'
@@ -125,6 +126,7 @@ export default function Collection1Story() {
 
   return (
     <div className="story-page">
+      <SmokeBackground className="story-smoke" smokeColor="#6e6a63" />
       <StoryCanvas
         progressRef={progressRef}
         active={active}

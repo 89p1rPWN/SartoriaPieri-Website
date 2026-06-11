@@ -6,15 +6,16 @@ import { extend } from '@react-three/fiber'
 // - uBleach 1 = washed look (desaturated, lifted blacks, grain); 0 = full
 //   color (hover state)
 // - manual fog toward uFogColor by view depth (scene has no THREE.Fog;
-//   the canvas is transparent over a CSS gradient)
+//   the canvas is transparent over the SmokeBackground canvas)
 // - uOpacity for near-camera fade as the camera passes a plane
+// - texture alpha respected (hero cutout PNGs float over the smoke)
 export const FogPlaneMaterial = shaderMaterial(
   {
     map: null,
     uBleach: 1,
     uOpacity: 1,
     uTime: 0,
-    uFogColor: new THREE.Color('#c9c6bf'), // must stay in sync with .story-page CSS gradient
+    uFogColor: new THREE.Color('#141414'), // smoke shader's dark floor (clamp .08)
     uFogNear: 6,
     uFogFar: 26,
   },
@@ -55,9 +56,9 @@ export const FogPlaneMaterial = shaderMaterial(
       col += grain * uBleach;
       float fogF = smoothstep(uFogNear, uFogFar, vFogDepth);
       col = mix(col, uFogColor, fogF);
-      // 0.85 (not 1.0): keep a 15% floor so far planes hand off softly to
-      // the CSS gradient; assumes uFogColor stays in the gradient's family.
-      float alpha = uOpacity * (1.0 - fogF * 0.85);
+      // tex.a: cutout transparency. 0.85 (not 1.0): keep a 15% floor so far
+      // planes hand off softly to the smoke; uFogColor stays in its family.
+      float alpha = tex.a * uOpacity * (1.0 - fogF * 0.85);
       gl_FragColor = vec4(col, alpha);
     }
   `,

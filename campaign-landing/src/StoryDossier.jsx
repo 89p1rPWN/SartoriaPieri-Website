@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { CHAPTERS, webSrc } from './webgl/story/photoManifest.js'
+import { CHAPTERS, webSrc, videoSrc } from './webgl/story/photoManifest.js'
 
 // Editorial detail view for one sin: hero large on the left, panel with the
 // look's other photos + garment data on the right. Sits below the lightbox
@@ -21,7 +21,19 @@ export default function StoryDossier({ chapterIndex, onPhotoClick, onClose }) {
       aria-label={`${chapter.slug} dossier`}
     >
       <figure className="dossier-hero" onClick={(e) => e.stopPropagation()}>
-        <img src={webSrc(chapter.slug, chapter.hero)} alt={`${chapter.slug} look`} />
+        {chapter.video ? (
+          <video
+            src={videoSrc(chapter.slug)}
+            poster={webSrc(chapter.slug, chapter.hero)}
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-label={`${chapter.slug} look, living portrait`}
+          />
+        ) : (
+          <img src={webSrc(chapter.slug, chapter.hero)} alt={`${chapter.slug} look`} />
+        )}
       </figure>
       <aside className="dossier-panel" onClick={(e) => e.stopPropagation()}>
         <button ref={closeRef} className="dossier-close" aria-label="Close" onClick={onClose}>×</button>

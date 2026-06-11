@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
@@ -7,63 +7,22 @@ import { FogPlaneMaterial } from './fogPlaneMaterial.js'
 const PLANE_W = 1.76
 const PLANE_H = 2.2
 
+// Stable reference: drei re-runs its onLoad layout-effect when this changes.
 const toSRGB = (t) => {
   t.colorSpace = THREE.SRGBColorSpace
 }
 
-// One sin's hero. Plays a subtle video loop when an approved clip exists
-// (chapter.video), with the still photo as poster and fallback. The page
-// only renders the canvas path when motion is allowed, so no
-// prefers-reduced-motion check is needed here.
-export default function HeroPlane({ placement, stillUrl, videoUrl, onClick }) {
+// One sin's hero: the transparent-background cutout floating over the smoke.
+// The approved video loop plays in the dossier instead (its baked studio
+// background can't be made transparent). The page only renders the canvas
+// path when motion is allowed, so no prefers-reduced-motion check here.
+export default function HeroPlane({ placement, url, onClick }) {
   const mesh = useRef()
   const mat = useRef()
   const [hovered, setHovered] = useState(false)
-  const [videoEl, setVideoEl] = useState(null)
-  const stillTexture = useTexture(stillUrl, toSRGB)
+  const texture = useTexture(url, toSRGB)
 
-  useEffect(() => {
-    if (!videoUrl) return undefined
-    let cancelled = false
-    const el = document.createElement('video')
-    el.src = videoUrl
-    el.muted = true
-    el.loop = true
-    el.playsInline = true
-    el.preload = 'auto'
-    const onCanPlay = () => {
-      el.play()
-        // cancelled guard: play() can resolve after cleanup tore el down
-        .then(() => !cancelled && setVideoEl(el))
-        .catch(() => {}) // autoplay denied → keep the still
-    }
-    const onError = () => {
-      if (import.meta.env.DEV) console.warn('Hero video failed:', videoUrl)
-      setVideoEl(null)
-    }
-    el.addEventListener('canplaythrough', onCanPlay, { once: true })
-    el.addEventListener('error', onError)
-    el.load()
-    return () => {
-      cancelled = true
-      el.removeEventListener('canplaythrough', onCanPlay)
-      el.removeEventListener('error', onError)
-      el.pause()
-      el.removeAttribute('src')
-      el.load()
-      setVideoEl(null)
-    }
-  }, [videoUrl])
-
-  const videoTexture = useMemo(() => {
-    if (!videoEl) return null
-    const t = new THREE.VideoTexture(videoEl)
-    t.colorSpace = THREE.SRGBColorSpace
-    return t
-  }, [videoEl])
-
-  useEffect(() => () => videoTexture?.dispose(), [videoTexture])
-
+  // Reset cursor if we unmount mid-hover (chapter zones unmount on scroll).
   useEffect(() => () => {
     document.body.style.cursor = ''
   }, [])
@@ -72,12 +31,15 @@ export default function HeroPlane({ placement, stillUrl, videoUrl, onClick }) {
     if (!mesh.current || !mat.current) return
     const { drift, y, scale } = placement
     const t = state.clock.elapsedTime
+    // Slow vertical drift around the placement's base y.
     mesh.current.position.y = y + Math.sin(t * drift.speed + drift.phase) * drift.amp
+    // Hover: ease toward color + slight scale-up.
     const targetBleach = hovered ? 0 : 1
     mat.current.uBleach = THREE.MathUtils.lerp(mat.current.uBleach, targetBleach, 0.08)
     const targetScale = scale * (hovered ? 1.04 : 1)
     mesh.current.scale.x = THREE.MathUtils.lerp(mesh.current.scale.x, targetScale, 0.1)
     mesh.current.scale.y = mesh.current.scale.x
+    // Fade out as the camera passes (camera moves toward -z; d shrinks).
     const d = state.camera.position.z - placement.z
     mat.current.uOpacity = THREE.MathUtils.smoothstep(d, 0.5, 2.5)
     mat.current.uTime = t
@@ -107,7 +69,7 @@ export default function HeroPlane({ placement, stillUrl, videoUrl, onClick }) {
       <fogPlaneMaterial
         ref={mat}
         key={FogPlaneMaterial.key}
-        map={videoTexture ?? stillTexture}
+        map={texture}
         transparent
         side={THREE.DoubleSide}
         depthWrite={false}

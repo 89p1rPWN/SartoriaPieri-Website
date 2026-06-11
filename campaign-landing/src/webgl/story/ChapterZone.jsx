@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { CHAPTERS, heroPlacement, webSrc, videoSrc } from './photoManifest.js'
+import { CHAPTERS, heroPlacement, fullSrc } from './photoManifest.js'
 import HeroPlane from './HeroPlane.jsx'
 
 // A failed texture load silently omits that plane (per spec) instead of
@@ -26,8 +26,7 @@ export default function ChapterZone({ chapterIndex, lateralScale, onHeroClick })
       <Suspense fallback={null}>
         <HeroPlane
           placement={placement}
-          stillUrl={webSrc(chapter.slug, chapter.hero)}
-          videoUrl={chapter.video ? videoSrc(chapter.slug) : null}
+          url={fullSrc(chapter.slug, chapter.cutout)}
           onClick={() => onHeroClick(chapterIndex)}
         />
       </Suspense>
