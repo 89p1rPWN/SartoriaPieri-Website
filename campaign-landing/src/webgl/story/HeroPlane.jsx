@@ -24,6 +24,7 @@ export default function HeroPlane({ placement, stillUrl, videoUrl, onClick }) {
 
   useEffect(() => {
     if (!videoUrl) return undefined
+    let cancelled = false
     const el = document.createElement('video')
     el.src = videoUrl
     el.muted = true
@@ -32,7 +33,8 @@ export default function HeroPlane({ placement, stillUrl, videoUrl, onClick }) {
     el.preload = 'auto'
     const onCanPlay = () => {
       el.play()
-        .then(() => setVideoEl(el))
+        // cancelled guard: play() can resolve after cleanup tore el down
+        .then(() => !cancelled && setVideoEl(el))
         .catch(() => {}) // autoplay denied → keep the still
     }
     const onError = () => {
@@ -43,6 +45,7 @@ export default function HeroPlane({ placement, stillUrl, videoUrl, onClick }) {
     el.addEventListener('error', onError)
     el.load()
     return () => {
+      cancelled = true
       el.removeEventListener('canplaythrough', onCanPlay)
       el.removeEventListener('error', onError)
       el.pause()

@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import StoryCanvas from './webgl/story/StoryCanvas.jsx'
 import StoryFallback from './StoryFallback.jsx'
+import StoryDossier from './StoryDossier.jsx'
 import { CHAPTERS, fullSrc } from './webgl/story/photoManifest.js'
 import { useStoryScroll, activeChapter, CHAPTER_COUNT } from './webgl/story/useStoryScroll.js'
 import './Collection1Story.css'
@@ -31,6 +32,7 @@ export default function Collection1Story() {
   const lenisRef = useRef(null)
   const [active, setActive] = useState(-1)
   const [lightbox, setLightbox] = useState(null) // {chapterIndex, photoIndex} | null
+  const [dossier, setDossier] = useState(null) // chapterIndex | null
   const [lateralScale] = useState(() =>
     typeof window !== 'undefined' &&
     window.matchMedia('(orientation: portrait)').matches
@@ -76,6 +78,7 @@ export default function Collection1Story() {
     (chapterIndex, photoIndex) => setLightbox({ chapterIndex, photoIndex }),
     [],
   )
+  const openDossier = useCallback((chapterIndex) => setDossier(chapterIndex), [])
   const stepLightbox = useCallback((dir) =>
     setLightbox((lb) => {
       if (!lb) return lb
@@ -84,21 +87,30 @@ export default function Collection1Story() {
       return { ...lb, photoIndex: next }
     }), [])
 
-  // Lightbox: lock scroll while open, Esc to close.
+  // Scroll lock while any overlay (dossier or lightbox) is open.
+  const locked = dossier != null || lightbox != null
   useEffect(() => {
-    if (!lightbox) return undefined
+    if (!locked) return undefined
     lenisRef.current?.stop()
+    return () => lenisRef.current?.start()
+  }, [locked])
+
+  // Esc cascade: lightbox closes first, then the dossier under it.
+  useEffect(() => {
+    if (dossier == null && !lightbox) return undefined
     const onKey = (e) => {
-      if (e.key === 'Escape') setLightbox(null)
-      if (e.key === 'ArrowRight') stepLightbox(1)
-      if (e.key === 'ArrowLeft') stepLightbox(-1)
+      if (e.key === 'Escape') {
+        if (lightbox) setLightbox(null)
+        else setDossier(null)
+      }
+      if (lightbox) {
+        if (e.key === 'ArrowRight') stepLightbox(1)
+        if (e.key === 'ArrowLeft') stepLightbox(-1)
+      }
     }
     window.addEventListener('keydown', onKey)
-    return () => {
-      window.removeEventListener('keydown', onKey)
-      lenisRef.current?.start()
-    }
-  }, [lightbox, stepLightbox])
+    return () => window.removeEventListener('keydown', onKey)
+  }, [dossier, lightbox, stepLightbox])
 
   if (!useCanvas) {
     return (
@@ -117,7 +129,7 @@ export default function Collection1Story() {
         progressRef={progressRef}
         active={active}
         lateralScale={lateralScale}
-        onPhotoClick={openLightbox}
+        onHeroClick={openDossier}
       />
       <div className="story-grain" aria-hidden="true" />
 
@@ -144,6 +156,13 @@ export default function Collection1Story() {
       {/* Scroll spacer that drives everything */}
       <div ref={scrollRef} className="story-scroll" />
 
+      {dossier != null && (
+        <StoryDossier
+          chapterIndex={dossier}
+          onPhotoClick={openLightbox}
+          onClose={() => setDossier(null)}
+        />
+      )}
       {lightbox && (
         <Lightbox lightbox={lightbox} onStep={stepLightbox} onClose={() => setLightbox(null)} />
       )}

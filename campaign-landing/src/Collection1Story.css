@@ -195,3 +195,114 @@
 .story-fallback .fb-photo:focus-visible img {
   filter: none;
 }
+
+/* Dossier */
+.story-dossier {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  background: rgba(217, 215, 210, 0.55);
+  backdrop-filter: blur(6px);
+}
+.dossier-hero {
+  flex: 0 0 42%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: dossier-hero-in 0.55s ease both;
+}
+.dossier-hero img {
+  max-width: 80%;
+  max-height: 84vh;
+  object-fit: contain;
+  box-shadow: 0 24px 80px rgba(40, 36, 30, 0.35);
+}
+@keyframes dossier-hero-in {
+  from { transform: translateX(8vw) scale(0.92); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.dossier-panel {
+  flex: 1;
+  position: relative;
+  background: rgba(244, 242, 238, 0.96);
+  border-left: 1px solid #999;
+  padding: 8vh 4vw;
+  overflow-y: auto;
+  animation: dossier-panel-in 0.55s ease both;
+}
+@keyframes dossier-panel-in {
+  from { transform: translateX(100%); }
+  to { transform: none; }
+}
+.dossier-numeral {
+  display: block;
+  letter-spacing: 0.5em;
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
+.dossier-panel h2 {
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+  letter-spacing: 0.28em;
+  font-style: italic;
+  font-weight: 400;
+  margin: 0.3rem 0 2rem;
+}
+.dossier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.9rem;
+}
+.dossier-grid button {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.dossier-grid button:focus-visible {
+  outline: 2px solid #3b372f;
+  outline-offset: 3px;
+}
+.dossier-grid img {
+  width: 100%;
+  display: block;
+  filter: saturate(0.6);
+  transition: filter 0.35s ease;
+}
+.dossier-grid button:hover img,
+.dossier-grid button:focus-visible img {
+  filter: none;
+}
+.dossier-data {
+  margin-top: 3rem;
+  border-top: 1px solid #b5b0a8;
+  padding-top: 1.4rem;
+}
+.dossier-data div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  padding: 0.45rem 0;
+}
+.dossier-data dd {
+  margin: 0;
+  opacity: 0.65;
+}
+.dossier-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.4rem;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #3b372f;
+}
+@media (max-width: 700px) {
+  .story-dossier { flex-direction: column; overflow-y: auto; }
+  .dossier-hero { flex: 0 0 auto; padding: 8vh 0 2vh; }
+  .dossier-hero img { max-height: 44vh; }
+  .dossier-panel { animation-name: dossier-hero-in; }
+}
