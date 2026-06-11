@@ -6,12 +6,20 @@ export const ZONE_SPACING = 14
 
 const range = (n) => Array.from({ length: n }, (_, i) => `${i + 1}.jpg`)
 
+// Garment data shown in the dossier. Values are user-edited; empty string
+// renders as an em-dash until filled.
+const garmentData = (overrides = {}) =>
+  ['PATCHWORK', 'FABRIC', 'CUT', 'ATELIER'].map((label) => ({
+    label,
+    value: overrides[label] ?? (label === 'ATELIER' ? 'Sartoria Pieri, 2026' : ''),
+  }))
+
 const SINS = [
-  { slug: 'depravazione', numeral: 'I', photos: range(8), hero: '1.jpg' },
-  { slug: 'dolore', numeral: 'II', photos: [...range(6), 'dolore_main.jpg'], hero: 'dolore_main.jpg' },
-  { slug: 'perversione', numeral: 'III', photos: range(9), hero: '1.jpg' },
-  { slug: 'trauma', numeral: 'IV', photos: range(10), hero: '1.jpg' },
-  { slug: 'vergogna', numeral: 'V', photos: [...range(8), 'vergogna_main.jpg'], hero: 'vergogna_main.jpg' },
+  { slug: 'depravazione', numeral: 'I', photos: range(8), hero: '1.jpg', data: garmentData(), video: false },
+  { slug: 'dolore', numeral: 'II', photos: [...range(6), 'dolore_main.jpg'], hero: 'dolore_main.jpg', data: garmentData(), video: false },
+  { slug: 'perversione', numeral: 'III', photos: range(9), hero: '1.jpg', data: garmentData(), video: false },
+  { slug: 'trauma', numeral: 'IV', photos: range(10), hero: '1.jpg', data: garmentData(), video: false },
+  { slug: 'vergogna', numeral: 'V', photos: [...range(8), 'vergogna_main.jpg'], hero: 'vergogna_main.jpg', data: garmentData(), video: false },
 ]
 
 export const CHAPTERS = SINS.map((sin, index) => ({
@@ -22,42 +30,21 @@ export const CHAPTERS = SINS.map((sin, index) => ({
 
 export const webSrc = (slug, file) => `/outfits-web/${slug}/${file}`
 export const fullSrc = (slug, file) => `/outfits/${slug}/${file}`
+export const videoSrc = (slug) => `/outfits-video/${slug}.mp4`
 
-// Deterministic PRNG so the scatter is stable across reloads and tests.
-function mulberry32(seed) {
-  let a = seed >>> 0
-  return function () {
-    a |= 0
-    a = (a + 0x6d2b79f5) | 0
-    let t = Math.imul(a ^ (a >>> 15), 1 | a)
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
-
-// Plane placements for one chapter. lateralScale < 1 compresses x for
-// portrait screens. Photos are 4:5; plane geometry is 1.76 x 2.2 world
-// units at scale 1 (set in PhotoPlane).
-export function chapterLayout(chapterIndex, lateralScale = 1) {
+// One hero per chapter, replacing v1's scatter. x echoes the camera
+// S-curve side (camera weaves to ∓1.4; hero sits at ∓0.9 on the same side).
+export function heroPlacement(chapterIndex, lateralScale = 1) {
   const chapter = CHAPTERS[chapterIndex]
-  const rand = mulberry32(chapterIndex * 9301 + 49297)
-  return chapter.photos.map((file, i) => {
-    const isHero = file === chapter.hero
-    const side = i % 2 === 0 ? -1 : 1
-    return {
-      file,
-      isHero,
-      x: (isHero ? side * 1.2 : side * (1.6 + rand() * 3.4)) * lateralScale,
-      y: isHero ? 0 : (rand() - 0.5) * 2.4,
-      z: chapter.z + (isHero ? 1.5 : (rand() - 0.5) * 6),
-      rotY: (rand() - 0.5) * 0.14,
-      rotZ: (rand() - 0.5) * 0.1,
-      scale: isHero ? 1.45 : 0.85 + rand() * 0.35,
-      drift: {
-        speed: 0.3 + rand() * 0.4,
-        phase: rand() * Math.PI * 2,
-        amp: 0.08 + rand() * 0.08,
-      },
-    }
-  })
+  const side = chapterIndex % 2 === 0 ? -1 : 1
+  return {
+    file: chapter.hero,
+    x: side * 0.9 * lateralScale,
+    y: 0,
+    z: chapter.z + 1.5,
+    rotY: side * -0.06,
+    rotZ: 0,
+    scale: 1.9,
+    drift: { speed: 0.35, phase: chapterIndex * 1.7, amp: 0.07 },
+  }
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { CHAPTERS, ZONE_SPACING, chapterLayout, webSrc, fullSrc } from '../photoManifest.js'
+import { CHAPTERS, ZONE_SPACING, heroPlacement, videoSrc, webSrc, fullSrc } from '../photoManifest.js'
 
 describe('CHAPTERS', () => {
   it('has the five sins in order with roman numerals', () => {
@@ -23,25 +23,36 @@ describe('CHAPTERS', () => {
   })
 })
 
-describe('chapterLayout', () => {
-  it('is deterministic', () => {
-    expect(chapterLayout(2)).toEqual(chapterLayout(2))
+describe('heroPlacement', () => {
+  it('is deterministic and one per chapter', () => {
+    expect(heroPlacement(2)).toEqual(heroPlacement(2))
+    expect(heroPlacement(1).file).toBe('dolore_main.jpg')
   })
 
-  it('returns one placement per photo, hero is the largest', () => {
-    const layout = chapterLayout(1) // dolore
-    expect(layout).toHaveLength(CHAPTERS[1].photos.length)
-    const hero = layout.find((p) => p.isHero)
-    const others = layout.filter((p) => !p.isHero)
-    expect(hero.file).toBe('dolore_main.jpg')
-    others.forEach((o) => expect(hero.scale).toBeGreaterThan(o.scale))
+  it('alternates sides matching the camera S-curve and sits forward of the zone', () => {
+    expect(heroPlacement(0).x).toBeLessThan(0)
+    expect(heroPlacement(1).x).toBeGreaterThan(0)
+    CHAPTERS.forEach((c) => expect(heroPlacement(c.index).z).toBe(c.z + 1.5))
   })
 
-  it('compresses lateral spread with lateralScale', () => {
-    const wide = chapterLayout(0, 1)
-    const narrow = chapterLayout(0, 0.55)
-    wide.forEach((p, i) => {
-      expect(Math.abs(narrow[i].x)).toBeCloseTo(Math.abs(p.x) * 0.55, 5)
+  it('compresses x with lateralScale', () => {
+    expect(Math.abs(heroPlacement(0, 0.55).x)).toBeCloseTo(Math.abs(heroPlacement(0, 1).x) * 0.55, 5)
+  })
+})
+
+describe('garment data & video', () => {
+  it('every chapter has a data list of label/value pairs', () => {
+    CHAPTERS.forEach((c) => {
+      expect(c.data.length).toBeGreaterThan(0)
+      c.data.forEach((d) => {
+        expect(typeof d.label).toBe('string')
+        expect(typeof d.value).toBe('string')
+      })
     })
+  })
+
+  it('video flag is boolean and videoSrc builds the path', () => {
+    CHAPTERS.forEach((c) => expect(typeof c.video).toBe('boolean'))
+    expect(videoSrc('dolore')).toBe('/outfits-video/dolore.mp4')
   })
 })
