@@ -1,6 +1,6 @@
-import React, { Suspense, useMemo } from 'react'
-import { CHAPTERS, chapterLayout, webSrc } from './photoManifest.js'
-import PhotoPlane from './PhotoPlane.jsx'
+import React, { Suspense } from 'react'
+import { CHAPTERS, heroPlacement, webSrc, videoSrc } from './photoManifest.js'
+import HeroPlane from './HeroPlane.jsx'
 
 // A failed texture load silently omits that plane (per spec) instead of
 // breaking the whole chapter's Suspense tree.
@@ -17,29 +17,20 @@ class PlaneBoundary extends React.Component {
   }
 }
 
-// One sin's photo cluster. Mounted only when the camera is within one zone
-// (StoryCanvas decides); Suspense means planes appear once textures load —
-// the fog hides pop-in.
-export default function ChapterZone({ chapterIndex, lateralScale, onPhotoClick }) {
+// One sin = one hero plane. Detail photos live in the DOM dossier, not here.
+export default function ChapterZone({ chapterIndex, lateralScale, onHeroClick }) {
   const chapter = CHAPTERS[chapterIndex]
-  const layout = useMemo(
-    () => chapterLayout(chapterIndex, lateralScale),
-    [chapterIndex, lateralScale],
-  )
-
+  const placement = heroPlacement(chapterIndex, lateralScale)
   return (
-    <group>
-      {layout.map((placement, photoIndex) => (
-        <PlaneBoundary key={placement.file}>
-          <Suspense fallback={null}>
-            <PhotoPlane
-              placement={placement}
-              url={webSrc(chapter.slug, placement.file)}
-              onClick={() => onPhotoClick(chapterIndex, photoIndex)}
-            />
-          </Suspense>
-        </PlaneBoundary>
-      ))}
-    </group>
+    <PlaneBoundary>
+      <Suspense fallback={null}>
+        <HeroPlane
+          placement={placement}
+          stillUrl={webSrc(chapter.slug, chapter.hero)}
+          videoUrl={chapter.video ? videoSrc(chapter.slug) : null}
+          onClick={() => onHeroClick(chapterIndex)}
+        />
+      </Suspense>
+    </PlaneBoundary>
   )
 }

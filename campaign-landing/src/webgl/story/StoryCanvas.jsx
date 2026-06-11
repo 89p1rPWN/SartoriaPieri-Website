@@ -42,7 +42,7 @@ function CameraRig({ progressRef }) {
 
 // activeChapter: -1 intro .. CHAPTER_COUNT outro (state from the page, so
 // React mounts/unmounts zones; per-frame motion stays in refs).
-export default function StoryCanvas({ progressRef, active, lateralScale, onPhotoClick }) {
+export default function StoryCanvas({ progressRef, active, lateralScale, onHeroClick }) {
   const mounted = CHAPTERS.filter((c) => {
     const clamped = Math.min(CHAPTER_COUNT - 1, Math.max(0, active))
     return Math.abs(c.index - clamped) <= 1
@@ -61,7 +61,7 @@ export default function StoryCanvas({ progressRef, active, lateralScale, onPhoto
           key={c.slug}
           chapterIndex={c.index}
           lateralScale={lateralScale}
-          onPhotoClick={onPhotoClick}
+          onHeroClick={onHeroClick}
         />
       ))}
     </Canvas>
