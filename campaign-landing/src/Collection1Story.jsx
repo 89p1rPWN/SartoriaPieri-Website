@@ -8,7 +8,7 @@ import StoryFallback from './StoryFallback.jsx'
 import StoryDossier from './StoryDossier.jsx'
 import SmokeBackground from './SmokeBackground.jsx'
 import { CHAPTERS, fullSrc } from './webgl/story/photoManifest.js'
-import { useStoryScroll, activeChapter, CHAPTER_COUNT } from './webgl/story/useStoryScroll.js'
+import { useStoryScroll, activeChapter, CHAPTER_COUNT, INTRO_FRACTION } from './webgl/story/useStoryScroll.js'
 import './Collection1Story.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -35,6 +35,7 @@ export default function Collection1Story() {
   // frame by SmokeBackground), vignette closes in via direct style writes.
   const abyssRef = useRef({ scroll: 0, dim: 1 })
   const vignetteRef = useRef(null)
+  const introPlateRef = useRef(null)
   const [active, setActive] = useState(-1)
   const [lightbox, setLightbox] = useState(null) // {chapterIndex, photoIndex} | null
   const [dossier, setDossier] = useState(null) // chapterIndex | null
@@ -66,6 +67,17 @@ export default function Collection1Story() {
         abyssRef.current.dim = 1 - self.progress * 0.55
         if (vignetteRef.current) {
           vignetteRef.current.style.opacity = 0.25 + self.progress * 0.6
+        }
+        // Entering the abisso: the chasm plate swallows the viewer — it
+        // scales up and dissolves across the intro segment.
+        if (introPlateRef.current) {
+          const fade = Math.max(0, 1 - self.progress / INTRO_FRACTION)
+          introPlateRef.current.style.opacity = fade
+          introPlateRef.current.style.visibility = fade === 0 ? 'hidden' : ''
+          const video = introPlateRef.current.firstChild
+          if (video) {
+            video.style.transform = `scale(${1 + Math.min(self.progress, INTRO_FRACTION) * 8})`
+          }
         }
         // Future audio (out of scope v1) subscribes to this, per spec.
         window.dispatchEvent(new CustomEvent('story:progress', { detail: self.progress }))
@@ -142,6 +154,9 @@ export default function Collection1Story() {
         lateralScale={lateralScale}
         onHeroClick={openDossier}
       />
+      <div ref={introPlateRef} className="story-intro-plate" aria-hidden="true">
+        <video src="/outfits-video/abisso-intro.mp4" autoPlay muted loop playsInline />
+      </div>
       <div ref={vignetteRef} className="story-vignette" aria-hidden="true" />
       <div className="story-grain" aria-hidden="true" />
 

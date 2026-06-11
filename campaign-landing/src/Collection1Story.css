@@ -21,6 +21,23 @@
   pointer-events: none;
 }
 
+/* Entering the abisso: chasm plate over the canvas, under the intro title;
+   opacity/scale driven by scroll in Collection1Story */
+.story-intro-plate {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.story-intro-plate video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform-origin: 50% 42%; /* zoom into the chasm mouth */
+}
+
 /* Abisso vignette — the walls close in as you descend (opacity driven by
    scroll in Collection1Story) */
 .story-vignette {
