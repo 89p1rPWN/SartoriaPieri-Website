@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { CHAPTERS, ZONE_SPACING, heroPlacement, videoSrc, webSrc, fullSrc } from '../photoManifest.js'
+import { CHAPTERS, ZONE_SPACING, heroPlacement, videoSrc, keyedVideoSrc, webSrc, fullSrc } from '../photoManifest.js'
 
 describe('CHAPTERS', () => {
   it('has the five sins in order with roman numerals', () => {
@@ -62,8 +62,12 @@ describe('garment data & video', () => {
     })
   })
 
-  it('video flag is boolean and videoSrc builds the path', () => {
-    CHAPTERS.forEach((c) => expect(typeof c.video).toBe('boolean'))
+  it('video flags are boolean and src helpers build the paths', () => {
+    CHAPTERS.forEach((c) => {
+      expect(typeof c.video).toBe('boolean')
+      expect(typeof c.keyedVideo).toBe('boolean')
+    })
     expect(videoSrc('dolore')).toBe('/outfits-video/dolore.mp4')
+    expect(keyedVideoSrc('dolore')).toBe('/outfits-video/dolore-keyed.mp4')
   })
 })

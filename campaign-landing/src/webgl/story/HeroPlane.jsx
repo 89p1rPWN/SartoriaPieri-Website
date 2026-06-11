@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
@@ -13,14 +13,58 @@ const toSRGB = (t) => {
 }
 
 // One sin's hero: the transparent-background cutout floating over the smoke.
-// The approved video loop plays in the dossier instead (its baked studio
-// background can't be made transparent). The page only renders the canvas
-// path when motion is allowed, so no prefers-reduced-motion check here.
-export default function HeroPlane({ placement, url, onClick }) {
+// If keyedVideoUrl is set, a green-screen loop replaces the still and the
+// shader chroma-keys it live (true fabric motion, transparent). The page
+// only renders the canvas path when motion is allowed, so no
+// prefers-reduced-motion check here.
+export default function HeroPlane({ placement, url, keyedVideoUrl, onClick }) {
   const mesh = useRef()
   const mat = useRef()
   const [hovered, setHovered] = useState(false)
+  const [videoEl, setVideoEl] = useState(null)
   const texture = useTexture(url, toSRGB)
+
+  useEffect(() => {
+    if (!keyedVideoUrl) return undefined
+    let cancelled = false
+    const el = document.createElement('video')
+    el.src = keyedVideoUrl
+    el.muted = true
+    el.loop = true
+    el.playsInline = true
+    el.preload = 'auto'
+    const onCanPlay = () => {
+      el.play()
+        // cancelled guard: play() can resolve after cleanup tore el down
+        .then(() => !cancelled && setVideoEl(el))
+        .catch(() => {}) // autoplay denied → keep the still
+    }
+    const onError = () => {
+      if (import.meta.env.DEV) console.warn('Hero keyed video failed:', keyedVideoUrl)
+      setVideoEl(null)
+    }
+    el.addEventListener('canplaythrough', onCanPlay, { once: true })
+    el.addEventListener('error', onError)
+    el.load()
+    return () => {
+      cancelled = true
+      el.removeEventListener('canplaythrough', onCanPlay)
+      el.removeEventListener('error', onError)
+      el.pause()
+      el.removeAttribute('src')
+      el.load()
+      setVideoEl(null)
+    }
+  }, [keyedVideoUrl])
+
+  const videoTexture = useMemo(() => {
+    if (!videoEl) return null
+    const t = new THREE.VideoTexture(videoEl)
+    t.colorSpace = THREE.SRGBColorSpace
+    return t
+  }, [videoEl])
+
+  useEffect(() => () => videoTexture?.dispose(), [videoTexture])
 
   // Reset cursor if we unmount mid-hover (chapter zones unmount on scroll).
   useEffect(() => () => {
@@ -73,7 +117,8 @@ export default function HeroPlane({ placement, url, onClick }) {
       <fogPlaneMaterial
         ref={mat}
         key={FogPlaneMaterial.key}
-        map={texture}
+        map={videoTexture ?? texture}
+        uKeyEnabled={videoTexture ? 1 : 0}
         transparent
         side={THREE.DoubleSide}
         depthWrite={false}

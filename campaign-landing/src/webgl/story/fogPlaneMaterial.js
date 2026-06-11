@@ -19,6 +19,7 @@ export const FogPlaneMaterial = shaderMaterial(
     uFogNear: 6,
     uFogFar: 26,
     uWave: 1, // cloth ripple strength; 0 disables
+    uKeyEnabled: 0, // 1 = chroma-key green-screen video textures
   },
   /* glsl */ `
     uniform float uTime;
@@ -46,6 +47,7 @@ export const FogPlaneMaterial = shaderMaterial(
     uniform vec3 uFogColor;
     uniform float uFogNear;
     uniform float uFogFar;
+    uniform float uKeyEnabled;
     varying vec2 vUv;
     varying float vFogDepth;
 
@@ -58,6 +60,14 @@ export const FogPlaneMaterial = shaderMaterial(
 
     void main() {
       vec4 tex = texture2D(map, vUv);
+      // Chroma key for green-screen video heroes: greenness drives alpha,
+      // and spill is clamped so dark fabric edges don't tint green.
+      if (uKeyEnabled > 0.5) {
+        float maxrb = max(tex.r, tex.b);
+        float greenness = tex.g - maxrb;
+        tex.a = 1.0 - smoothstep(0.03, 0.16, greenness);
+        tex.g = min(tex.g, maxrb + 0.03); // spill suppression
+      }
       float g = dot(tex.rgb, vec3(0.299, 0.587, 0.114));
       vec3 col = mix(tex.rgb, vec3(g), uBleach * 0.55); // desaturate
       col = mix(col, vec3(1.0), uBleach * 0.16);        // lift blacks

@@ -18,13 +18,13 @@ const garmentData = (overrides = {}) =>
 // texture over the smoke. The hero jpg remains the dossier/lightbox image
 // and the video poster.
 const SINS = [
-  { slug: 'depravazione', numeral: 'I', photos: range(8), hero: '1.jpg', cutout: '1_nobg.png', data: garmentData(), video: true },
-  { slug: 'dolore', numeral: 'II', photos: [...range(6), 'dolore_main.jpg'], hero: 'dolore_main.jpg', cutout: 'dolore_nobg.png', data: garmentData(), video: true },
+  { slug: 'depravazione', numeral: 'I', photos: range(8), hero: '1.jpg', cutout: '1_nobg.png', data: garmentData(), video: true, keyedVideo: false },
+  { slug: 'dolore', numeral: 'II', photos: [...range(6), 'dolore_main.jpg'], hero: 'dolore_main.jpg', cutout: 'dolore_nobg.png', data: garmentData(), video: true, keyedVideo: true },
   // perversione/trauma 1.jpg are process-collage pages, not outfit shots —
   // heroes point at the true full-look photos.
-  { slug: 'perversione', numeral: 'III', photos: range(9), hero: '2.jpg', cutout: '2_nobg.png', data: garmentData(), video: true },
-  { slug: 'trauma', numeral: 'IV', photos: range(10), hero: '3.jpg', cutout: '3_nobg.png', data: garmentData(), video: true },
-  { slug: 'vergogna', numeral: 'V', photos: [...range(8), 'vergogna_main.jpg'], hero: 'vergogna_main.jpg', cutout: 'vergogna_nobg.png', data: garmentData(), video: true },
+  { slug: 'perversione', numeral: 'III', photos: range(9), hero: '2.jpg', cutout: '2_nobg.png', data: garmentData(), video: true, keyedVideo: false },
+  { slug: 'trauma', numeral: 'IV', photos: range(10), hero: '3.jpg', cutout: '3_nobg.png', data: garmentData(), video: true, keyedVideo: false },
+  { slug: 'vergogna', numeral: 'V', photos: [...range(8), 'vergogna_main.jpg'], hero: 'vergogna_main.jpg', cutout: 'vergogna_nobg.png', data: garmentData(), video: true, keyedVideo: false },
 ]
 
 export const CHAPTERS = SINS.map((sin, index) => ({
@@ -36,6 +36,9 @@ export const CHAPTERS = SINS.map((sin, index) => ({
 export const webSrc = (slug, file) => `/outfits-web/${slug}/${file}`
 export const fullSrc = (slug, file) => `/outfits/${slug}/${file}`
 export const videoSrc = (slug) => `/outfits-video/${slug}.mp4`
+// Green-screen loop, chroma-keyed in the plane shader (transparent flow hero
+// with true fabric motion). Generated from the cutout on flat #00B140.
+export const keyedVideoSrc = (slug) => `/outfits-video/${slug}-keyed.mp4`
 
 // One hero per chapter, replacing v1's scatter. x echoes the camera
 // S-curve side (camera weaves to ∓1.4; hero sits at ∓0.9 on the same side).
