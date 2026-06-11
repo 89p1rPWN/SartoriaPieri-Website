@@ -31,6 +31,10 @@ export default function Collection1Story() {
   const progressRef = useStoryScroll()
   const scrollRef = useRef(null)
   const lenisRef = useRef(null)
+  // Abisso descent: smoke streams upward + darkens as you sink (read per
+  // frame by SmokeBackground), vignette closes in via direct style writes.
+  const abyssRef = useRef({ scroll: 0, dim: 1 })
+  const vignetteRef = useRef(null)
   const [active, setActive] = useState(-1)
   const [lightbox, setLightbox] = useState(null) // {chapterIndex, photoIndex} | null
   const [dossier, setDossier] = useState(null) // chapterIndex | null
@@ -58,6 +62,11 @@ export default function Collection1Story() {
       end: 'bottom bottom',
       onUpdate: (self) => {
         progressRef.current.progress = self.progress
+        abyssRef.current.scroll = self.progress * 3
+        abyssRef.current.dim = 1 - self.progress * 0.55
+        if (vignetteRef.current) {
+          vignetteRef.current.style.opacity = 0.25 + self.progress * 0.6
+        }
         // Future audio (out of scope v1) subscribes to this, per spec.
         window.dispatchEvent(new CustomEvent('story:progress', { detail: self.progress }))
         setActive((prev) => {
@@ -126,13 +135,14 @@ export default function Collection1Story() {
 
   return (
     <div className="story-page">
-      <SmokeBackground className="story-smoke" smokeColor="#6e6a63" />
+      <SmokeBackground className="story-smoke" smokeColor="#6e6a63" depthRef={abyssRef} />
       <StoryCanvas
         progressRef={progressRef}
         active={active}
         lateralScale={lateralScale}
         onHeroClick={openDossier}
       />
+      <div ref={vignetteRef} className="story-vignette" aria-hidden="true" />
       <div className="story-grain" aria-hidden="true" />
 
       {/* DOM overlays */}

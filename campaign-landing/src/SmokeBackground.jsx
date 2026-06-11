@@ -6,6 +6,8 @@ out vec4 O;
 uniform float time;
 uniform vec2 resolution;
 uniform vec3 u_color;
+uniform float u_scroll; // vertical pattern offset (0 = original look)
+uniform float u_dim;    // depth darkening multiplier (1 = original look)
 
 #define FC gl_FragCoord.xy
 #define R resolution
@@ -20,6 +22,7 @@ void main(){
   vec3 col=vec3(1);
   uv.x+=.25;
   uv*=vec2(2,1);
+  uv.y-=u_scroll;
 
   float n=fbm(uv*.28-vec2(T*.01,0));
   n=noise(uv*3.+n*2.);
@@ -32,6 +35,7 @@ void main(){
 
   col=mix(vec3(.08),col,min(time*.1,1.));
   col=clamp(col,.08,1.);
+  col*=u_dim;
   O=vec4(col,1);
 }`;
 
@@ -48,11 +52,15 @@ class Renderer {
     this.canvas = canvas;
     this.gl = canvas.getContext('webgl2');
     this.color = [0.5, 0.5, 0.5];
+    this.scroll = 0;
+    this.dim = 1;
     this.setup();
     this.init();
   }
 
   setColor(rgb) { this.color = rgb; }
+
+  setDepth(scroll, dim) { this.scroll = scroll; this.dim = dim; }
 
   resize() {
     const dpr = Math.max(1, window.devicePixelRatio);
@@ -92,6 +100,8 @@ class Renderer {
     this.uRes = gl.getUniformLocation(this.program, 'resolution');
     this.uTime = gl.getUniformLocation(this.program, 'time');
     this.uColor = gl.getUniformLocation(this.program, 'u_color');
+    this.uScroll = gl.getUniformLocation(this.program, 'u_scroll');
+    this.uDim = gl.getUniformLocation(this.program, 'u_dim');
   }
 
   render(now) {
@@ -104,6 +114,8 @@ class Renderer {
     gl.uniform2f(this.uRes, canvas.width, canvas.height);
     gl.uniform1f(this.uTime, now * 1e-3);
     gl.uniform3fv(this.uColor, this.color);
+    gl.uniform1f(this.uScroll, this.scroll);
+    gl.uniform1f(this.uDim, this.dim);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
@@ -118,7 +130,10 @@ class Renderer {
   }
 }
 
-export default function SmokeBackground({ smokeColor = '#808080', className = '' }) {
+// depthRef (optional): a mutable ref {scroll, dim} read per frame — lets a
+// scroll story stream the smoke vertically and darken it with depth without
+// re-rendering React. Omitting it keeps the original behaviour.
+export default function SmokeBackground({ smokeColor = '#808080', className = '', depthRef = null }) {
   const canvasRef = useRef(null);
   const rendererRef = useRef(null);
 
@@ -131,14 +146,18 @@ export default function SmokeBackground({ smokeColor = '#808080', className = ''
     onResize();
     window.addEventListener('resize', onResize);
     let raf;
-    const loop = (t) => { r.render(t); raf = requestAnimationFrame(loop); };
+    const loop = (t) => {
+      if (depthRef?.current) r.setDepth(depthRef.current.scroll, depthRef.current.dim);
+      r.render(t);
+      raf = requestAnimationFrame(loop);
+    };
     loop(0);
     return () => {
       window.removeEventListener('resize', onResize);
       cancelAnimationFrame(raf);
       r.dispose();
     };
-  }, []);
+  }, [depthRef]);
 
   useEffect(() => {
     const r = rendererRef.current;

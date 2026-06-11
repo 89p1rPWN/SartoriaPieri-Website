@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { CHAPTERS, ZONE_SPACING } from './photoManifest.js'
 import ChapterZone from './ChapterZone.jsx'
+import AbyssMotes from './AbyssMotes.jsx'
 import { CHAPTER_COUNT } from './useStoryScroll.js'
 
 // Camera path: gentle lateral S-curve weaving past the zones, ending a
@@ -56,6 +57,7 @@ export default function StoryCanvas({ progressRef, active, lateralScale, onHeroC
       style={{ position: 'fixed', inset: 0 }}
     >
       <CameraRig progressRef={progressRef} />
+      <AbyssMotes />
       {mounted.map((c) => (
         <ChapterZone
           key={c.slug}

@@ -21,6 +21,17 @@
   pointer-events: none;
 }
 
+/* Abisso vignette — the walls close in as you descend (opacity driven by
+   scroll in Collection1Story) */
+.story-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.25;
+  background: radial-gradient(ellipse 75% 65% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.85) 100%);
+}
+
 /* Animated film grain over everything (cheaper than a postprocessing pass) */
 .story-grain {
   position: fixed;
