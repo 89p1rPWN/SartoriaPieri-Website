@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
 import { FogPlaneMaterial } from './fogPlaneMaterial.js'
+import { revealAt } from './reveal.js'
 
 const PLANE_W = 1.76
 const PLANE_H = 2.2
@@ -84,11 +85,10 @@ export default function HeroPlane({ placement, url, keyedVideoUrl, onClick }) {
     const targetScale = scale * (hovered ? 1.04 : 1)
     mesh.current.scale.x = THREE.MathUtils.lerp(mesh.current.scale.x, targetScale, 0.1)
     mesh.current.scale.y = mesh.current.scale.x
-    // Fade out as the camera passes (camera moves toward -z; d shrinks).
-    // Tight window (0.4..1.6): the cutout grows to a giant pass-by moment —
-    // the scroll "zoom" — and only dissolves right at the chapter's end.
-    const d = state.camera.position.z - placement.z
-    mat.current.uOpacity = THREE.MathUtils.smoothstep(d, 0.3, 1.1)
+    // Rivelazione: hidden in the dark until the light shaft finds it on
+    // approach, then the giant pass-by dissolve at the chapter's end
+    // (revealAt = approach reveal × pass-fade, shared with LightShaft).
+    mat.current.uOpacity = revealAt(state.camera.position.z, placement.z)
     mat.current.uTime = t
   })
 

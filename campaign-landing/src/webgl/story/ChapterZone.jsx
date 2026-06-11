@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react'
 import { CHAPTERS, heroPlacement, fullSrc, keyedVideoSrc } from './photoManifest.js'
 import HeroPlane from './HeroPlane.jsx'
+import LightShaft from './LightShaft.jsx'
 
 // A failed texture load silently omits that plane (per spec) instead of
 // breaking the whole chapter's Suspense tree.
@@ -23,6 +24,7 @@ export default function ChapterZone({ chapterIndex, lateralScale, onHeroClick })
   const placement = heroPlacement(chapterIndex, lateralScale)
   return (
     <PlaneBoundary>
+      <LightShaft x={placement.x} z={placement.z} />
       <Suspense fallback={null}>
         <HeroPlane
           placement={placement}
