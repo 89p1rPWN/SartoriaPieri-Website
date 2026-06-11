@@ -29,10 +29,12 @@ describe('heroPlacement', () => {
     expect(heroPlacement(1).file).toBe('dolore_main.jpg')
   })
 
-  it('alternates sides matching the camera S-curve and sits forward of the zone', () => {
+  it('alternates sides matching the camera S-curve and stands off the camera knot', () => {
     expect(heroPlacement(0).x).toBeLessThan(0)
     expect(heroPlacement(1).x).toBeGreaterThan(0)
-    CHAPTERS.forEach((c) => expect(heroPlacement(c.index).z).toBe(c.z + 1.5))
+    // Camera knot sits at c.z + 4; hero at c.z - 1 gives a 5-unit standoff so
+    // the full plane fits the frustum at the chapter midpoint.
+    CHAPTERS.forEach((c) => expect(heroPlacement(c.index).z).toBe(c.z - 1))
   })
 
   it('compresses x with lateralScale', () => {

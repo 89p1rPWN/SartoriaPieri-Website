@@ -39,15 +39,15 @@ export const videoSrc = (slug) => `/outfits-video/${slug}.mp4`
 export function heroPlacement(chapterIndex, lateralScale = 1) {
   const chapter = CHAPTERS[chapterIndex]
   const side = chapterIndex % 2 === 0 ? -1 : 1
-  // Portrait (lateralScale < 1): the frustum is ~3× narrower, so the hero
-  // needs a deeper standoff from the camera knot (z = chapter.z + 4) and a
-  // smaller plane, or it fills and clips the frame at the chapter midpoint.
+  // 5-unit standoff from the camera knot (c.z + 4): any closer and the
+  // plane overflows the frustum height at the chapter midpoint. Portrait
+  // additionally shrinks the plane for its ~3×-narrower frustum.
   const portrait = lateralScale < 1
   return {
     file: chapter.hero,
     x: side * 0.9 * lateralScale,
     y: 0,
-    z: chapter.z + (portrait ? -1 : 1.5),
+    z: chapter.z - 1,
     rotY: side * -0.06,
     rotZ: 0,
     scale: portrait ? 1.15 : 1.9,
