@@ -6,7 +6,7 @@ import Lenis from 'lenis'
 import StoryCanvas from './webgl/story/StoryCanvas.jsx'
 import StoryFallback from './StoryFallback.jsx'
 import StoryDossier from './StoryDossier.jsx'
-import SmokeBackground from './SmokeBackground.jsx'
+import AbyssBackdrop from './AbyssBackdrop.jsx'
 import { CHAPTERS, fullSrc } from './webgl/story/photoManifest.js'
 import { useStoryScroll, activeChapter, CHAPTER_COUNT, INTRO_FRACTION } from './webgl/story/useStoryScroll.js'
 import './Collection1Story.css'
@@ -31,9 +31,8 @@ export default function Collection1Story() {
   const progressRef = useStoryScroll()
   const scrollRef = useRef(null)
   const lenisRef = useRef(null)
-  // Abisso descent: smoke streams upward + darkens as you sink (read per
-  // frame by SmokeBackground), vignette closes in via direct style writes.
-  const abyssRef = useRef({ scroll: 0, dim: 1 })
+  // Abisso descent: vignette closes in via direct style writes; the
+  // backdrop videos read progressRef themselves.
   const vignetteRef = useRef(null)
   const introPlateRef = useRef(null)
   const [active, setActive] = useState(-1)
@@ -63,8 +62,6 @@ export default function Collection1Story() {
       end: 'bottom bottom',
       onUpdate: (self) => {
         progressRef.current.progress = self.progress
-        abyssRef.current.scroll = self.progress * 3
-        abyssRef.current.dim = 1 - self.progress * 0.55
         if (vignetteRef.current) {
           vignetteRef.current.style.opacity = 0.25 + self.progress * 0.6
         }
@@ -147,7 +144,7 @@ export default function Collection1Story() {
 
   return (
     <div className="story-page">
-      <SmokeBackground className="story-smoke" smokeColor="#6e6a63" depthRef={abyssRef} />
+      <AbyssBackdrop progressRef={progressRef} />
       <StoryCanvas
         progressRef={progressRef}
         active={active}
