@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
-import Collection1 from './Collection1New.jsx'
+import SplendorAnimae from './SplendorAnimae.jsx'
+import ProcessPage from './ProcessPage.jsx'
 import Test from './Test.jsx'
 import SpoolHero from './SpoolHero.jsx'
 import HandCardHero from './HandCardHero.jsx'
@@ -21,7 +22,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/home" element={<App />} />
         <Route path="/hand-card" element={<HandCardHero />} />
         <Route path="/demo" element={<EtroLanding />} />
-        <Route path="/collections/collection1" element={<Collection1 />} />
+        <Route path="/collections/collection1" element={<SplendorAnimae />} />
+        <Route path="/collections/collection1/process/:slug" element={<ProcessPage />} />
         <Route path="/collections/collection1-story" element={<Collection1Story />} />
         <Route path="/test" element={<Test />} />
         <Route path="/spool-test" element={<SpoolHero />} />

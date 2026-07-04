@@ -34,3 +34,5 @@ dist-ssr
 /spool-*.png
 /foto per sito interessanti.zip
 /foto per sito interessanti/
+.vercel
+.env*

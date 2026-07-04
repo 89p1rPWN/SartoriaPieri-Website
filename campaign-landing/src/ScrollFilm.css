@@ -1,0 +1,332 @@
+/* ══════ SCROLL FILM ══════ */
+.sa-film {
+  /* neutralize global `section { display:flex; overflow:hidden; ... }` from App.css —
+     overflow:hidden on the track breaks position:sticky on the stage */
+  display: block;
+  overflow: visible;
+  min-height: 0;
+  position: relative;
+  background: #050505;
+}
+
+.sa-film-stage {
+  position: sticky;
+  top: 0;
+  height: 100lvh;
+  overflow: hidden;
+}
+
+.sa-film-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+
+.sa-film-canvas.is-ready {
+  opacity: 1;
+}
+
+.sa-film-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 130% 110% at 50% 42%, transparent 55%, rgba(5, 5, 5, 0.5) 100%),
+    linear-gradient(180deg, rgba(5, 5, 5, 0.32) 0%, transparent 18%, transparent 78%, rgba(5, 5, 5, 0.45) 100%);
+}
+
+/* ── chapters ── */
+.sa-film-chapter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 0 clamp(1.4rem, 5vw, 5rem) clamp(4.5rem, 10vh, 7.5rem);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+/* hero clears the scroll invitation pinned at the stage bottom */
+.sa-film-chapter--hero {
+  padding-bottom: clamp(10rem, 20vh, 13rem);
+}
+
+.sa-film-chapter--center {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.sa-film-chapter--center-left {
+  justify-content: center;
+  align-items: flex-start;
+  max-width: none;
+}
+
+.sa-film-chapter--lower-right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.sa-film-chapter h1 {
+  font-size: clamp(3.2rem, 9.5vw, 8.2rem);
+  line-height: 0.98;
+  letter-spacing: 0.01em;
+  margin: 1.3rem 0 1.5rem;
+}
+
+.sa-film-chapter h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(233, 229, 221, 0.88);
+}
+
+.sa-film-chapter h2 {
+  font-size: clamp(1.8rem, 3.8vw, 3rem);
+  line-height: 1.1;
+  margin: 0.9rem 0 0.8rem;
+}
+
+.sa-film-hero-sub {
+  font-size: clamp(0.92rem, 1.4vw, 1.05rem);
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  color: var(--sa-muted);
+  max-width: 34rem;
+  margin-bottom: 2.6rem;
+}
+
+.sa-film-caption {
+  font-size: 0.86rem;
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+  color: var(--sa-muted);
+  max-width: 24rem;
+}
+
+.sa-film-intro-copy {
+  font-family: var(--sa-serif);
+  font-size: clamp(1.3rem, 2.3vw, 1.85rem);
+  line-height: 1.62;
+  color: rgba(233, 229, 221, 0.9);
+  max-width: 36rem;
+  text-shadow: 0 1px 24px rgba(5, 5, 5, 0.8);
+}
+
+.sa-film-logo-mark {
+  font-family: var(--sa-serif);
+  font-size: clamp(1.3rem, 3vw, 2.1rem);
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  padding-left: 0.5em; /* optically recenter the tracked text */
+}
+
+.sa-film-logo-sub {
+  margin-top: 1.6rem;
+  font-family: var(--sa-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--sa-muted);
+}
+
+.sa-film-logo-rule {
+  display: block;
+  width: 56px;
+  height: 1px;
+  margin: 1.8rem auto 0;
+  background: var(--sa-gold);
+  opacity: 0.6;
+}
+
+/* ── scroll invitation over the black opening ── */
+.sa-film-hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.6rem, 4vh, 3rem);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.sa-film-hint-label {
+  font-family: var(--sa-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgba(233, 229, 221, 0.8);
+  padding-left: 0.42em; /* optically recenter the tracked text */
+  animation: sa-hint-breathe 3.2s ease-in-out infinite;
+}
+
+.sa-film-hint-line {
+  width: 1px;
+  height: 56px;
+  background: rgba(233, 229, 221, 0.14);
+  overflow: hidden;
+  position: relative;
+}
+
+.sa-film-hint-line i {
+  position: absolute;
+  left: 0;
+  top: -100%;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, var(--sa-gold) 40%, var(--sa-text));
+  animation: sa-hint-drop 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes sa-hint-drop {
+  0% { top: -100%; }
+  55%, 100% { top: 100%; }
+}
+
+@keyframes sa-hint-breathe {
+  0%, 100% { opacity: 0.82; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sa-film-hint-label,
+  .sa-film-hint-line i {
+    animation: none;
+  }
+
+  .sa-film-hint-line i {
+    top: 0;
+  }
+}
+
+/* ── film progress hairline ── */
+.sa-film-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: rgba(233, 229, 221, 0.08);
+}
+
+.sa-film-progress i {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(168, 137, 95, 0.5), rgba(233, 229, 221, 0.7));
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* ── loader ── */
+.sa-film-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  background: #050505;
+  transition: opacity 1.2s ease 0.2s, visibility 0s linear 1.5s;
+}
+
+.sa-film-loader.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.sa-film-loader-mark {
+  font-family: var(--sa-serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--sa-muted);
+}
+
+.sa-film-loader-title {
+  font-family: var(--sa-serif);
+  font-style: italic;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  color: var(--sa-text);
+}
+
+.sa-film-loader-line {
+  width: min(220px, 40vw);
+  height: 1px;
+  background: rgba(233, 229, 221, 0.12);
+  overflow: hidden;
+}
+
+.sa-film-loader-line i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--sa-gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s ease;
+}
+
+.sa-film-loader-pct {
+  font-family: var(--sa-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--sa-faint);
+}
+
+/* ── responsive ── */
+@media (max-width: 760px) {
+  .sa-film-chapter {
+    padding-bottom: 5.5rem;
+  }
+
+  .sa-film-chapter--hero {
+    padding-bottom: 11.5rem;
+  }
+
+  .sa-film-hint-label {
+    font-size: 0.56rem;
+    letter-spacing: 0.28em;
+    max-width: 78vw;
+    text-align: center;
+    line-height: 1.9;
+  }
+
+  .sa-film-hint-line {
+    height: 42px;
+  }
+
+  .sa-film-caption {
+    max-width: 19rem;
+  }
+
+  .sa-film-intro-copy {
+    max-width: 22rem;
+  }
+}
+
+/* ── reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .sa-film-canvas {
+    transition-duration: 0.01ms;
+  }
+
+  .sa-film-loader {
+    transition-duration: 0.01ms, 0s;
+  }
+}
