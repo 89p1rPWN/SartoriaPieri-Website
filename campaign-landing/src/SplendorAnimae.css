@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600&display=swap');
 
 :root {
   --sa-black: #050505;
@@ -9,9 +9,10 @@
   --sa-faint: rgba(233, 229, 221, 0.32);
   --sa-line: rgba(233, 229, 221, 0.14);
   --sa-gold: #a8895f;
-  --sa-serif: 'Playfair Display', Georgia, serif;
-  --sa-sans: 'Inter', 'Helvetica Neue', sans-serif;
-  --sa-mono: 'IBM Plex Mono', monospace;
+  /* the brand wordmark's condensed grotesque carries all site text */
+  --sa-serif: 'Oswald', 'Arial Narrow', sans-serif;
+  --sa-sans: 'Oswald', 'Arial Narrow', sans-serif;
+  --sa-mono: 'Oswald', 'Arial Narrow', sans-serif;
   --sa-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -20,7 +21,7 @@
   background: var(--sa-black);
   color: var(--sa-text);
   font-family: var(--sa-sans);
-  font-weight: 300;
+  font-weight: 200;
   overflow-x: clip;
   min-height: 100lvh;
   user-select: text;
@@ -43,7 +44,9 @@
 .sa-root h2,
 .sa-root h3 {
   font-family: var(--sa-serif);
-  font-weight: 400;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   margin: 0;
 }
 
@@ -135,6 +138,20 @@
   border: 0;
 }
 
+/* ══════ LOGO ══════ */
+.sa-logo {
+  display: block;
+  width: auto;
+}
+
+.sa-logo--nav {
+  height: 13px;
+}
+
+.sa-logo--footer {
+  height: 11px;
+}
+
 /* ══════ NAV ══════ */
 .sa-nav {
   /* neutralize global `nav { mix-blend-mode: difference }` from App.css */
@@ -149,7 +166,14 @@
   justify-content: space-between;
   padding: 1.6rem clamp(1.4rem, 4vw, 3.5rem);
   transition: background 0.7s ease, padding 0.7s var(--sa-ease),
-    backdrop-filter 0.7s ease;
+    backdrop-filter 0.7s ease, transform 0.6s var(--sa-ease), opacity 0.6s ease;
+}
+
+/* immersion: the bar leaves once the hero is behind, returns on scroll-up */
+.sa-nav.is-hidden {
+  transform: translateY(-110%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .sa-nav.is-scrolled {

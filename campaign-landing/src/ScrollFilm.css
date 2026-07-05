@@ -84,8 +84,8 @@
 }
 
 .sa-film-chapter h1 em {
-  font-style: italic;
-  font-weight: 400;
+  font-style: normal;
+  font-weight: 200;
   color: rgba(233, 229, 221, 0.88);
 }
 
@@ -122,11 +122,9 @@
 }
 
 .sa-film-logo-mark {
-  font-family: var(--sa-serif);
-  font-size: clamp(1.3rem, 3vw, 2.1rem);
-  letter-spacing: 0.5em;
-  text-transform: uppercase;
-  padding-left: 0.5em; /* optically recenter the tracked text */
+  height: clamp(24px, 3.4vw, 38px);
+  width: auto;
+  display: block;
 }
 
 .sa-film-logo-sub {
@@ -170,6 +168,17 @@
 .sa-film-end--letterbox img {
   object-fit: contain;
   object-position: center center;
+  position: relative;
+}
+
+.sa-film-end-bg {
+  position: absolute !important;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important;
+  filter: blur(26px) brightness(0.55);
+  transform: scale(1.12);
 }
 
 /* ── waking image: covers the canvas at rest, dissolves as the scrub begins ── */
@@ -195,7 +204,6 @@
 
 .sa-outfit-film-name {
   font-size: clamp(2.6rem, 6.5vw, 5.5rem);
-  font-style: italic;
   line-height: 1;
   margin: 0.9rem 0 0.9rem;
 }
@@ -325,17 +333,16 @@
   pointer-events: none;
 }
 
-.sa-film-loader-mark {
-  font-family: var(--sa-serif);
-  font-size: 0.8rem;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--sa-muted);
+.sa-film-loader-mark-img {
+  height: 13px;
+  width: auto;
+  opacity: 0.75;
 }
 
 .sa-film-loader-title {
   font-family: var(--sa-serif);
-  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
   font-size: clamp(1.6rem, 3.4vw, 2.4rem);
   color: var(--sa-text);
 }

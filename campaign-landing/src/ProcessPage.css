@@ -49,7 +49,6 @@
 .pp-hero-text h1 {
   font-size: clamp(3.4rem, 9vw, 8rem);
   line-height: 0.96;
-  font-style: italic;
   margin: 1.4rem 0 1.6rem;
 }
 
@@ -304,7 +303,7 @@
 
 .pp-next-name {
   font-family: var(--sa-serif);
-  font-style: italic;
+  text-transform: uppercase;
   font-size: clamp(1.5rem, 3.4vw, 2.6rem);
   color: var(--sa-text);
   transition: color 0.5s ease;

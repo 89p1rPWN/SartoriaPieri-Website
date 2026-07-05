@@ -234,11 +234,21 @@ export default function ScrollFilm({
       const img = images[idx];
       if (!img) return;
       if (fit === 'width') {
-        // letterbox: full frame width, centered vertically on black
+        // full frame width, vertically centered; a blurred cover pass fills
+        // the rest of the screen so the stage never feels letterbox-empty
         const scale = cw / img.naturalWidth;
         const dh = img.naturalHeight * scale;
-        ctx.fillStyle = '#050505';
-        ctx.fillRect(0, 0, cw, ch);
+        if ('filter' in ctx) {
+          const cs = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+          const cwid = img.naturalWidth * cs;
+          const chei = img.naturalHeight * cs;
+          ctx.filter = 'blur(22px) brightness(0.5)';
+          ctx.drawImage(img, (cw - cwid) / 2, (ch - chei) / 2, cwid, chei);
+          ctx.filter = 'none';
+        } else {
+          ctx.fillStyle = '#050505';
+          ctx.fillRect(0, 0, cw, ch);
+        }
         ctx.drawImage(img, 0, (ch - dh) / 2, cw, dh);
         return;
       }
@@ -384,6 +394,9 @@ export default function ScrollFilm({
             ref={endRef}
             aria-hidden="true"
           >
+            {fit === 'width' && (
+              <img className="sa-film-end-bg" src={endImage} alt="" draggable={false} />
+            )}
             <img src={endImage} alt="" draggable={false} />
           </div>
         )}
@@ -429,7 +442,11 @@ export default function ScrollFilm({
             aria-live="polite"
             aria-hidden={ready}
           >
-            <span className="sa-film-loader-mark">Sartoriapieri</span>
+            <img
+              className="sa-film-loader-mark-img"
+              src="/assets/logo.png"
+              alt="Sartoriapieri"
+            />
             <span className="sa-film-loader-title">Splendor Animae</span>
             <span className="sa-film-loader-line" aria-hidden="true">
               <i ref={loaderLineRef} />

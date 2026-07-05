@@ -156,8 +156,8 @@ export default function ProcessPage() {
     <MotionConfig reducedMotion="user">
       <div className="pp-root sa-root" lang="it">
         <nav className="sa-nav is-scrolled">
-          <Link to="/collections/collection1" className="sa-nav-mark">
-            Sartoriapieri
+          <Link to="/collections/collection1" className="sa-nav-mark" aria-label="Sartoriapieri">
+            <img className="sa-logo sa-logo--nav" src="/assets/logo.png" alt="Sartoriapieri" />
           </Link>
           <div className="sa-nav-links">
             <Link to="/collections/collection1" className="pp-nav-link">

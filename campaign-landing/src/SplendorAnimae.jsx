@@ -274,7 +274,9 @@ function OutfitSection({ outfit, onOpen }) {
 
 export default function SplendorAnimae() {
   const lenisRef = useRef(null);
+  const lastYRef = useRef(0);
   const [scrolled, setScrolled] = useState(false);
+  const [navHidden, setNavHidden] = useState(false);
   // one lightbox for the whole page: { items, index } or null
   const [lightbox, setLightbox] = useState(null);
 
@@ -310,7 +312,13 @@ export default function SplendorAnimae() {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
 
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 40);
+      // gone once the hero is left behind; back the moment the user scrolls up
+      setNavHidden(y > window.innerHeight && y > lastYRef.current);
+      lastYRef.current = y;
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
 
     let rafId;
@@ -486,7 +494,7 @@ export default function SplendorAnimae() {
         className: 'sa-film-chapter--center',
         content: (
           <>
-            <span className="sa-film-logo-mark">Sartoriapieri</span>
+            <img className="sa-film-logo-mark" src="/assets/logo.png" alt="Sartoriapieri" />
             <span className="sa-film-logo-rule" aria-hidden="true" />
             <span className="sa-film-logo-sub">Splendor Animae — FW26</span>
           </>
@@ -500,9 +508,9 @@ export default function SplendorAnimae() {
   return (
     <MotionConfig reducedMotion="user">
     <div className="sa-root">
-      <nav className={`sa-nav ${scrolled ? 'is-scrolled' : ''}`}>
-        <Link to="/" className="sa-nav-mark">
-          Sartoriapieri
+      <nav className={`sa-nav ${scrolled ? 'is-scrolled' : ''} ${navHidden ? 'is-hidden' : ''}`}>
+        <Link to="/" className="sa-nav-mark" aria-label="Sartoriapieri">
+          <img className="sa-logo sa-logo--nav" src="/assets/logo.png" alt="Sartoriapieri" />
         </Link>
         <div className="sa-nav-links">
           <button type="button" onClick={() => scrollToFilm(0)}>
@@ -637,7 +645,7 @@ export default function SplendorAnimae() {
       </section>
 
       <footer className="sa-footer">
-        <span className="sa-nav-mark">Sartoriapieri</span>
+        <img className="sa-logo sa-logo--footer" src="/assets/logo.png" alt="Sartoriapieri" />
         <span>Splendor Animae — FW26</span>
         <span>© 2026</span>
       </footer>
