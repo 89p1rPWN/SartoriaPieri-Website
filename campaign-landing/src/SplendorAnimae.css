@@ -215,9 +215,14 @@
 }
 
 .sa-outfits {
-  padding: clamp(6rem, 14vh, 10rem) clamp(1.4rem, 5vw, 5rem) clamp(4rem, 8vh, 6rem);
+  /* the outfit films are full-bleed; only the heading keeps gutters */
+  padding: clamp(6rem, 14vh, 10rem) 0 0;
   position: relative;
   z-index: 2;
+}
+
+.sa-outfits .sa-section-head {
+  padding: 0 clamp(1.4rem, 5vw, 5rem);
 }
 
 .sa-outfit {

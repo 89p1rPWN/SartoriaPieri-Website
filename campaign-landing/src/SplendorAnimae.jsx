@@ -15,6 +15,18 @@ import './SplendorAnimae.css';
 
 const EASE = [0.16, 1, 0.3, 1];
 
+const heroFramePath = (i) => `/cinematic/frames/frame-${String(i + 1).padStart(4, '0')}.jpg`;
+
+// per-outfit scrub sequences (12fps stills under /cinematic/outfits/<slug>/)
+const OUTFIT_FILM_FRAMES = {
+  abisso: 68,
+  trauma: 68,
+  perversione: 68,
+  depravazione: 97,
+  vergogna: 68,
+  dolore: 68,
+};
+
 const fadeUp = {
   hidden: { opacity: 0, y: 44 },
   show: (delay = 0) => ({
@@ -49,6 +61,106 @@ const ATELIER_PLATES = [
     text: "L'organza cangiante, bruciata e sbrandellata, viene fissata a caldo: la ferita che risplende grazie al ricamo.",
   },
 ];
+
+// Immersive variant: each outfit is its own scroll-scrubbed mini-film that
+// settles on the full-outfit stage image, where the process page opens.
+function OutfitFilm({ outfit, onOpen }) {
+  const chapters = useMemo(
+    () => [
+      {
+        id: `${outfit.slug}-title`,
+        decorative: true,
+        start: 0.04,
+        end: 0.24,
+        className: 'sa-film-chapter--center-left',
+        content: (
+          <div lang="it">
+            <span className="sa-index">{outfit.numeral}</span>
+            <h3 className="sa-outfit-film-name">{outfit.name}</h3>
+          </div>
+        ),
+      },
+      // the outfit's own processo creativo lines, surfacing mid-scrub
+      {
+        id: `${outfit.slug}-quote-a`,
+        decorative: true,
+        start: 0.3,
+        end: 0.46,
+        content: (
+          <p className="sa-outfit-film-quote" lang="it">
+            {outfit.process[0]}
+          </p>
+        ),
+      },
+      ...(outfit.process.length > 1
+        ? [
+            {
+              id: `${outfit.slug}-quote-b`,
+              decorative: true,
+              start: 0.52,
+              end: 0.68,
+              className: 'sa-film-chapter--lower-right',
+              content: (
+                <p className="sa-outfit-film-quote" lang="it">
+                  {outfit.process[1]}
+                </p>
+              ),
+            },
+          ]
+        : []),
+      {
+        id: `${outfit.slug}-end`,
+        start: 0.8,
+        end: 1.1,
+        content: (
+          <>
+            <div lang="it">
+              <span className="sa-index">{outfit.numeral}</span>
+              <h3 className="sa-outfit-film-name">{outfit.name}</h3>
+              <p className="sa-outfit-film-emotion">{outfit.emotion}</p>
+            </div>
+            <div className="sa-hero-actions">
+              <Link
+                className="sa-btn"
+                to={`/collections/collection1/process/${outfit.slug}`}
+                lang="it"
+              >
+                Il processo
+              </Link>
+              <button
+                type="button"
+                className="sa-btn sa-btn--ghost"
+                lang="it"
+                onClick={() => onOpen(outfit, outfit.looks[0])}
+              >
+                L'archivio
+              </button>
+            </div>
+          </>
+        ),
+      },
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [outfit.slug]
+  );
+
+  return (
+    <ScrollFilm
+      className="sa-outfit-film"
+      chapters={chapters}
+      frameCount={OUTFIT_FILM_FRAMES[outfit.slug]}
+      framePath={(i) =>
+        `/cinematic/outfits/${outfit.slug}/frame-${String(i + 1).padStart(4, '0')}.jpg`
+      }
+      trackVh={280}
+      endImage={`/cinematic/outfits/${outfit.slug}/end.jpg`}
+      endStart={0.72}
+      lazy
+      showLoader={false}
+      ariaLabel={`${outfit.numeral} — ${outfit.name}`}
+    />
+  );
+}
 
 function SectionVideo({ slug, side, videoRef }) {
   return (
@@ -396,7 +508,15 @@ export default function SplendorAnimae() {
       </nav>
 
       {/* ── The film: scroll-scrubbed frame sequence ── */}
-      <ScrollFilm chapters={chapters} />
+      <ScrollFilm
+        chapters={chapters}
+        frameCount={289}
+        framePath={heroFramePath}
+        trackVh={700}
+        showLoader
+        hint
+        ariaLabel="Splendor Animae — the film"
+      />
 
       {/* static narrative for screen readers — the visual chapters above are
           scroll-gated and marked decorative */}
@@ -425,10 +545,10 @@ export default function SplendorAnimae() {
           viewport={{ once: true, margin: '-15% 0px' }}
         >
           <p className="sa-eyebrow">Lookbook</p>
-          <h2 lang="it">Cinque abiti, cinque emozioni</h2>
+          <h2 lang="it">La collezione, in sei atti</h2>
         </Motion.div>
         {OUTFITS.map((outfit) => (
-          <OutfitSection key={outfit.slug} outfit={outfit} onOpen={openOutfitLightbox} />
+          <OutfitFilm key={outfit.slug} outfit={outfit} onOpen={openOutfitLightbox} />
         ))}
       </div>
 
