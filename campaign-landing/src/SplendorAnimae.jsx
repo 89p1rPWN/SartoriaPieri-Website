@@ -21,8 +21,10 @@ const PORTRAIT =
   typeof window !== 'undefined' &&
   window.matchMedia('(orientation: portrait) and (max-width: 900px)').matches;
 
+// portrait keeps the full lineup visible: a lighter landscape set drawn
+// letterboxed (fit="width") instead of a cropped portrait sequence
 const heroFramePath = (i) =>
-  `/cinematic/frames/${PORTRAIT ? 'p/' : ''}frame-${String(i + 1).padStart(4, '0')}.jpg`;
+  `/cinematic/frames/${PORTRAIT ? 'm/' : ''}frame-${String(i + 1).padStart(4, '0')}.jpg`;
 
 // per-outfit scrub sequences (12fps stills under /cinematic/outfits/<slug>/)
 const OUTFIT_FILM_FRAMES = {
@@ -159,7 +161,7 @@ function OutfitFilm({ outfit, onOpen }) {
       framePath={(i) =>
         `/cinematic/outfits/${outfit.slug}/${PORTRAIT ? 'p/' : ''}frame-${String(i + 1).padStart(4, '0')}.jpg`
       }
-      trackVh={PORTRAIT ? 230 : 280}
+      trackVh={PORTRAIT ? 300 : 280}
       endImage={`/cinematic/outfits/${outfit.slug}/end.jpg`}
       endStart={0.72}
       lazy
@@ -520,9 +522,10 @@ export default function SplendorAnimae() {
         chapters={chapters}
         frameCount={275}
         framePath={heroFramePath}
-        trackVh={PORTRAIT ? 550 : 700}
+        trackVh={PORTRAIT ? 850 : 700}
         endImage="/cinematic/endcard.jpg"
         endStart={0.9}
+        fit={PORTRAIT ? 'width' : 'cover'}
         showLoader
         hint
         ariaLabel="Splendor Animae — the film"

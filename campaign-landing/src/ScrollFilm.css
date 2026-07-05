@@ -163,6 +163,15 @@
   display: block;
 }
 
+.sa-film-end--letterbox {
+  background: #050505;
+}
+
+.sa-film-end--letterbox img {
+  object-fit: contain;
+  object-position: center center;
+}
+
 /* ── waking image: covers the canvas at rest, dissolves as the scrub begins ── */
 .sa-film-start {
   position: absolute;

@@ -31,6 +31,8 @@ const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
  *  - showLoader: full-screen loading card gated on keyframes (the hero);
  *    when false the film reveals on its first loaded frame
  *  - hint: the "scroll to enter" invitation over the opening frame
+ *  - fit: 'cover' fills the stage (cropping); 'width' letterboxes the full
+ *    frame width — the cinema-strip look for landscape film on portrait
  */
 export default function ScrollFilm({
   chapters,
@@ -43,6 +45,7 @@ export default function ScrollFilm({
   lazy = false,
   showLoader = true,
   hint = false,
+  fit = 'cover',
   className = '',
   ariaLabel = 'Film',
 }) {
@@ -230,6 +233,15 @@ export default function ScrollFilm({
     const drawFrame = (idx) => {
       const img = images[idx];
       if (!img) return;
+      if (fit === 'width') {
+        // letterbox: full frame width, centered vertically on black
+        const scale = cw / img.naturalWidth;
+        const dh = img.naturalHeight * scale;
+        ctx.fillStyle = '#050505';
+        ctx.fillRect(0, 0, cw, ch);
+        ctx.drawImage(img, 0, (ch - dh) / 2, cw, dh);
+        return;
+      }
       const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
       const dw = img.naturalWidth * scale;
       const dh = img.naturalHeight * scale;
@@ -349,7 +361,7 @@ export default function ScrollFilm({
       window.removeEventListener('resize', resize);
       io.disconnect();
     };
-  }, [chapters, frameCount, trackVh, endImage, endStart, lazy, showLoader]);
+  }, [chapters, frameCount, trackVh, endImage, endStart, lazy, showLoader, fit]);
 
   return (
     <section
@@ -367,7 +379,11 @@ export default function ScrollFilm({
         <div className="sa-film-vignette" aria-hidden="true" />
 
         {endImage && (
-          <div className="sa-film-end" ref={endRef} aria-hidden="true">
+          <div
+            className={`sa-film-end ${fit === 'width' ? 'sa-film-end--letterbox' : ''}`}
+            ref={endRef}
+            aria-hidden="true"
+          >
             <img src={endImage} alt="" draggable={false} />
           </div>
         )}
