@@ -45,7 +45,6 @@ export default function ScrollFilm({
 }) {
   const trackRef = useRef(null);
   const canvasRef = useRef(null);
-  const depthRef = useRef(null);
   const chapterRefs = useRef([]);
   const barRef = useRef(null);
   const hintRef = useRef(null);
@@ -191,30 +190,6 @@ export default function ScrollFilm({
     resize();
     window.addEventListener('resize', resize);
 
-    /* ── depth: the stage is a 3D scene; the cursor tilts the layer stack
-       (canvas at z0, settle image and chapter text floating above it) ── */
-    const depthEl = depthRef.current;
-    const fineHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    let rotX = 0;
-    let rotY = 0;
-    let targetRotX = 0;
-    let targetRotY = 0;
-    const onPointerMove = (e) => {
-      const nx = e.clientX / window.innerWidth - 0.5;
-      const ny = e.clientY / window.innerHeight - 0.5;
-      targetRotY = nx * 5;
-      targetRotX = -ny * 4;
-    };
-    const onPointerLeave = () => {
-      targetRotX = 0;
-      targetRotY = 0;
-    };
-    const depthActive = fineHover && !reduceMotion && depthEl;
-    if (depthActive) {
-      stage.addEventListener('pointermove', onPointerMove, { passive: true });
-      stage.addEventListener('pointerleave', onPointerLeave, { passive: true });
-    }
-
     /* ── idle gating: skip all per-frame work while the track is offscreen;
        for lazy films the same observer starts the frame downloads early ── */
     let inView = true;
@@ -283,10 +258,9 @@ export default function ScrollFilm({
       lastOpacity[i] = o;
       const dir = p < (start + end) / 2 ? 1 : -1;
       el.style.opacity = o.toFixed(3);
-      // translateZ floats the text above the canvas inside the 3D stage
       el.style.transform = reduceMotion
         ? 'none'
-        : `translateZ(48px) translateY(${((1 - o) * 26 * dir).toFixed(1)}px)`;
+        : `translateY(${((1 - o) * 26 * dir).toFixed(1)}px)`;
       el.style.visibility = o <= 0.001 ? 'hidden' : 'visible';
       el.style.pointerEvents = o > 0.5 ? 'auto' : 'none';
       if ('inert' in el) el.inert = o <= 0.5; // keep hidden buttons out of tab order
@@ -350,13 +324,6 @@ export default function ScrollFilm({
         hintRef.current.style.opacity = hintO.toFixed(3);
         hintRef.current.style.visibility = hintO <= 0.001 ? 'hidden' : 'visible';
       }
-      if (depthActive) {
-        rotX += (targetRotX - rotX) * 0.06;
-        rotY += (targetRotY - rotY) * 0.06;
-        if (Math.abs(rotX) + Math.abs(rotY) > 0.002) {
-          depthEl.style.transform = `rotateX(${rotX.toFixed(3)}deg) rotateY(${rotY.toFixed(3)}deg)`;
-        }
-      }
     };
     rafId = requestAnimationFrame(loop);
 
@@ -365,10 +332,6 @@ export default function ScrollFilm({
       if (watchdog) clearTimeout(watchdog);
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
-      if (depthActive) {
-        stage.removeEventListener('pointermove', onPointerMove);
-        stage.removeEventListener('pointerleave', onPointerLeave);
-      }
       io.disconnect();
     };
   }, [chapters, frameCount, trackVh, endImage, endStart, lazy, showLoader]);
@@ -381,33 +344,31 @@ export default function ScrollFilm({
       aria-label={ariaLabel}
     >
       <div className="sa-film-stage">
-        <div className="sa-film-depth" ref={depthRef}>
-          <canvas
-            ref={canvasRef}
-            className={`sa-film-canvas ${ready ? 'is-ready' : ''}`}
-            aria-hidden="true"
-          />
-          <div className="sa-film-vignette" aria-hidden="true" />
+        <canvas
+          ref={canvasRef}
+          className={`sa-film-canvas ${ready ? 'is-ready' : ''}`}
+          aria-hidden="true"
+        />
+        <div className="sa-film-vignette" aria-hidden="true" />
 
-          {endImage && (
-            <div className="sa-film-end" ref={endRef} aria-hidden="true">
-              <img src={endImage} alt="" draggable={false} />
-            </div>
-          )}
+        {endImage && (
+          <div className="sa-film-end" ref={endRef} aria-hidden="true">
+            <img src={endImage} alt="" draggable={false} />
+          </div>
+        )}
 
-          {chapters.map((chapter, i) => (
-            <div
-              key={chapter.id}
-              ref={(el) => {
-                chapterRefs.current[i] = el;
-              }}
-              className={`sa-film-chapter ${chapter.className || ''}`}
-              aria-hidden={chapter.decorative ? 'true' : undefined}
-            >
-              {chapter.content}
-            </div>
-          ))}
-        </div>
+        {chapters.map((chapter, i) => (
+          <div
+            key={chapter.id}
+            ref={(el) => {
+              chapterRefs.current[i] = el;
+            }}
+            className={`sa-film-chapter ${chapter.className || ''}`}
+            aria-hidden={chapter.decorative ? 'true' : undefined}
+          >
+            {chapter.content}
+          </div>
+        ))}
 
         {hint && (
           <div className="sa-film-hint" ref={hintRef} aria-hidden="true">

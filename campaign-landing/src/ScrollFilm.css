@@ -16,19 +16,6 @@
   overflow: hidden;
 }
 
-/* the stage is a shallow 3D scene: the cursor tilts .sa-film-depth, whose
-   layers (canvas z0, settle image z26, chapter text z48) parallax apart */
-.sa-film-stage {
-  perspective: 1100px;
-}
-
-.sa-film-depth {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-
 .sa-film-canvas {
   position: absolute;
   inset: 0;
@@ -37,7 +24,6 @@
   display: block;
   opacity: 0;
   transition: opacity 1.6s ease;
-  transform: scale(1.07); /* cover the edges the tilt exposes */
 }
 
 .sa-film-canvas.is-ready {
@@ -167,7 +153,6 @@
   inset: 0;
   opacity: 0;
   pointer-events: none;
-  transform: translateZ(26px) scale(1.05);
 }
 
 .sa-film-end img {
