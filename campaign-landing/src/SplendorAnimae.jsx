@@ -513,7 +513,6 @@ export default function SplendorAnimae() {
         frameCount={275}
         framePath={heroFramePath}
         trackVh={700}
-        startImage="/cinematic/start-dark.jpg"
         endImage="/cinematic/endcard.jpg"
         endStart={0.9}
         showLoader
