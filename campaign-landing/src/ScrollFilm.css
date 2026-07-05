@@ -163,6 +163,22 @@
   display: block;
 }
 
+/* ── waking image: covers the canvas at rest, dissolves as the scrub begins ── */
+.sa-film-start {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.sa-film-start img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  display: block;
+}
+
 /* ── per-outfit mini films ── */
 .sa-outfit-film .sa-film-stage {
   border-top: 1px solid var(--sa-line);

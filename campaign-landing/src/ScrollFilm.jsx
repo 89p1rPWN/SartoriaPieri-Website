@@ -23,6 +23,8 @@ const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
  *  - chapters: [{ id, start, end, className?, decorative?, content }]
  *  - frameCount, framePath(i): the sequence
  *  - trackVh: scroll track height (default 700)
+ *  - startImage: image covering the canvas at rest, dissolving as the scrub
+ *    begins (the film "wakes" out of it)
  *  - endImage / endStart: image crossfaded over the canvas in the track's
  *    final stretch — the film "settles" on it
  *  - lazy: defer frame loading until the track approaches the viewport
@@ -35,6 +37,7 @@ export default function ScrollFilm({
   frameCount,
   framePath,
   trackVh = 700,
+  startImage = null,
   endImage = null,
   endStart = 0.74,
   lazy = false,
@@ -48,6 +51,7 @@ export default function ScrollFilm({
   const chapterRefs = useRef([]);
   const barRef = useRef(null);
   const hintRef = useRef(null);
+  const startRef = useRef(null);
   const endRef = useRef(null);
   const loaderLineRef = useRef(null);
   const loaderPctRef = useRef(null);
@@ -270,6 +274,7 @@ export default function ScrollFilm({
     let lastDrawn = -1;
     let lastBar = -1;
     let lastEnd = -1;
+    let lastStart = -1;
     let prevTime = performance.now();
     let rafId;
 
@@ -312,10 +317,19 @@ export default function ScrollFilm({
         barRef.current.style.transform = `scaleX(${visualP.toFixed(4)})`;
       }
       if (endRef.current) {
-        const endO = clamp((visualP - endStart) / 0.14, 0, 1);
+        // fade span never extends past the track end
+        const endFade = Math.min(0.14, Math.max(0.02, 1 - endStart));
+        const endO = clamp((visualP - endStart) / endFade, 0, 1);
         if (Math.abs(endO - lastEnd) > 0.002) {
           lastEnd = endO;
           endRef.current.style.opacity = endO.toFixed(3);
+        }
+      }
+      if (startRef.current) {
+        const startO = clamp(1 - visualP / 0.08, 0, 1);
+        if (Math.abs(startO - lastStart) > 0.002) {
+          lastStart = startO;
+          startRef.current.style.opacity = startO.toFixed(3);
         }
       }
       if (hintRef.current) {
@@ -354,6 +368,12 @@ export default function ScrollFilm({
         {endImage && (
           <div className="sa-film-end" ref={endRef} aria-hidden="true">
             <img src={endImage} alt="" draggable={false} />
+          </div>
+        )}
+
+        {startImage && (
+          <div className="sa-film-start" ref={startRef} aria-hidden="true">
+            <img src={startImage} alt="" draggable={false} />
           </div>
         )}
 

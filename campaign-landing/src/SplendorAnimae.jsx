@@ -386,8 +386,8 @@ export default function SplendorAnimae() {
       {
         id: 'intro',
         decorative: true,
-        start: 0.13,
-        end: 0.24,
+        start: 0.09,
+        end: 0.2,
         className: 'sa-film-chapter--center-left',
         content: (
           <>
@@ -404,8 +404,8 @@ export default function SplendorAnimae() {
       {
         id: 'lace',
         decorative: true,
-        start: 0.28,
-        end: 0.375,
+        start: 0.25,
+        end: 0.345,
         content: (
           <>
             <span className="sa-index">01</span>
@@ -417,8 +417,8 @@ export default function SplendorAnimae() {
       {
         id: 'veil',
         decorative: true,
-        start: 0.56,
-        end: 0.66,
+        start: 0.54,
+        end: 0.64,
         className: 'sa-film-chapter--lower-right',
         content: (
           <>
@@ -431,8 +431,8 @@ export default function SplendorAnimae() {
       {
         id: 'movement',
         decorative: true,
-        start: 0.7,
-        end: 0.78,
+        start: 0.685,
+        end: 0.77,
         content: (
           <>
             <span className="sa-index">03</span>
@@ -444,8 +444,8 @@ export default function SplendorAnimae() {
       {
         id: 'openwork',
         decorative: true,
-        start: 0.42,
-        end: 0.5,
+        start: 0.39,
+        end: 0.475,
         className: 'sa-film-chapter--lower-right',
         content: (
           <>
@@ -458,8 +458,8 @@ export default function SplendorAnimae() {
       {
         id: 'deconstructed',
         decorative: true,
-        start: 0.78,
-        end: 0.855,
+        start: 0.77,
+        end: 0.85,
         content: (
           <>
             <span className="sa-index">05</span>
@@ -471,7 +471,7 @@ export default function SplendorAnimae() {
       {
         id: 'logo',
         decorative: true,
-        start: 0.93,
+        start: 0.925,
         end: 1.1,
         className: 'sa-film-chapter--center',
         content: (
@@ -510,9 +510,12 @@ export default function SplendorAnimae() {
       {/* ── The film: scroll-scrubbed frame sequence ── */}
       <ScrollFilm
         chapters={chapters}
-        frameCount={289}
+        frameCount={275}
         framePath={heroFramePath}
         trackVh={700}
+        startImage="/cinematic/start-dark.jpg"
+        endImage="/cinematic/endcard.jpg"
+        endStart={0.9}
         showLoader
         hint
         ariaLabel="Splendor Animae — the film"
