@@ -4,7 +4,13 @@ import { motion as Motion, MotionConfig } from 'framer-motion';
 import Lenis from 'lenis';
 import ScrollFilm from './ScrollFilm.jsx';
 import Lightbox, { LightboxThumb } from './Lightbox.jsx';
-import { OUTFITS, webSrc, fullSrc, videoSrc } from './processContent.js';
+import {
+  OUTFITS,
+  webSrc,
+  fullSrc,
+  sectionVideoSrc,
+  sectionPosterSrc,
+} from './processContent.js';
 import './SplendorAnimae.css';
 
 const EASE = [0.16, 1, 0.3, 1];
@@ -44,82 +50,112 @@ const ATELIER_PLATES = [
   },
 ];
 
-function LookCard({ outfit, index }) {
-  const videoRef = useRef(null);
-  const hoverTimer = useRef(null);
-
-  // hover intent: a cursor sweeping across the grid must not queue five
-  // multi-MB video fetches — only a deliberate 180ms rest starts playback
-  const play = () => {
-    clearTimeout(hoverTimer.current);
-    hoverTimer.current = setTimeout(() => {
-      videoRef.current?.play().catch(() => {});
-    }, 180);
-  };
-  const stop = () => {
-    clearTimeout(hoverTimer.current);
-    const video = videoRef.current;
-    if (video) {
-      video.pause();
-      video.currentTime = 0;
-    }
-  };
-
-  useEffect(() => () => clearTimeout(hoverTimer.current), []);
-
+function SectionVideo({ slug, side, videoRef }) {
   return (
-    <Motion.figure
-      className="sa-look"
+    <Motion.div
+      className="sa-outfit-video"
       variants={fadeUp}
-      custom={(index % 5) * 0.08}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: '-10% 0px' }}
+      viewport={{ once: true, margin: '-8% 0px' }}
     >
-      <Link
-        to={`/collections/collection1/process/${outfit.slug}`}
-        className="sa-look-media"
-        onMouseEnter={play}
-        onMouseLeave={stop}
-        onFocus={play}
-        onBlur={stop}
-        aria-label={`${outfit.name} — il processo`}
+      <video
+        ref={videoRef}
+        src={sectionVideoSrc(slug, side)}
+        poster={sectionPosterSrc(slug, side)}
+        muted
+        loop
+        playsInline
+        preload="none"
+        disablePictureInPicture
+        tabIndex={-1}
+        aria-hidden="true"
+      />
+    </Motion.div>
+  );
+}
+
+function OutfitSection({ outfit, onOpen }) {
+  const sectionRef = useRef(null);
+  const leftRef = useRef(null);
+  const rightRef = useRef(null);
+
+  // the ambient loops only run while their section is on screen
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return; // posters only
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        [leftRef.current, rightRef.current].forEach((video) => {
+          if (!video) return;
+          if (entry.isIntersecting) video.play().catch(() => {});
+          else video.pause();
+        });
+      },
+      { rootMargin: '15% 0px' }
+    );
+    io.observe(section);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <section className="sa-outfit" ref={sectionRef} id={`sa-outfit-${outfit.slug}`}>
+      <Motion.header
+        className="sa-outfit-head"
+        lang="it"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: '-12% 0px' }}
       >
-        <img
-          src={webSrc(outfit.slug, outfit.hero)}
-          alt={`${outfit.numeral} — ${outfit.name}`}
-          loading="lazy"
-          decoding="async"
-        />
-        <video
-          ref={videoRef}
-          className="sa-look-video"
-          src={videoSrc(outfit.slug)}
-          muted
-          loop
-          playsInline
-          preload="none"
-          disablePictureInPicture
-          tabIndex={-1}
-          aria-hidden="true"
-        />
-      </Link>
-      <figcaption lang="it">
         <span className="sa-index">{outfit.numeral}</span>
         <h3>{outfit.name}</h3>
         <p>{outfit.emotion}</p>
         <Link className="sa-look-cta" to={`/collections/collection1/process/${outfit.slug}`}>
           Il processo →
         </Link>
-      </figcaption>
-    </Motion.figure>
+      </Motion.header>
+
+      <div className="sa-outfit-triptych">
+        <SectionVideo slug={outfit.slug} side="left" videoRef={leftRef} />
+        <div className="sa-outfit-middle">
+          {outfit.looks.map((file, i) => (
+            <Motion.div
+              key={file}
+              variants={fadeUp}
+              custom={0.1 + i * 0.12}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: '-8% 0px' }}
+            >
+              <LightboxThumb
+                id={`sec-${outfit.slug}-${file}`}
+                label={`${outfit.name} — apri l'archivio`}
+                onOpen={() => onOpen(outfit, file)}
+              >
+                <img
+                  src={webSrc(outfit.slug, file)}
+                  alt={`${outfit.numeral} — ${outfit.name}`}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </LightboxThumb>
+            </Motion.div>
+          ))}
+        </div>
+        <SectionVideo slug={outfit.slug} side="right" videoRef={rightRef} />
+      </div>
+    </section>
   );
 }
 
 export default function SplendorAnimae() {
   const lenisRef = useRef(null);
   const [scrolled, setScrolled] = useState(false);
-  const [activePlate, setActivePlate] = useState(null);
+  // one lightbox for the whole page: { items, index } or null
+  const [lightbox, setLightbox] = useState(null);
 
   const plateItems = ATELIER_PLATES.map((plate) => ({
     id: `plate-${plate.slug}-${plate.file}`,
@@ -128,11 +164,23 @@ export default function SplendorAnimae() {
     alt: plate.title,
   }));
 
+  // opening a section picture surfaces the outfit's entire archive —
+  // looks, process collages, craft shots
+  const openOutfitLightbox = (outfit, file) => {
+    const items = outfit.gallery.map((entry, i) => ({
+      id: `sec-${outfit.slug}-${entry}`,
+      thumb: webSrc(outfit.slug, entry),
+      full: fullSrc(outfit.slug, entry),
+      alt: `${outfit.name} — archivio, immagine ${i + 1} di ${outfit.gallery.length}`,
+    }));
+    setLightbox({ items, index: Math.max(0, outfit.gallery.indexOf(file)) });
+  };
+
   // pause Lenis while the lightbox owns the viewport
   useEffect(() => {
-    if (activePlate != null) lenisRef.current?.stop();
+    if (lightbox) lenisRef.current?.stop();
     else lenisRef.current?.start();
-  }, [activePlate]);
+  }, [lightbox]);
 
   useEffect(() => {
     // stop the browser's async scroll restoration from racing our reset —
@@ -227,7 +275,7 @@ export default function SplendorAnimae() {
         id: 'intro',
         decorative: true,
         start: 0.13,
-        end: 0.245,
+        end: 0.24,
         className: 'sa-film-chapter--center-left',
         content: (
           <>
@@ -244,8 +292,8 @@ export default function SplendorAnimae() {
       {
         id: 'lace',
         decorative: true,
-        start: 0.3,
-        end: 0.41,
+        start: 0.28,
+        end: 0.375,
         content: (
           <>
             <span className="sa-index">01</span>
@@ -257,8 +305,8 @@ export default function SplendorAnimae() {
       {
         id: 'veil',
         decorative: true,
-        start: 0.45,
-        end: 0.535,
+        start: 0.56,
+        end: 0.66,
         className: 'sa-film-chapter--lower-right',
         content: (
           <>
@@ -271,8 +319,8 @@ export default function SplendorAnimae() {
       {
         id: 'movement',
         decorative: true,
-        start: 0.575,
-        end: 0.665,
+        start: 0.7,
+        end: 0.78,
         content: (
           <>
             <span className="sa-index">03</span>
@@ -284,8 +332,8 @@ export default function SplendorAnimae() {
       {
         id: 'openwork',
         decorative: true,
-        start: 0.7,
-        end: 0.775,
+        start: 0.42,
+        end: 0.5,
         className: 'sa-film-chapter--lower-right',
         content: (
           <>
@@ -298,8 +346,8 @@ export default function SplendorAnimae() {
       {
         id: 'deconstructed',
         decorative: true,
-        start: 0.8,
-        end: 0.875,
+        start: 0.78,
+        end: 0.855,
         content: (
           <>
             <span className="sa-index">05</span>
@@ -367,8 +415,8 @@ export default function SplendorAnimae() {
         <p>Deconstructed Elegance — formality taken apart and worn as memory.</p>
       </div>
 
-      {/* ── Lookbook ── */}
-      <section className="sa-lookbook" id="sa-lookbook">
+      {/* ── The five outfits ── */}
+      <div className="sa-outfits" id="sa-lookbook">
         <Motion.div
           className="sa-section-head"
           variants={fadeUp}
@@ -379,12 +427,10 @@ export default function SplendorAnimae() {
           <p className="sa-eyebrow">Lookbook</p>
           <h2 lang="it">Cinque abiti, cinque emozioni</h2>
         </Motion.div>
-        <div className="sa-look-grid">
-          {OUTFITS.map((outfit, i) => (
-            <LookCard key={outfit.slug} outfit={outfit} index={i} />
-          ))}
-        </div>
-      </section>
+        {OUTFITS.map((outfit) => (
+          <OutfitSection key={outfit.slug} outfit={outfit} onOpen={openOutfitLightbox} />
+        ))}
+      </div>
 
       {/* ── Artisanal details ── */}
       <section className="sa-atelier" id="sa-atelier">
@@ -412,7 +458,7 @@ export default function SplendorAnimae() {
                 <LightboxThumb
                   id={plateItems[i].id}
                   label={`Ingrandisci — ${plate.title}`}
-                  onOpen={() => setActivePlate(i)}
+                  onOpen={() => setLightbox({ items: plateItems, index: i })}
                 >
                   <img
                     src={plateItems[i].thumb}
@@ -464,10 +510,10 @@ export default function SplendorAnimae() {
       </footer>
 
       <Lightbox
-        items={plateItems}
-        active={activePlate}
-        onClose={() => setActivePlate(null)}
-        onNav={setActivePlate}
+        items={lightbox?.items ?? []}
+        active={lightbox ? lightbox.index : null}
+        onClose={() => setLightbox(null)}
+        onNav={(i) => setLightbox((state) => (state ? { ...state, index: i } : state))}
       />
     </div>
     </MotionConfig>

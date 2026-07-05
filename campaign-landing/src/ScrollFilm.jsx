@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './ScrollFilm.css';
 
-const FRAME_COUNT = 241;
+const FRAME_COUNT = 289;
 const TRACK_VH = 700;
 const KEY_STRIDE = 24;
 const MID_STRIDE = 6;

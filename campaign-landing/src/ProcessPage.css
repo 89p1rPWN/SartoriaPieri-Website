@@ -175,7 +175,7 @@
 /* ── craft ── */
 .pp-craft {
   padding: clamp(5rem, 12vh, 9rem) clamp(1.4rem, 5vw, 5rem);
-  background: var(--sa-charcoal);
+  background: rgba(12, 12, 14, 0.62);
   border-top: 1px solid var(--sa-line);
   border-bottom: 1px solid var(--sa-line);
 }

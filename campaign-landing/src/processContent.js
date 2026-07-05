@@ -6,9 +6,14 @@ import { webSrc, fullSrc, videoSrc } from './webgl/story/photoManifest.js';
 
 export { webSrc, fullSrc, videoSrc };
 
+// split ambient loops flanking each outfit section (left/right columns)
+export const sectionVideoSrc = (slug, side) => `/outfits-video/sections/${slug}-${side}.mp4`;
+export const sectionPosterSrc = (slug, side) => `/outfits-video/sections/${slug}-${side}.jpg`;
+
 export const OUTFITS = [
   {
     slug: 'vergogna',
+    looks: ['vergogna_main.jpg', '8.jpg'],
     numeral: 'I',
     name: 'Vergogna',
     emotion: 'Il peso di ciò che nascondiamo sotto la superficie.',
@@ -29,6 +34,7 @@ export const OUTFITS = [
   },
   {
     slug: 'dolore',
+    looks: ['dolore_main.jpg', '5.jpg'],
     numeral: 'II',
     name: 'Dolore',
     emotion: 'Il compagno inevitabile. Il dolore indossato apertamente.',
@@ -49,6 +55,7 @@ export const OUTFITS = [
   },
   {
     slug: 'depravazione',
+    looks: ['1.jpg', '3.jpg'],
     numeral: 'III',
     name: 'Depravazione',
     emotion: "L’esposizione cruda. Il lusso di non avere più nulla da perdere.",
@@ -69,6 +76,7 @@ export const OUTFITS = [
   },
   {
     slug: 'perversione',
+    looks: ['2.jpg', '4.jpg'],
     numeral: 'IV',
     name: 'Perversione',
     emotion: 'La bellezza distorta fino a diventare altro.',
@@ -88,6 +96,7 @@ export const OUTFITS = [
   },
   {
     slug: 'trauma',
+    looks: ['3.jpg', '9.jpg'],
     numeral: 'V',
     name: 'Trauma',
     emotion: 'La frattura. Il prima, il durante, il dopo.',
