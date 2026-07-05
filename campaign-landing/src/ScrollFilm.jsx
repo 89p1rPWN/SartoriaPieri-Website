@@ -33,6 +33,8 @@ const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
  *  - hint: the "scroll to enter" invitation over the opening frame
  *  - fit: 'cover' fills the stage (cropping); 'width' letterboxes the full
  *    frame width — the cinema-strip look for landscape film on portrait
+ *  - bookendFit: 'contain' letterboxes the start/end images over a blurred
+ *    ambient fill (full lineup visible) even while the film itself covers
  */
 export default function ScrollFilm({
   chapters,
@@ -46,6 +48,7 @@ export default function ScrollFilm({
   showLoader = true,
   hint = false,
   fit = 'cover',
+  bookendFit = 'cover',
   className = '',
   ariaLabel = 'Film',
 }) {
@@ -390,11 +393,11 @@ export default function ScrollFilm({
 
         {endImage && (
           <div
-            className={`sa-film-end ${fit === 'width' ? 'sa-film-end--letterbox' : ''}`}
+            className={`sa-film-end ${bookendFit === 'contain' ? 'sa-film-end--letterbox' : ''}`}
             ref={endRef}
             aria-hidden="true"
           >
-            {fit === 'width' && (
+            {bookendFit === 'contain' && (
               <img className="sa-film-end-bg" src={endImage} alt="" draggable={false} />
             )}
             <img src={endImage} alt="" draggable={false} />
@@ -402,7 +405,14 @@ export default function ScrollFilm({
         )}
 
         {startImage && (
-          <div className="sa-film-start" ref={startRef} aria-hidden="true">
+          <div
+            className={`sa-film-start ${bookendFit === 'contain' ? 'sa-film-end--letterbox' : ''}`}
+            ref={startRef}
+            aria-hidden="true"
+          >
+            {bookendFit === 'contain' && (
+              <img className="sa-film-end-bg" src={startImage} alt="" draggable={false} />
+            )}
             <img src={startImage} alt="" draggable={false} />
           </div>
         )}

@@ -197,6 +197,17 @@
   display: block;
 }
 
+/* letterboxed start beats its own cover default (source order) */
+.sa-film-start.sa-film-end--letterbox img {
+  object-fit: contain;
+  object-position: center center;
+  position: relative;
+}
+
+.sa-film-start.sa-film-end--letterbox .sa-film-end-bg {
+  object-fit: cover !important;
+}
+
 /* ── per-outfit mini films ── */
 .sa-outfit-film .sa-film-stage {
   border-top: 1px solid var(--sa-line);
