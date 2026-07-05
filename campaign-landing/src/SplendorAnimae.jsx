@@ -28,12 +28,12 @@ const heroFramePath = (i) =>
 
 // per-outfit scrub sequences (12fps stills under /cinematic/outfits/<slug>/)
 const OUTFIT_FILM_FRAMES = {
-  abisso: 68,
-  trauma: 68,
-  perversione: 68,
-  depravazione: 97,
-  vergogna: 68,
-  dolore: 68,
+  abisso: 135,
+  trauma: 135,
+  perversione: 135,
+  depravazione: 193,
+  vergogna: 135,
+  dolore: 135,
 };
 
 const fadeUp = {
@@ -378,27 +378,9 @@ export default function SplendorAnimae() {
         end: 0.1,
         className: 'sa-film-chapter--hero',
         content: (
-          <>
-            <p className="sa-eyebrow">Sartoriapieri — Couture Study, FW26</p>
-            <h1>
-              Splendor <em>Animae</em>
-            </h1>
-            <p className="sa-film-hero-sub">
-              A cinematic couture study in shadow, lace, and transformation.
-            </p>
-            <div className="sa-hero-actions">
-              <button type="button" className="sa-btn" onClick={() => scrollToFilm(0.17)}>
-                Explore Collection
-              </button>
-              <button
-                type="button"
-                className="sa-btn sa-btn--ghost"
-                onClick={() => scrollTo('#sa-lookbook', 3)}
-              >
-                View Lookbook
-              </button>
-            </div>
-          </>
+          <h1>
+            Splendor <em>Animae</em>
+          </h1>
         ),
       },
       {
@@ -409,12 +391,12 @@ export default function SplendorAnimae() {
         className: 'sa-film-chapter--center-left',
         content: (
           <>
-            <p className="sa-eyebrow">The Collection</p>
+            <p className="sa-eyebrow">La Collezione</p>
             <p className="sa-film-intro-copy">
-              Splendor Animae explores the tension between fragility and power.
-              Distressed lace, fractured silhouettes, veiled forms, and
-              sculptural movement create a collection suspended between ritual,
-              memory, and transformation.
+              Splendor Animae esplora la tensione tra fragilità e potere. Pizzo
+              distrutto, silhouette fratturate, forme velate e movimento
+              scultoreo creano una collezione sospesa tra rituale, memoria e
+              trasformazione.
             </p>
           </>
         ),
@@ -427,8 +409,8 @@ export default function SplendorAnimae() {
         content: (
           <>
             <span className="sa-index">01</span>
-            <h2>Distressed Lace</h2>
-            <p className="sa-film-caption">Lace destroyed by hand, then rebuilt as ornament.</p>
+            <h2>Pizzo Distrutto</h2>
+            <p className="sa-film-caption">Pizzo distrutto a mano, poi ricostruito come ornamento.</p>
           </>
         ),
       },
@@ -441,8 +423,8 @@ export default function SplendorAnimae() {
         content: (
           <>
             <span className="sa-index">02</span>
-            <h2>Veiled Identity</h2>
-            <p className="sa-film-caption">The face withdrawn behind a lace horizon.</p>
+            <h2>Identità Velata</h2>
+            <p className="sa-film-caption">Il volto ritirato dietro un orizzonte di pizzo.</p>
           </>
         ),
       },
@@ -454,8 +436,8 @@ export default function SplendorAnimae() {
         content: (
           <>
             <span className="sa-index">03</span>
-            <h2>Shadow Movement</h2>
-            <p className="sa-film-caption">Silhouettes that dissolve before they resolve.</p>
+            <h2>Movimento d’Ombra</h2>
+            <p className="sa-film-caption">Silhouette che si dissolvono prima di rivelarsi.</p>
           </>
         ),
       },
@@ -468,8 +450,8 @@ export default function SplendorAnimae() {
         content: (
           <>
             <span className="sa-index">04</span>
-            <h2>Openwork Structure</h2>
-            <p className="sa-film-caption">Voids made structural — absence carrying the seam.</p>
+            <h2>Struttura Traforata</h2>
+            <p className="sa-film-caption">Vuoti resi struttura — l’assenza che regge la cucitura.</p>
           </>
         ),
       },
@@ -481,8 +463,8 @@ export default function SplendorAnimae() {
         content: (
           <>
             <span className="sa-index">05</span>
-            <h2>Deconstructed Elegance</h2>
-            <p className="sa-film-caption">Formality taken apart and worn as memory.</p>
+            <h2>Eleganza Decostruita</h2>
+            <p className="sa-film-caption">La formalità scomposta e indossata come memoria.</p>
           </>
         ),
       },
@@ -501,13 +483,13 @@ export default function SplendorAnimae() {
         ),
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     []
   );
 
   return (
     <MotionConfig reducedMotion="user">
-    <div className="sa-root">
+    <div className="sa-root" lang="it">
       <nav className={`sa-nav ${scrolled ? 'is-scrolled' : ''} ${navHidden ? 'is-hidden' : ''}`}>
         <Link to="/" className="sa-nav-mark" aria-label="Sartoriapieri">
           <img className="sa-logo sa-logo--nav" src="/assets/logo.png" alt="Sartoriapieri" />
@@ -537,24 +519,23 @@ export default function SplendorAnimae() {
         bookendFit={PORTRAIT ? 'contain' : 'cover'}
         showLoader
         hint
-        ariaLabel="Splendor Animae — the film"
+        ariaLabel="Splendor Animae — il film"
       />
 
       {/* static narrative for screen readers — the visual chapters above are
           scroll-gated and marked decorative */}
       <div className="sa-sr-only">
-        <h2>The Collection</h2>
+        <h2>La Collezione</h2>
         <p>
-          Splendor Animae explores the tension between fragility and power.
-          Distressed lace, fractured silhouettes, veiled forms, and sculptural
-          movement create a collection suspended between ritual, memory, and
-          transformation.
+          Splendor Animae esplora la tensione tra fragilità e potere. Pizzo
+          distrutto, silhouette fratturate, forme velate e movimento scultoreo
+          creano una collezione sospesa tra rituale, memoria e trasformazione.
         </p>
-        <p>Distressed Lace — lace destroyed by hand, then rebuilt as ornament.</p>
-        <p>Veiled Identity — the face withdrawn behind a lace horizon.</p>
-        <p>Shadow Movement — silhouettes that dissolve before they resolve.</p>
-        <p>Openwork Structure — voids made structural, absence carrying the seam.</p>
-        <p>Deconstructed Elegance — formality taken apart and worn as memory.</p>
+        <p>Pizzo Distrutto — pizzo distrutto a mano, poi ricostruito come ornamento.</p>
+        <p>Identità Velata — il volto ritirato dietro un orizzonte di pizzo.</p>
+        <p>Movimento d’Ombra — silhouette che si dissolvono prima di rivelarsi.</p>
+        <p>Struttura Traforata — vuoti resi struttura, l’assenza che regge la cucitura.</p>
+        <p>Eleganza Decostruita — la formalità scomposta e indossata come memoria.</p>
       </div>
 
       {/* ── The five outfits ── */}
@@ -583,8 +564,8 @@ export default function SplendorAnimae() {
           whileInView="show"
           viewport={{ once: true, margin: '-15% 0px' }}
         >
-          <p className="sa-eyebrow">Artisanal Details</p>
-          <h2>The Hand Remains Visible</h2>
+          <p className="sa-eyebrow">Dettagli Artigianali</p>
+          <h2>La mano resta visibile</h2>
         </Motion.div>
         <div className="sa-atelier-grid">
           {ATELIER_PLATES.map((plate, i) => (
@@ -634,13 +615,13 @@ export default function SplendorAnimae() {
           viewport={{ once: true, margin: '-20% 0px' }}
         >
           <h2>
-            Enter the world of <em>Splendor Animae</em>.
+            Entra nel mondo di <em>Splendor Animae</em>.
           </h2>
           <a
             className="sa-btn sa-btn--solid"
             href="mailto:press@sartoriapieri.com?subject=Splendor%20Animae%20%E2%80%94%20Lookbook%20Request"
           >
-            Request the Lookbook
+            Richiedi il Lookbook
           </a>
         </Motion.div>
       </section>

@@ -433,7 +433,7 @@ export default function ScrollFilm({
         {hint && (
           <div className="sa-film-hint" ref={hintRef} aria-hidden="true">
             <span className="sa-film-hint-label">
-              Scroll to enter the world of Splendor Animae
+              Scorri per entrare nel mondo di Splendor Animae
             </span>
             <span className="sa-film-hint-line">
               <i />
