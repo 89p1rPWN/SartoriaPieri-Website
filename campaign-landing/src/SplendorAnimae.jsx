@@ -15,7 +15,14 @@ import './SplendorAnimae.css';
 
 const EASE = [0.16, 1, 0.3, 1];
 
-const heroFramePath = (i) => `/cinematic/frames/frame-${String(i + 1).padStart(4, '0')}.jpg`;
+// portrait phones get center-cropped portrait sequences (full sharpness at a
+// fraction of the landscape frames' weight) and shorter scrub tracks
+const PORTRAIT =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(orientation: portrait) and (max-width: 900px)').matches;
+
+const heroFramePath = (i) =>
+  `/cinematic/frames/${PORTRAIT ? 'p/' : ''}frame-${String(i + 1).padStart(4, '0')}.jpg`;
 
 // per-outfit scrub sequences (12fps stills under /cinematic/outfits/<slug>/)
 const OUTFIT_FILM_FRAMES = {
@@ -150,9 +157,9 @@ function OutfitFilm({ outfit, onOpen }) {
       chapters={chapters}
       frameCount={OUTFIT_FILM_FRAMES[outfit.slug]}
       framePath={(i) =>
-        `/cinematic/outfits/${outfit.slug}/frame-${String(i + 1).padStart(4, '0')}.jpg`
+        `/cinematic/outfits/${outfit.slug}/${PORTRAIT ? 'p/' : ''}frame-${String(i + 1).padStart(4, '0')}.jpg`
       }
-      trackVh={280}
+      trackVh={PORTRAIT ? 230 : 280}
       endImage={`/cinematic/outfits/${outfit.slug}/end.jpg`}
       endStart={0.72}
       lazy
@@ -513,7 +520,7 @@ export default function SplendorAnimae() {
         chapters={chapters}
         frameCount={275}
         framePath={heroFramePath}
-        trackVh={700}
+        trackVh={PORTRAIT ? 550 : 700}
         endImage="/cinematic/endcard.jpg"
         endStart={0.9}
         showLoader
