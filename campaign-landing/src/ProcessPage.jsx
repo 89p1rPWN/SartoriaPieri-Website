@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import Lenis from 'lenis';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import {
   motion as Motion,
@@ -60,6 +61,7 @@ function ParallaxImg({ src, alt, range = 8, className, onOpen, thumbId }) {
 export default function ProcessPage() {
   const { slug } = useParams();
   const outfit = outfitBySlug(slug);
+  const lenisRef = useRef(null);
   const heroRef = useRef(null);
   const titleRef = useRef(null);
   const heroVideoRef = useRef(null);
@@ -83,6 +85,35 @@ export default function ProcessPage() {
   });
   const videoY = useTransform(heroProgress, [0, 1], ['0%', '14%']);
   const titleY = useTransform(heroProgress, [0, 1], ['0%', '-30%']);
+
+  // the same smooth scroll as the collection page
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const lenis = new Lenis({
+      duration: 1.7,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 0.85,
+    });
+    lenisRef.current = lenis;
+    let rafId;
+    const loop = (time) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(loop);
+    };
+    rafId = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
+
+  // pause Lenis while the lightbox owns the viewport
+  useEffect(() => {
+    if (active != null) lenisRef.current?.stop();
+    else lenisRef.current?.start();
+  }, [active]);
 
   // reset before paint so the new outfit never flashes at the old scroll
   // offset (which would also consume the once:true entrance animations)

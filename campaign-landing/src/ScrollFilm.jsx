@@ -4,8 +4,8 @@ import './ScrollFilm.css';
 const CONCURRENCY = 6; // browsers cap at 6 connections per origin on HTTP/1.1
 const MAX_RETRIES = 2;
 const READY_WATCHDOG_MS = 12000;
-const DECODE_AHEAD = 10;
-const DECODE_BEHIND = 3;
+const DECODE_AHEAD = 16;
+const DECODE_BEHIND = 6;
 const FOCAL_Y = 0.42;
 const MAX_DPR = 2;
 
@@ -291,8 +291,9 @@ export default function ScrollFilm({
         current = target;
         snapOnResume = false;
       } else {
-        current += (target - current) * (1 - Math.pow(0.0015, dt));
-        if (Math.abs(target - current) < 0.4) current = target;
+        // softer time-based lerp: silkier scrub tail, ~150ms of follow
+        current += (target - current) * (1 - Math.pow(0.01, dt));
+        if (Math.abs(target - current) < 0.15) current = target;
       }
 
       const visualP = current / (frameCount - 1);
