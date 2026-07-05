@@ -147,7 +147,7 @@ export default function ProcessPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: EASE, delay: 0.3 }}
             >
-              Il Processo — {outfit.numeral} di V
+              Il Processo — {outfit.numeral} di VI
             </Motion.p>
             <Motion.h1
               ref={titleRef}
@@ -212,6 +212,7 @@ export default function ProcessPage() {
             </Motion.p>
           </Motion.div>
 
+          {steps.length > 0 && (
           <div className="pp-steps">
             {steps.map((text, i) => {
               const img = outfit.processImages[i % outfit.processImages.length];
@@ -241,9 +242,11 @@ export default function ProcessPage() {
               );
             })}
           </div>
+          )}
         </section>
 
         {/* ── la mano / craft macros ── */}
+        {outfit.craftImages.length > 0 && (
         <section className="pp-craft">
           <Motion.div
             className="sa-section-head"
@@ -278,6 +281,7 @@ export default function ProcessPage() {
             ))}
           </div>
         </section>
+        )}
 
         {/* ── archivio / gallery with zoom ── */}
         <section className="pp-archive">
