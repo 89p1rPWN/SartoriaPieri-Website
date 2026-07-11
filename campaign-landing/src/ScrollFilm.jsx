@@ -97,6 +97,7 @@ export default function ScrollFilm({
   startImage = null,
   endImage = null,
   endStart = 0.74,
+  endFadeSpan = null,
   lazy = false,
   showLoader = true,
   hint = false,
@@ -409,7 +410,10 @@ export default function ScrollFilm({
       }
       if (endRef.current) {
         // fade span never extends past the track end
-        const endFade = Math.min(0.14, Math.max(0.02, 1 - endStart));
+        const endFade = Math.min(
+          endFadeSpan ?? 0.14,
+          Math.max(0.02, 1 - endStart)
+        );
         const endO = clamp((visualP - endStart) / endFade, 0, 1);
         if (Math.abs(endO - lastEnd) > 0.002) {
           lastEnd = endO;
@@ -440,7 +444,7 @@ export default function ScrollFilm({
       window.removeEventListener('resize', resize);
       io.disconnect();
     };
-  }, [chapters, frameCount, trackVh, endImage, endStart, lazy, showLoader, fit]);
+  }, [chapters, frameCount, trackVh, endImage, endStart, endFadeSpan, lazy, showLoader, fit]);
 
   return (
     <section

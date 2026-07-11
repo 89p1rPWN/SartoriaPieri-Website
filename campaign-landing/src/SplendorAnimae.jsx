@@ -515,7 +515,8 @@ export default function SplendorAnimae() {
         trackVh={PORTRAIT ? 850 : 700}
         startImage={PORTRAIT ? '/cinematic/frames/m/frame-0001.jpg' : null}
         endImage="/cinematic/endcard.jpg"
-        endStart={0.9}
+        endStart={0.85}
+        endFadeSpan={0.07}
         bookendFit={PORTRAIT ? 'contain' : 'cover'}
         showLoader
         hint
