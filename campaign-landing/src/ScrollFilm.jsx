@@ -11,6 +11,59 @@ const MAX_DPR = 2;
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
+/* ── shared background-preload coordinator ──
+ * Every film registers here in mount order (top of page first). The film at
+ * the head of the queue downloads its frames; when its queue drains, the
+ * next film starts. So the hero streams first, then each outfit film warms
+ * top-to-bottom while the visitor is still up-page — by the time a track
+ * scrolls near, its frames are already resident and the scrub is instant.
+ * A film that approaches the viewport still starts immediately (visibility
+ * beats the queue); explicit data-thrift signals disable only the
+ * background pass, never visibility-triggered loading. */
+const dataThrift = () => {
+  const conn = typeof navigator !== 'undefined' ? navigator.connection : null;
+  return Boolean(conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || '')));
+};
+
+const preloadQueue = [];
+let preloadActive = null;
+let preloadPumpScheduled = false;
+
+// deferred a microtask so a page teardown (cleanups releasing one by one)
+// empties the queue before the pump runs, instead of chain-starting films
+// that are about to unmount
+const preloadPump = () => {
+  if (preloadPumpScheduled) return;
+  preloadPumpScheduled = true;
+  queueMicrotask(() => {
+    preloadPumpScheduled = false;
+    if (preloadActive || dataThrift()) return;
+    const next = preloadQueue.find((entry) => !entry.started);
+    if (next) {
+      preloadActive = next;
+      next.start();
+    }
+  });
+};
+
+const preloadRegister = (entry) => {
+  preloadQueue.push(entry);
+  preloadPump();
+};
+
+const preloadClaim = (entry) => {
+  if (!preloadActive) preloadActive = entry;
+};
+
+const preloadRelease = (entry) => {
+  const at = preloadQueue.indexOf(entry);
+  if (at !== -1) preloadQueue.splice(at, 1);
+  if (preloadActive === entry) {
+    preloadActive = null;
+    preloadPump();
+  }
+};
+
 /**
  * Scroll-scrubbed frame-sequence film.
  * A tall scroll track drives a pinned full-viewport canvas: scroll progress
@@ -95,6 +148,10 @@ export default function ScrollFilm({
       setReady(true);
     };
 
+    // declared ahead of the loader: pump() reads inView to pick fetch priority
+    let inView = true;
+    let snapOnResume = false;
+
     /* ── progressive loader: keyframes → mid pass → every frame ── */
     const keySet = new Set();
     for (let i = 0; i < frameCount; i += keyStride) keySet.add(i);
@@ -117,6 +174,7 @@ export default function ScrollFilm({
     let keyLoaded = 0;
     let loadStarted = false;
     let watchdog = null;
+    const queueEntry = { started: false, start: () => startLoading() };
 
     const onFrameLoaded = (i) => {
       if (!showLoader) {
@@ -139,7 +197,10 @@ export default function ScrollFilm({
       if (cursor >= order.length) {
         // queue drained: if some keyframes failed for good, reveal anyway —
         // the loop renders nearest-loaded neighbours.
-        if (inflight === 0) reveal();
+        if (inflight === 0) {
+          reveal();
+          preloadRelease(queueEntry); // hand the network to the next film
+        }
         return;
       }
       const i = order[cursor];
@@ -147,6 +208,8 @@ export default function ScrollFilm({
       inflight += 1;
       const img = new Image();
       img.decoding = 'async';
+      // background warming must never outrank what the visitor is looking at
+      img.fetchPriority = inView ? 'auto' : 'low';
       img.onload = () => {
         inflight -= 1;
         images[i] = img;
@@ -171,11 +234,15 @@ export default function ScrollFilm({
     const startLoading = () => {
       if (loadStarted || disposed) return;
       loadStarted = true;
+      queueEntry.started = true;
+      // hold the coordinator slot so films further down wait their turn
+      preloadClaim(queueEntry);
       for (let c = 0; c < CONCURRENCY; c += 1) pump();
       // never leave the visitor behind an opaque loader: reveal after a
       // deadline even if keyframes are still missing.
       watchdog = setTimeout(reveal, READY_WATCHDOG_MS);
     };
+    preloadRegister(queueEntry);
     if (!lazy) startLoading();
 
     /* ── canvas sizing (from the stage box, NOT the window: the stage is
@@ -202,8 +269,6 @@ export default function ScrollFilm({
 
     /* ── idle gating: skip all per-frame work while the track is offscreen;
        for lazy films the same observer starts the frame downloads early ── */
-    let inView = true;
-    let snapOnResume = false;
     const io = new IntersectionObserver(
       (entries) => {
         inView = entries[0].isIntersecting;
@@ -369,6 +434,7 @@ export default function ScrollFilm({
 
     return () => {
       disposed = true;
+      preloadRelease(queueEntry);
       if (watchdog) clearTimeout(watchdog);
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
