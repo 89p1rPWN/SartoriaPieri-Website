@@ -431,8 +431,8 @@ export default function SplendorAnimae() {
       {
         id: 'movement',
         decorative: true,
-        start: 0.685,
-        end: 0.77,
+        start: 0.64,
+        end: 0.715,
         content: (
           <>
             <span className="sa-index">03</span>
@@ -458,8 +458,8 @@ export default function SplendorAnimae() {
       {
         id: 'deconstructed',
         decorative: true,
-        start: 0.77,
-        end: 0.85,
+        start: 0.725,
+        end: 0.785,
         content: (
           <>
             <span className="sa-index">05</span>
@@ -471,7 +471,7 @@ export default function SplendorAnimae() {
       {
         id: 'logo',
         decorative: true,
-        start: 0.925,
+        start: 0.86,
         end: 1.1,
         className: 'sa-film-chapter--center',
         content: (
@@ -515,7 +515,7 @@ export default function SplendorAnimae() {
         trackVh={PORTRAIT ? 850 : 700}
         startImage={PORTRAIT ? '/cinematic/frames/m/frame-0001.jpg' : null}
         endImage="/cinematic/endcard.jpg"
-        endStart={0.85}
+        endStart={0.78}
         endFadeSpan={0.07}
         bookendFit={PORTRAIT ? 'contain' : 'cover'}
         showLoader
