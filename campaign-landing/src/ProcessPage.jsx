@@ -30,34 +30,6 @@ const fadeUp = {
   }),
 };
 
-function ParallaxImg({ src, alt, range = 8, className, onOpen, thumbId }) {
-  const ref = useRef(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], [`-${range}%`, `${range}%`]);
-
-  const img = (
-    <Motion.img
-      src={src}
-      alt={alt}
-      loading="lazy"
-      decoding="async"
-      style={reduce ? undefined : { y }}
-    />
-  );
-  return (
-    <div ref={ref} className={`pp-parallax ${className || ''}`}>
-      {thumbId ? (
-        <LightboxThumb id={thumbId} onOpen={onOpen}>
-          {img}
-        </LightboxThumb>
-      ) : (
-        img
-      )}
-    </div>
-  );
-}
-
 export default function ProcessPage() {
   const { slug } = useParams();
   const outfit = outfitBySlug(slug);
@@ -67,7 +39,8 @@ export default function ProcessPage() {
   const heroVideoRef = useRef(null);
   const prevSlugRef = useRef(null);
   const reduce = useReducedMotion();
-  const [active, setActive] = useState(null);
+  // one lightbox for the whole page: { items, index } or null
+  const [lightbox, setLightbox] = useState(null);
   const [videoPaused, setVideoPaused] = useState(false);
   const [lastSlug, setLastSlug] = useState(slug);
 
@@ -75,7 +48,7 @@ export default function ProcessPage() {
   // lightbox index and pause state must not leak between outfits
   if (lastSlug !== slug) {
     setLastSlug(slug);
-    setActive(null);
+    setLightbox(null);
     setVideoPaused(false);
   }
 
@@ -111,9 +84,9 @@ export default function ProcessPage() {
 
   // pause Lenis while the lightbox owns the viewport
   useEffect(() => {
-    if (active != null) lenisRef.current?.stop();
+    if (lightbox != null) lenisRef.current?.stop();
     else lenisRef.current?.start();
-  }, [active]);
+  }, [lightbox]);
 
   // reset before paint so the new outfit never flashes at the old scroll
   // offset (which would also consume the once:true entrance animations)
@@ -143,11 +116,18 @@ export default function ProcessPage() {
     }
   };
 
-  const galleryItems = outfit.gallery.map((file, i) => ({
-    id: `${outfit.slug}-${file}`,
+  const studioItems = outfit.studio.map((file, i) => ({
+    id: `${outfit.slug}-studio-${file}`,
     thumb: webSrc(outfit.slug, file),
     full: fullSrc(outfit.slug, file),
-    alt: `${outfit.name} — archivio, immagine ${i + 1} di ${outfit.gallery.length}`,
+    alt: `${outfit.name} — studio, immagine ${i + 1} di ${outfit.studio.length}`,
+  }));
+
+  const sketchItems = outfit.sketches.map((file, i) => ({
+    id: `${outfit.slug}-sketch-${file}`,
+    thumb: webSrc(outfit.slug, file),
+    full: fullSrc(outfit.slug, file),
+    alt: `${outfit.name} — processo creativo, immagine ${i + 1} di ${outfit.sketches.length}`,
   }));
 
   const [lead, ...steps] = outfit.process;
@@ -245,40 +225,28 @@ export default function ProcessPage() {
 
           {steps.length > 0 && (
           <div className="pp-steps">
-            {steps.map((text, i) => {
-              const img = outfit.processImages[i % outfit.processImages.length];
-              const flip = i % 2 === 1;
-              return (
-                <Motion.article
-                  key={text.slice(0, 24)}
-                  className={`pp-step ${flip ? 'pp-step--flip' : ''}`}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, margin: '-12% 0px' }}
-                >
-                  {i < outfit.processImages.length && (
-                    <ParallaxImg
-                      className="pp-step-media"
-                      src={webSrc(outfit.slug, img)}
-                      alt={`${outfit.name} — processo`}
-                      range={7}
-                    />
-                  )}
-                  <div className="pp-step-text">
-                    <span className="sa-index">{String(i + 1).padStart(2, '0')}</span>
-                    <p>{text}</p>
-                  </div>
-                </Motion.article>
-              );
-            })}
+            {steps.map((text, i) => (
+              <Motion.article
+                key={text.slice(0, 24)}
+                className="pp-step"
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: '-12% 0px' }}
+              >
+                <div className="pp-step-text">
+                  <span className="sa-index">{String(i + 1).padStart(2, '0')}</span>
+                  <p>{text}</p>
+                </div>
+              </Motion.article>
+            ))}
           </div>
           )}
         </section>
 
-        {/* ── la mano / craft macros ── */}
-        {outfit.craftImages.length > 0 && (
-        <section className="pp-craft">
+        {/* ── lo studio: the garment in full light ── */}
+        {studioItems.length > 0 && (
+        <section className="pp-studio">
           <Motion.div
             className="sa-section-head"
             variants={fadeUp}
@@ -286,64 +254,69 @@ export default function ProcessPage() {
             whileInView="show"
             viewport={{ once: true, margin: '-15% 0px' }}
           >
-            <p className="sa-eyebrow">Artigianato</p>
-            <h2>La mano resta visibile</h2>
+            <p className="sa-eyebrow">Lo Studio</p>
+            <h2>Il capo, in piena luce</h2>
           </Motion.div>
-          <div className="pp-craft-grid">
-            {outfit.craftImages.map((craft, i) => (
-              <Motion.figure
-                key={craft.file}
-                className="pp-craft-item"
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: '-10% 0px' }}
-              >
-                <ParallaxImg
-                  src={webSrc(outfit.slug, craft.file)}
-                  alt={craft.caption}
-                  range={i === 0 ? 9 : 5}
-                />
-                <figcaption>
-                  <span className="sa-index">Plate {['I', 'II'][i]}</span>
-                  <p>{craft.caption}</p>
-                </figcaption>
-              </Motion.figure>
-            ))}
-          </div>
-        </section>
-        )}
-
-        {/* ── archivio / gallery with zoom ── */}
-        <section className="pp-archive">
-          <Motion.div
-            className="sa-section-head"
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-15% 0px' }}
-          >
-            <p className="sa-eyebrow">Archivio</p>
-            <h2>Ogni fase, documentata</h2>
-          </Motion.div>
-          <div className="pp-archive-grid">
-            {galleryItems.map((item, i) => (
+          <div className="pp-studio-grid">
+            {studioItems.map((item, i) => (
               <Motion.div
                 key={item.id}
-                className="pp-archive-cell"
+                className="pp-studio-cell"
                 variants={fadeUp}
                 custom={(i % 3) * 0.07}
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, margin: '-8% 0px' }}
               >
-                <LightboxThumb id={item.id} label={item.alt} onOpen={() => setActive(i)}>
+                <LightboxThumb
+                  id={item.id}
+                  label={item.alt}
+                  onOpen={() => setLightbox({ items: studioItems, index: i })}
+                >
                   <img src={item.thumb} alt={item.alt} loading="lazy" decoding="async" />
                 </LightboxThumb>
               </Motion.div>
             ))}
           </div>
         </section>
+        )}
+
+        {/* ── schizzi e lavorazione: sketch pages + work in progress ── */}
+        {sketchItems.length > 0 && (
+        <section className="pp-sketch">
+          <Motion.div
+            className="sa-section-head"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-15% 0px' }}
+          >
+            <p className="sa-eyebrow">Dietro le Quinte</p>
+            <h2>Schizzi e lavorazione</h2>
+          </Motion.div>
+          <div className="pp-sketch-grid">
+            {sketchItems.map((item, i) => (
+              <Motion.div
+                key={item.id}
+                className="pp-sketch-cell"
+                variants={fadeUp}
+                custom={(i % 3) * 0.07}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: '-8% 0px' }}
+              >
+                <LightboxThumb
+                  id={item.id}
+                  label={item.alt}
+                  onOpen={() => setLightbox({ items: sketchItems, index: i })}
+                >
+                  <img src={item.thumb} alt={item.alt} loading="lazy" decoding="async" />
+                </LightboxThumb>
+              </Motion.div>
+            ))}
+          </div>
+        </section>
+        )}
 
         {/* ── garment data ── */}
         <section className="pp-data">
@@ -381,10 +354,10 @@ export default function ProcessPage() {
         </footer>
 
         <Lightbox
-          items={galleryItems}
-          active={active}
-          onClose={() => setActive(null)}
-          onNav={setActive}
+          items={lightbox?.items ?? []}
+          active={lightbox ? lightbox.index : null}
+          onClose={() => setLightbox(null)}
+          onNav={(i) => setLightbox((state) => (state ? { ...state, index: i } : state))}
         />
       </div>
     </MotionConfig>

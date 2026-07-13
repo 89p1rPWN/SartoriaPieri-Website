@@ -3,6 +3,9 @@
 // published pages (outfits/<slug>/ — the cream text plates). Emotion lines and
 // summaries come from the collection copy in Collection1New.jsx. Order is the
 // collection order: Abisso opens the descent, Dolore closes it.
+// studio: light-seamless lookbook shots (Lo Studio section on the process page).
+// sketches: annotated process collages + work-in-progress shots (Schizzi e
+// lavorazione section). gallery: the full archive, used by the main page lightbox.
 import { webSrc, fullSrc, videoSrc } from './webgl/story/photoManifest.js';
 
 export { webSrc, fullSrc, videoSrc };
@@ -22,8 +25,8 @@ export const OUTFITS = [
     process: [
       "L'Abisso è la matrice della collezione: il cartamodello da cui gli stigmi discendono — la gonna del Trauma ne riprende il taglio. Un velo che inghiotte la figura, strati di pizzo strappato che risalgono dal buio.",
     ],
-    processImages: [],
-    craftImages: [],
+    studio: ['studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg'],
+    sketches: [],
     gallery: ['abisso_main.jpg', '2.jpg', '3.jpg', '4.jpg'],
   },
   {
@@ -40,11 +43,8 @@ export const OUTFITS = [
       "Il cappello è un’evoluzione: diverso nella forma, più corto nel velo, svela il mistero invece di nasconderlo. L’organza cangiante, bruciata e sbrandellata, segna l’inizio della rivelazione.",
       'Affrontando il primo stigma, la gabbia inizia a cedere.',
     ],
-    processImages: ['1.jpg', '2.jpg', '8.jpg'],
-    craftImages: [
-      { file: '4.jpg', caption: 'La mezzaruota — struttura della gonna' },
-      { file: '6.jpg', caption: "L’organza bruciata, fissata a caldo" },
-    ],
+    studio: ['studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg', '5.jpg'],
+    sketches: ['8.jpg', '1.jpg', '2.jpg', '4.jpg', '6.jpg'],
     gallery: ['stage.jpg', '3.jpg', '1.jpg', '2.jpg', '4.jpg', '5.jpg', '6.jpg', '8.jpg', '9.jpg', '10.jpg'],
   },
   {
@@ -60,11 +60,8 @@ export const OUTFITS = [
       'Per il collo, un tessuto luminoso dona movimento; per il seno e la vulva, fiori ricamati con Swarovski si uniscono a strass, paillettes.',
       "Il cappello segna la fine della gabbia e l’inizio della rivelazione, ispirato all’eleganza dei cappelli dei samurai giapponesi: un “vedo/non vedo” elegante e misterioso, che completa l’outfit.",
     ],
-    processImages: ['1.jpg', '5.jpg', '9.jpg'],
-    craftImages: [
-      { file: '6.jpg', caption: 'Il pizzo del cappello, steso e cerchiato' },
-      { file: '7.jpg', caption: 'Il cappello prende forma sul busto' },
-    ],
+    studio: ['studio-1.jpg', '2.jpg', 'studio-2.jpg', 'studio-3.jpg', 'studio-4.jpg'],
+    sketches: ['1.jpg', '5.jpg', '9.jpg', '6.jpg', '7.jpg'],
     gallery: ['stage.jpg', '2.jpg', '1.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '9.jpg'],
   },
   {
@@ -81,11 +78,8 @@ export const OUTFITS = [
       "L’obiettivo era tradurre a livello modellistico ciò che era già stato esplorato nella sirena con collo alto, ma in una visione più cruda e disinibita.",
       'La corona di spine rappresenta la sofferenza legata alla perdita del controllo, con le mutande sbrindellate che si insinuano tra le punte come simbolo di caos e trasgressione.',
     ],
-    processImages: ['2.jpg', '5.jpg'],
-    craftImages: [
-      { file: '4.jpg', caption: 'La corona di spine, modellata a mano' },
-      { file: '7.jpg', caption: 'La struttura della corona sul busto' },
-    ],
+    studio: ['studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg', 'studio-4.jpg', 'studio-5.jpg'],
+    sketches: ['5.jpg', '2.jpg', '7.jpg', '4.jpg'],
     gallery: ['stage.jpg', '1.jpg', '10.jpg', '9.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'],
   },
   {
@@ -102,11 +96,8 @@ export const OUTFITS = [
       "Un drappeggio di organza soffocante avvolge il corpo, cancellando i connotati e trasmettendo l’angoscia del nascondimento.",
       "Il patchwork ritorna come frammentazione dell’essere e testimonianza di vulnerabilità.",
     ],
-    processImages: ['2.jpg', '3.jpg', '4.jpg'],
-    craftImages: [
-      { file: '6.jpg', caption: 'Il ricamo fissato a pinzette, perla per perla' },
-      { file: '7.jpg', caption: 'Il patchwork — frammentazione cucita a mano' },
-    ],
+    studio: ['8.jpg', 'studio-1.jpg'],
+    sketches: ['4.jpg', '3.jpg', '2.jpg', '7.jpg', '6.jpg'],
     gallery: ['stage.jpg', 'vergogna_main.jpg', '9.jpg', '1.jpg', '2.jpg', '3.jpg', '4.jpg', '6.jpg', '7.jpg', '8.jpg'],
   },
   {
@@ -123,11 +114,8 @@ export const OUTFITS = [
       'Il ricamo è ispirato alle lacrime e si alterna a mani cucite che stringono il tessuto: il dolore prende forma in molteplici volti.',
       "L’outfit porta con sé un’anima pesante, e pesante appare allo sguardo, come il dolore stesso.",
     ],
-    processImages: ['3.jpg', '4.jpg', '6.jpg'],
-    craftImages: [
-      { file: '2.jpg', caption: 'Lacrime ricamate, cucite una ad una' },
-      { file: '5.jpg', caption: "L’organza ricamata — il dolore in trasparenza" },
-    ],
+    studio: ['dolore_main.jpg', 'studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg'],
+    sketches: ['4.jpg', '3.jpg', '6.jpg', '5.jpg', '2.jpg'],
     gallery: ['stage.jpg', 'dolore_main.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg'],
   },
 ];

@@ -478,7 +478,7 @@ export default function SplendorAnimae() {
         framePath={heroFramePath}
         trackVh={PORTRAIT ? 850 : 700}
         startImage={PORTRAIT ? '/cinematic/frames/m/frame-0001.jpg' : null}
-        endImage="/cinematic/endcard.jpg"
+        endImage="/cinematic/endcard-order.jpg"
         endStart={0.78}
         endFadeSpan={0.07}
         bookendFit={PORTRAIT ? 'contain' : 'cover'}

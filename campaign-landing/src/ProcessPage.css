@@ -98,18 +98,6 @@
   border-color: rgba(233, 229, 221, 0.5);
 }
 
-/* ── parallax frame ── */
-.pp-parallax {
-  overflow: hidden;
-}
-
-.pp-parallax img {
-  width: 100%;
-  height: 116%;
-  object-fit: cover;
-  display: block;
-}
-
 /* ── processo ── */
 .pp-process {
   padding: clamp(5rem, 12vh, 9rem) clamp(1.4rem, 5vw, 5rem);
@@ -131,35 +119,9 @@
   margin-top: clamp(3.5rem, 8vh, 6rem);
 }
 
-.pp-step {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  align-items: center;
-}
-
-.pp-step-media {
-  grid-column: 1 / 7;
-  max-height: 36rem;
-  aspect-ratio: 4 / 5;
-}
-
 .pp-step-text {
-  grid-column: 8 / 13;
-}
-
-.pp-step--flip .pp-step-media {
-  grid-column: 7 / 13;
-  order: 2;
-}
-
-.pp-step--flip .pp-step-text {
-  grid-column: 1 / 6;
-  order: 1;
-}
-
-.pp-step:not(:has(.pp-step-media)) .pp-step-text {
-  grid-column: 3 / 11;
+  max-width: 44rem;
+  margin-inline: auto;
   text-align: center;
 }
 
@@ -171,74 +133,62 @@
   margin-top: 1.1rem;
 }
 
-/* ── craft ── */
-.pp-craft {
+/* ── lo studio (light band — the garment in full light) ── */
+.pp-studio {
   padding: clamp(5rem, 12vh, 9rem) clamp(1.4rem, 5vw, 5rem);
-  background: rgba(12, 12, 14, 0.62);
-  border-top: 1px solid var(--sa-line);
-  border-bottom: 1px solid var(--sa-line);
+  background: #eceae6;
 }
 
-.pp-craft-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  align-items: start;
+.pp-studio .sa-section-head h2 {
+  color: #121013;
 }
 
-.pp-craft-item {
-  margin: 0;
+.pp-studio .sa-eyebrow {
+  color: #8a6f4d;
 }
 
-.pp-craft-item:nth-child(2) {
-  margin-top: clamp(2rem, 8vh, 5rem);
-}
-
-.pp-craft-item .pp-parallax {
-  aspect-ratio: 4 / 5;
-}
-
-.pp-craft-item figcaption {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding-top: 1.2rem;
-  border-top: 1px solid var(--sa-line);
-  margin-top: 1.2rem;
-}
-
-.pp-craft-item figcaption p {
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: var(--sa-muted);
-  letter-spacing: 0.02em;
-}
-
-/* ── archive ── */
-.pp-archive {
-  padding: clamp(5rem, 12vh, 9rem) clamp(1.4rem, 5vw, 5rem);
-}
-
-.pp-archive-grid {
+.pp-studio-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(0.8rem, 1.8vw, 1.6rem);
 }
 
-.pp-archive-cell .lb-thumb {
+.pp-studio-cell .lb-thumb {
+  aspect-ratio: 3 / 4;
+  background: #e3e0db;
+}
+
+.pp-studio-cell img {
+  transition: transform 1.8s var(--sa-ease);
+}
+
+.pp-studio-cell:hover img {
+  transform: scale(1.04);
+}
+
+/* ── schizzi e lavorazione ── */
+.pp-sketch {
+  padding: clamp(5rem, 12vh, 9rem) clamp(1.4rem, 5vw, 5rem);
+  background: rgba(12, 12, 14, 0.62);
+  border-bottom: 1px solid var(--sa-line);
+}
+
+.pp-sketch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.8rem, 1.8vw, 1.6rem);
+}
+
+.pp-sketch-cell .lb-thumb {
   aspect-ratio: 4 / 5;
 }
 
-.pp-archive-cell:nth-child(4n + 1) .lb-thumb {
-  aspect-ratio: 3 / 4;
-}
-
-.pp-archive-cell img {
+.pp-sketch-cell img {
   transition: transform 1.8s var(--sa-ease), filter 1s ease;
   filter: grayscale(6%);
 }
 
-.pp-archive-cell:hover img {
+.pp-sketch-cell:hover img {
   transform: scale(1.04);
   filter: grayscale(0%);
 }
@@ -335,32 +285,15 @@
     width: min(100%, 24rem);
   }
 
-  .pp-step,
-  .pp-step--flip {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .pp-step--flip .pp-step-media {
-    order: 0;
-  }
-
-  .pp-craft-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pp-craft-item:nth-child(2) {
-    margin-top: 0;
-  }
-
-  .pp-archive-grid {
+  .pp-studio-grid,
+  .pp-sketch-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 560px) {
-  .pp-archive-grid {
+  .pp-studio-grid,
+  .pp-sketch-grid {
     grid-template-columns: 1fr;
   }
 
