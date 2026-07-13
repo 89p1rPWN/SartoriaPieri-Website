@@ -99,26 +99,6 @@
   border-color: var(--sa-text);
 }
 
-.sa-btn--ghost {
-  border-color: rgba(233, 229, 221, 0.18);
-  color: var(--sa-muted);
-}
-
-.sa-btn--ghost:hover {
-  color: var(--sa-black);
-}
-
-.sa-btn--solid {
-  background: var(--sa-text);
-  color: var(--sa-black);
-  border-color: var(--sa-text);
-}
-
-.sa-btn--solid:hover {
-  background: transparent;
-  color: var(--sa-text);
-}
-
 .sa-hero-actions {
   display: flex;
   flex-wrap: wrap;

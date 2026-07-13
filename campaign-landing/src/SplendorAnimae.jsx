@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import { motion as Motion, MotionConfig } from 'framer-motion';
 import Lenis from 'lenis';
 import ScrollFilm from './ScrollFilm.jsx';
-import Lightbox, { LightboxThumb } from './Lightbox.jsx';
+import { LightboxThumb } from './Lightbox.jsx';
 import {
   OUTFITS,
   webSrc,
-  fullSrc,
   sectionVideoSrc,
   sectionPosterSrc,
 } from './processContent.js';
@@ -47,7 +46,7 @@ const fadeUp = {
 
 // Immersive variant: each outfit is its own scroll-scrubbed mini-film that
 // settles on the full-outfit stage image, where the process page opens.
-function OutfitFilm({ outfit, onOpen }) {
+function OutfitFilm({ outfit }) {
   const chapters = useMemo(
     () => [
       {
@@ -110,14 +109,6 @@ function OutfitFilm({ outfit, onOpen }) {
               >
                 Il processo
               </Link>
-              <button
-                type="button"
-                className="sa-btn sa-btn--ghost"
-                lang="it"
-                onClick={() => onOpen(outfit, outfit.looks[0])}
-              >
-                L'archivio
-              </button>
             </div>
           </>
         ),
@@ -251,27 +242,6 @@ export default function SplendorAnimae() {
   const lastYRef = useRef(0);
   const [scrolled, setScrolled] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
-  // one lightbox for the whole page: { items, index } or null
-  const [lightbox, setLightbox] = useState(null);
-
-  // opening a section picture surfaces the outfit's entire archive —
-  // looks, process collages, craft shots
-  const openOutfitLightbox = (outfit, file) => {
-    const items = outfit.gallery.map((entry, i) => ({
-      id: `sec-${outfit.slug}-${entry}`,
-      thumb: webSrc(outfit.slug, entry),
-      full: fullSrc(outfit.slug, entry),
-      alt: `${outfit.name} — archivio, immagine ${i + 1} di ${outfit.gallery.length}`,
-    }));
-    setLightbox({ items, index: Math.max(0, outfit.gallery.indexOf(file)) });
-  };
-
-  // pause Lenis while the lightbox owns the viewport
-  useEffect(() => {
-    if (lightbox) lenisRef.current?.stop();
-    else lenisRef.current?.start();
-  }, [lightbox]);
-
   useEffect(() => {
     // stop the browser's async scroll restoration from racing our reset —
     // it re-applies a stale offset once the 700vh track has laid out.
@@ -516,7 +486,7 @@ export default function SplendorAnimae() {
           <h2 lang="it">La collezione, in sei atti</h2>
         </Motion.div>
         {OUTFITS.map((outfit) => (
-          <OutfitFilm key={outfit.slug} outfit={outfit} onOpen={openOutfitLightbox} />
+          <OutfitFilm key={outfit.slug} outfit={outfit} />
         ))}
       </div>
 
@@ -525,13 +495,6 @@ export default function SplendorAnimae() {
         <span>Splendor Animae — FW26</span>
         <span>© 2026</span>
       </footer>
-
-      <Lightbox
-        items={lightbox?.items ?? []}
-        active={lightbox ? lightbox.index : null}
-        onClose={() => setLightbox(null)}
-        onNav={(i) => setLightbox((state) => (state ? { ...state, index: i } : state))}
-      />
     </div>
     </MotionConfig>
   );
