@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion as Motion, MotionConfig } from 'framer-motion';
 import Lenis from 'lenis';
 import ScrollFilm from './ScrollFilm.jsx';
+import FocusRail from './FocusRail.jsx';
 import { LightboxThumb } from './Lightbox.jsx';
 import {
   OUTFITS,
@@ -43,6 +44,16 @@ const fadeUp = {
     transition: { duration: 1.2, ease: EASE, delay },
   }),
 };
+
+// L'archivio come focus rail: una card per outfit, immagine firma
+// dall'archivio, in ordine di collezione.
+const ARCHIVE_ITEMS = OUTFITS.map((outfit) => ({
+  id: outfit.slug,
+  title: outfit.name,
+  description: outfit.emotion,
+  meta: `${outfit.numeral} — FW26`,
+  imageSrc: webSrc(outfit.slug, outfit.hero),
+}));
 
 // Immersive variant: each outfit is its own scroll-scrubbed mini-film that
 // settles on the full-outfit stage image, where the process page opens.
@@ -438,6 +449,9 @@ export default function SplendorAnimae() {
           <button type="button" onClick={() => scrollTo('#sa-lookbook', 3)}>
             Lookbook
           </button>
+          <button type="button" onClick={() => scrollTo('#sa-archivio', 3)}>
+            Archivio
+          </button>
         </div>
       </nav>
 
@@ -489,6 +503,21 @@ export default function SplendorAnimae() {
           <OutfitFilm key={outfit.slug} outfit={outfit} />
         ))}
       </div>
+
+      {/* ── L'archivio: focus rail ── */}
+      <section className="sa-archive" id="sa-archivio">
+        <Motion.div
+          className="sa-section-head"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-15% 0px' }}
+        >
+          <p className="sa-eyebrow">L'Archivio</p>
+          <h2 lang="it">La collezione, da vicino</h2>
+        </Motion.div>
+        <FocusRail items={ARCHIVE_ITEMS} autoPlay loop interval={4500} />
+      </section>
 
       <footer className="sa-footer">
         <img className="sa-logo sa-logo--footer" src="/assets/logo.png" alt="Sartoriapieri" />
