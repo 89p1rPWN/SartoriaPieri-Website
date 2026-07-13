@@ -45,32 +45,6 @@ const fadeUp = {
   }),
 };
 
-// Atelier plates — real craft shots from the outfit archives; captions drawn
-// from the atelier's own processo creativo texts.
-const ATELIER_PLATES = [
-  {
-    slug: 'vergogna',
-    file: '6.jpg',
-    plate: 'Plate I',
-    title: 'Ricamo a mano',
-    text: 'Perline e filo fissati a pinzette, una ad una: il ricamo arresta ogni strappo prima che si propaghi.',
-  },
-  {
-    slug: 'dolore',
-    file: '2.jpg',
-    plate: 'Plate II',
-    title: 'Lacrime cucite',
-    text: 'Il ricamo ispirato alle lacrime si alterna a mani cucite che stringono il tessuto: il dolore prende forma in molteplici volti.',
-  },
-  {
-    slug: 'trauma',
-    file: '6.jpg',
-    plate: 'Plate III',
-    title: 'Modellatura a caldo',
-    text: "L'organza cangiante, bruciata e sbrandellata, viene fissata a caldo: la ferita che risplende grazie al ricamo.",
-  },
-];
-
 // Immersive variant: each outfit is its own scroll-scrubbed mini-film that
 // settles on the full-outfit stage image, where the process page opens.
 function OutfitFilm({ outfit, onOpen }) {
@@ -279,13 +253,6 @@ export default function SplendorAnimae() {
   const [navHidden, setNavHidden] = useState(false);
   // one lightbox for the whole page: { items, index } or null
   const [lightbox, setLightbox] = useState(null);
-
-  const plateItems = ATELIER_PLATES.map((plate) => ({
-    id: `plate-${plate.slug}-${plate.file}`,
-    thumb: webSrc(plate.slug, plate.file),
-    full: fullSrc(plate.slug, plate.file),
-    alt: plate.title,
-  }));
 
   // opening a section picture surfaces the outfit's entire archive —
   // looks, process collages, craft shots
@@ -501,9 +468,6 @@ export default function SplendorAnimae() {
           <button type="button" onClick={() => scrollTo('#sa-lookbook', 3)}>
             Lookbook
           </button>
-          <button type="button" onClick={() => scrollTo('#sa-atelier', 3)}>
-            Atelier
-          </button>
         </div>
       </nav>
 
@@ -555,77 +519,6 @@ export default function SplendorAnimae() {
           <OutfitFilm key={outfit.slug} outfit={outfit} onOpen={openOutfitLightbox} />
         ))}
       </div>
-
-      {/* ── Artisanal details ── */}
-      <section className="sa-atelier" id="sa-atelier">
-        <Motion.div
-          className="sa-section-head"
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: '-15% 0px' }}
-        >
-          <p className="sa-eyebrow">Dettagli Artigianali</p>
-          <h2>La mano resta visibile</h2>
-        </Motion.div>
-        <div className="sa-atelier-grid">
-          {ATELIER_PLATES.map((plate, i) => (
-            <Motion.article
-              key={`${plate.slug}-${plate.file}`}
-              className="sa-detail"
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: '-10% 0px' }}
-            >
-              <div className="sa-detail-media">
-                <LightboxThumb
-                  id={plateItems[i].id}
-                  label={`Ingrandisci — ${plate.title}`}
-                  onOpen={() => setLightbox({ items: plateItems, index: i })}
-                >
-                  <img
-                    src={plateItems[i].thumb}
-                    alt={plate.title}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </LightboxThumb>
-              </div>
-              <div className="sa-detail-text" lang="it">
-                <span className="sa-index">{plate.plate}</span>
-                <h3>{plate.title}</h3>
-                <p>{plate.text}</p>
-              </div>
-            </Motion.article>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Final CTA ── */}
-      <section className="sa-cta">
-        <div className="sa-cta-media" aria-hidden="true">
-          <img src="/assets/cta-bg.jpg" alt="" loading="lazy" decoding="async" />
-          <div className="sa-cta-shade" />
-        </div>
-        <Motion.div
-          className="sa-cta-content"
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: '-20% 0px' }}
-        >
-          <h2>
-            Entra nel mondo di <em>Splendor Animae</em>.
-          </h2>
-          <a
-            className="sa-btn sa-btn--solid"
-            href="mailto:press@sartoriapieri.com?subject=Splendor%20Animae%20%E2%80%94%20Lookbook%20Request"
-          >
-            Richiedi il Lookbook
-          </a>
-        </Motion.div>
-      </section>
 
       <footer className="sa-footer">
         <img className="sa-logo sa-logo--footer" src="/assets/logo.png" alt="Sartoriapieri" />

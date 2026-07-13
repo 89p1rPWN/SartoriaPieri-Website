@@ -231,13 +231,6 @@
 }
 
 /* ══════ OUTFIT SECTIONS ══════ */
-.sa-atelier {
-  /* neutralize global `section { display:flex; min-height:100vh; ... }` from App.css */
-  display: block;
-  min-height: 0;
-  overflow: visible;
-}
-
 .sa-outfits {
   /* the outfit films are full-bleed; only the heading keeps gutters */
   padding: clamp(6rem, 14vh, 10rem) 0 0;
@@ -347,121 +340,6 @@
   color: var(--sa-text);
 }
 
-/* ══════ ATELIER / DETAILS ══════ */
-.sa-atelier {
-  padding: clamp(6rem, 14vh, 10rem) clamp(1.4rem, 5vw, 5rem);
-  background: rgba(12, 12, 14, 0.62);
-  border-top: 1px solid var(--sa-line);
-  border-bottom: 1px solid var(--sa-line);
-  position: relative;
-  z-index: 2;
-}
-
-.sa-atelier-grid {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(4rem, 10vh, 7rem);
-}
-
-.sa-detail {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  align-items: center;
-}
-
-.sa-detail-media {
-  grid-column: 1 / 7;
-  overflow: hidden;
-  background: var(--sa-grey);
-}
-
-.sa-detail-media img {
-  width: 100%;
-  height: 100%;
-  max-height: 34rem;
-  object-fit: cover;
-  display: block;
-}
-
-.sa-detail-text {
-  grid-column: 8 / 12;
-}
-
-.sa-detail:nth-child(even) .sa-detail-media {
-  grid-column: 7 / 13;
-  order: 2;
-}
-
-.sa-detail:nth-child(even) .sa-detail-text {
-  grid-column: 2 / 6;
-  order: 1;
-}
-
-.sa-detail-text h3 {
-  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-  margin: 1rem 0 1.1rem;
-}
-
-.sa-detail-text p {
-  font-size: 0.88rem;
-  line-height: 1.8;
-  color: var(--sa-muted);
-  letter-spacing: 0.02em;
-}
-
-/* ══════ FINAL CTA ══════ */
-.sa-cta {
-  position: relative;
-  min-height: 82vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  text-align: center;
-  z-index: 2;
-}
-
-.sa-cta-media {
-  position: absolute;
-  inset: 0;
-}
-
-.sa-cta-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.sa-cta-shade {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 90% 80% at 50% 45%, rgba(5, 5, 5, 0.28) 0%, rgba(5, 5, 5, 0.86) 100%),
-    linear-gradient(180deg, var(--sa-black) 0%, transparent 18%, transparent 82%, var(--sa-black) 100%);
-}
-
-.sa-cta-content {
-  position: relative;
-  z-index: 2;
-  padding: 6rem clamp(1.4rem, 5vw, 5rem);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2.8rem;
-}
-
-.sa-cta-content h2 {
-  font-size: clamp(2rem, 5vw, 4rem);
-  line-height: 1.18;
-  max-width: 22ch;
-}
-
-.sa-cta-content em {
-  font-style: italic;
-}
-
 /* ══════ FOOTER ══════ */
 .sa-footer {
   display: flex;
@@ -545,25 +423,6 @@
     margin-left: 0;
     text-align: left;
     align-items: flex-start;
-  }
-
-  .sa-detail,
-  .sa-detail:nth-child(even) {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .sa-detail:nth-child(even) .sa-detail-media {
-    order: 0;
-  }
-
-  .sa-detail-text {
-    padding: 0 0.2rem;
-  }
-
-  .sa-cta {
-    min-height: 68vh;
   }
 
   .sa-footer {
