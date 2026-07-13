@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { motion as Motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import './FocusRail.css';
 
 const wrap = (min, max, v) => {
@@ -186,7 +186,7 @@ export default function FocusRail({
     >
       <div className="fr-bg">
         <AnimatePresence mode="popLayout">
-          <Motion.div
+          <motion.div
             key={`bg-${activeItem.id}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.4 }}
@@ -196,12 +196,12 @@ export default function FocusRail({
           >
             <img src={activeItem.imageSrc} alt="" />
             <div className="fr-bg-fade" />
-          </Motion.div>
+          </motion.div>
         </AnimatePresence>
       </div>
 
       <div className="fr-stage">
-        <Motion.div
+        <motion.div
           className="fr-rail"
           drag={scrollDriven ? false : "x"}
           dragConstraints={{ left: 0, right: 0 }}
@@ -223,7 +223,7 @@ export default function FocusRail({
             const blur = isCenter ? 0 : dist * 6;
             const brightness = isCenter ? 1 : 0.5;
             return (
-              <Motion.div
+              <motion.div
                 key={abs}
                 className={`fr-card ${isCenter ? 'is-center' : ''}`}
                 initial={false}
@@ -245,15 +245,15 @@ export default function FocusRail({
                 <img src={item.imageSrc} alt={item.title} />
                 <div className="fr-card-shine" />
                 <div className="fr-card-shade" />
-              </Motion.div>
+              </motion.div>
             );
           })}
-        </Motion.div>
+        </motion.div>
 
         <div className="fr-info">
           <div className="fr-info-text">
             <AnimatePresence mode="wait">
-              <Motion.div
+              <motion.div
                 key={activeItem.id}
                 initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
                 animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -263,7 +263,7 @@ export default function FocusRail({
                 {activeItem.meta && <span className="fr-meta">{activeItem.meta}</span>}
                 <h2 className="fr-title">{activeItem.title}</h2>
                 {activeItem.description && <p className="fr-desc">{activeItem.description}</p>}
-              </Motion.div>
+              </motion.div>
             </AnimatePresence>
           </div>
 

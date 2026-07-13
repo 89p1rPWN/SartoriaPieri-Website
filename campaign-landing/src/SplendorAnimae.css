@@ -320,21 +320,6 @@
   color: var(--sa-text);
 }
 
-/* ══════ ARCHIVE RAIL ══════ */
-.sa-archive {
-  /* neutralize global `section { display:flex; min-height:100vh; ... }` from App.css */
-  display: block;
-  min-height: 0;
-  overflow: visible;
-  padding: clamp(6rem, 14vh, 10rem) 0 0;
-  position: relative;
-  z-index: 2;
-}
-
-.sa-archive .sa-section-head {
-  padding: 0 clamp(1.4rem, 5vw, 5rem);
-}
-
 /* ══════ FOOTER ══════ */
 .sa-footer {
   display: flex;
