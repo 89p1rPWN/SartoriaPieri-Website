@@ -25,8 +25,8 @@ export const OUTFITS = [
     process: [
       "L'Abisso è la matrice della collezione: il cartamodello da cui gli stigmi discendono — la gonna del Trauma ne riprende il taglio. Un velo che inghiotte la figura, strati di pizzo strappato che risalgono dal buio.",
     ],
-    studio: ['studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg'],
-    sketches: [],
+    studio: ['studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg', 'studio-4.jpg', 'studio-5.jpg'],
+    sketches: ['sketch-1.jpg', 'sketch-2.jpg'],
     gallery: ['abisso_main.jpg', '2.jpg', '3.jpg', '4.jpg'],
   },
   {
@@ -44,7 +44,7 @@ export const OUTFITS = [
       'Affrontando il primo stigma, la gabbia inizia a cedere.',
     ],
     studio: ['studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg', '5.jpg'],
-    sketches: ['8.jpg', '1.jpg', '2.jpg', '4.jpg', '6.jpg'],
+    sketches: ['sketch-1.jpg', 'sketch-2.jpg', '8.jpg', '1.jpg', '2.jpg', '4.jpg', '6.jpg'],
     gallery: ['stage.jpg', '3.jpg', '1.jpg', '2.jpg', '4.jpg', '5.jpg', '6.jpg', '8.jpg', '9.jpg', '10.jpg'],
   },
   {
@@ -61,7 +61,7 @@ export const OUTFITS = [
       "Il cappello segna la fine della gabbia e l’inizio della rivelazione, ispirato all’eleganza dei cappelli dei samurai giapponesi: un “vedo/non vedo” elegante e misterioso, che completa l’outfit.",
     ],
     studio: ['studio-1.jpg', '2.jpg', 'studio-2.jpg', 'studio-3.jpg', 'studio-4.jpg'],
-    sketches: ['1.jpg', '5.jpg', '9.jpg', '6.jpg', '7.jpg'],
+    sketches: ['sketch-1.jpg', 'sketch-2.jpg', '1.jpg', '5.jpg', '9.jpg', '6.jpg', '7.jpg'],
     gallery: ['stage.jpg', '2.jpg', '1.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '9.jpg'],
   },
   {
@@ -78,8 +78,8 @@ export const OUTFITS = [
       "L’obiettivo era tradurre a livello modellistico ciò che era già stato esplorato nella sirena con collo alto, ma in una visione più cruda e disinibita.",
       'La corona di spine rappresenta la sofferenza legata alla perdita del controllo, con le mutande sbrindellate che si insinuano tra le punte come simbolo di caos e trasgressione.',
     ],
-    studio: ['studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg', 'studio-4.jpg', 'studio-5.jpg'],
-    sketches: ['5.jpg', '2.jpg', '7.jpg', '4.jpg'],
+    studio: ['studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg', 'studio-4.jpg', 'studio-5.jpg', 'studio-6.jpg'],
+    sketches: ['sketch-1.jpg', 'sketch-2.jpg', '5.jpg', '2.jpg', '7.jpg', '4.jpg'],
     gallery: ['stage.jpg', '1.jpg', '10.jpg', '9.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'],
   },
   {
@@ -96,8 +96,8 @@ export const OUTFITS = [
       "Un drappeggio di organza soffocante avvolge il corpo, cancellando i connotati e trasmettendo l’angoscia del nascondimento.",
       "Il patchwork ritorna come frammentazione dell’essere e testimonianza di vulnerabilità.",
     ],
-    studio: ['8.jpg', 'studio-1.jpg'],
-    sketches: ['4.jpg', '3.jpg', '2.jpg', '7.jpg', '6.jpg'],
+    studio: ['8.jpg', 'studio-1.jpg', 'studio-2.jpg'],
+    sketches: ['sketch-1.jpg', '4.jpg', '3.jpg', '2.jpg', '7.jpg', '6.jpg'],
     gallery: ['stage.jpg', 'vergogna_main.jpg', '9.jpg', '1.jpg', '2.jpg', '3.jpg', '4.jpg', '6.jpg', '7.jpg', '8.jpg'],
   },
   {
@@ -115,7 +115,7 @@ export const OUTFITS = [
       "L’outfit porta con sé un’anima pesante, e pesante appare allo sguardo, come il dolore stesso.",
     ],
     studio: ['dolore_main.jpg', 'studio-1.jpg', 'studio-2.jpg', 'studio-3.jpg'],
-    sketches: ['4.jpg', '3.jpg', '6.jpg', '5.jpg', '2.jpg'],
+    sketches: ['sketch-1.jpg', '4.jpg', '3.jpg', '6.jpg', '5.jpg', '2.jpg'],
     gallery: ['stage.jpg', 'dolore_main.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg'],
   },
 ];
